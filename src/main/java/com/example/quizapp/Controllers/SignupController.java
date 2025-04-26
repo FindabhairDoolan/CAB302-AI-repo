@@ -1,5 +1,7 @@
-package com.example.quizapp.quizapp.Controllers;
+package com.example.quizapp.Controllers;
 
+import com.example.quizapp.Models.SqliteUserDAO;
+import com.example.quizapp.Models.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,11 +14,13 @@ import java.io.IOException;
 
 public class SignupController {
 
+    private SqliteUserDAO userDAO = new SqliteUserDAO();
+
     @FXML
     private Button backButton;
 
     @FXML
-    private TextField username;
+    private TextField usernameField;
 
     @FXML
     private TextField emailField;
@@ -32,7 +36,7 @@ public class SignupController {
         System.out.println("Back clicked");
         // Swap to Welcome screen
         Stage stage = (Stage) backButton.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/quizapp/WelcomePage.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/WelcomePage.fxml"));
         Scene scene = null;
         try {
             scene = new Scene(fxmlLoader.load(), 800, 650);
@@ -44,10 +48,16 @@ public class SignupController {
 
 
     public void handleSignup(ActionEvent actionEvent) {
+        String email = emailField.getText();
+        String password = passwordField.getText();
+        String userName = usernameField.getText();
+
+        userDAO.addUser(new User(userName, email, password));
+
         System.out.println("Signup button clicked");
         // Swap to Signup screen
         Stage stage = (Stage) signupButton.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/quizapp/login.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/login.fxml"));
         Scene scene = null;
         try {
             scene = new Scene(fxmlLoader.load(), 800, 650);

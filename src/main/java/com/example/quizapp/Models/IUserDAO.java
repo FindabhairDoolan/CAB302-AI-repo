@@ -1,0 +1,53 @@
+package com.example.quizapp.Models;
+
+import java.util.List;
+public interface IUserDAO {
+    /**
+     * Adds a new user to the database.
+     * @param user The user to add.
+     */
+    public void addUser(User user);
+
+    /**
+     * Updates an existing user in the database.
+     * @param user The user to update.
+     */
+    public void updateUser(User user);
+
+    /**
+     * Deletes a user from the database.
+     * @param user The user to delete.
+     */
+    public void deleteUser(User user);
+    /**
+     * Sets a new userID to the database.
+     * @param userID The userID to set.
+     */
+    /**
+     * Validates user credentials.
+     * @param username The username to validate.
+     * @param password The password to validate.
+     * @return true if credentials are valid, false otherwise.
+     */
+    boolean validateCredentials(String username, String password);
+
+
+    /**
+     * Adds a new username to the database.
+     * @param username The username to add.
+     */
+    public void addUsername(String username);
+    /**
+     * Adds a new emailaddress to the database.
+     * @param emailaddress The EmailAddress to add.
+     */
+    public void addEmailaddress(String emailaddress);
+    /**
+     * Adds a new password to the database.
+     * @param password The password to add.
+     */
+    public void addpassword(String password);
+
+}
+
+

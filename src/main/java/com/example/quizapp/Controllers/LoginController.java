@@ -1,5 +1,6 @@
-package com.example.quizapp.quizapp.Controllers;
+package com.example.quizapp.Controllers;
 
+import com.example.quizapp.Models.SqliteUserDAO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,6 +12,8 @@ import java.io.IOException;
 
 
 public class LoginController {
+
+    private SqliteUserDAO userDAO = new SqliteUserDAO();
 
     @FXML
     private Button backButton;
@@ -29,7 +32,7 @@ public class LoginController {
         System.out.println("Back clicked");
         // Swap to Welcome screen
         Stage stage = (Stage) loginButton.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/quizapp/WelcomePage.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/WelcomePage.fxml"));
         Scene scene = null;
         try {
             scene = new Scene(fxmlLoader.load(), 800, 650);
@@ -41,7 +44,15 @@ public class LoginController {
 
 
     public void handleLogin(ActionEvent actionEvent) {
-        System.out.println("Successful login -> Dashboard");
-        // Swap to dashboard
+        String email = emailField.getText();
+        String password = passwordField.getText();
+        boolean isValid = userDAO.validateCredentials(email, password);
+        if (isValid) {
+            System.out.println("Successful login -> Dashboard");
+            // Swap to dashboard
+        }
+        else {
+            System.out.println("Incorrect credentials!");
+        }
     }
 }

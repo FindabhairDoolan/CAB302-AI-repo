@@ -1,4 +1,4 @@
-package com.example.quizapp.quizapp;
+package com.example.quizapp.Models;
 
 public class User {
     private int userID;
@@ -6,8 +6,7 @@ public class User {
     private String email;
     private String password;
 
-    public User(int userID, String userName, String email, String password) {
-        this.userID = userID;
+    public User(String userName, String email, String password) {
         this.userName = userName;
         this.email = email;
         this.password = password;
