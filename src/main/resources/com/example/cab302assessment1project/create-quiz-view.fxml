@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+
+<!--Using BorderPane to dynamically sort title and contents of page regardless of
+    window size-->
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.cab302assessment1project.Controller.CreateQuizController"
+>
+    <!--Where the title and back button is located-->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <padding>
+                <Insets topRightBottomLeft="10"></Insets>
+            </padding>
+
+            <!--The back button-->
+            <Button text="&lt;" onAction="#onBack"></Button>
+
+            <!--Allows for the alignment of the button to be dynamic by setting the
+            spacer object to grow when there is available space-->
+            <Region HBox.hgrow="ALWAYS" />
+
+            <Label text="Create a quiz" style="-fx-font-size: 20px;"></Label>
+
+            <Region HBox.hgrow="ALWAYS" />
+        </HBox>
+    </top>
+
+    <!--Where the main contents used to create the quiz is located-->
+    <center>
+        <HBox>
+
+            <!--Contains the topic input and quiz create button-->
+            <VBox alignment="TOP_LEFT" spacing="10" HBox.hgrow="ALWAYS">
+                <padding>
+                    <Insets topRightBottomLeft="10"></Insets>
+                </padding>
+                <Label text="Topic" />
+                <!--If text reaches border of text area, it will continue on a new line
+                the text area will also dynamically grow if the page size is increased-->
+                <TextArea fx:id="topicTextArea" VBox.vgrow="ALWAYS" wrapText="true"/>
+                <Button fx:id="createButton" text="Create" onAction="#onCreate"></Button>
+            </VBox>
+
+            <!--Adds space between the two sections that dynamically grows if page
+            size is increased-->
+            <Region HBox.hgrow="ALWAYS" />
+
+            <!--Where all other quiz customisation options are aligned-->
+            <VBox fx:id="contactContainer" alignment="TOP_CENTER" spacing="10" HBox.hgrow="ALWAYS">
+                <padding>
+                    <Insets topRightBottomLeft="10"></Insets>
+                </padding>
+                <!--Insert year level, country, difficulty, number of questions,
+                quiz mode switch and time limit here -->
+            </VBox>
+        </HBox>
+    </center>
+
+</BorderPane>
