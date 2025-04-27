@@ -21,7 +21,7 @@
             </padding>
 
             <!--The back button-->
-            <Button text="&lt;" onAction="#onBack"></Button>
+            <Button fx:id="backButton" text="&lt;" onAction="#onBack"></Button>
 
             <!--Allows for the alignment of the button to be dynamic by setting the
             spacer object to grow when there is available space-->
@@ -54,7 +54,7 @@
             <Region HBox.hgrow="ALWAYS" />
 
             <!--Where all other quiz customisation options are aligned-->
-            <VBox fx:id="contactContainer" alignment="TOP_CENTER" spacing="10" HBox.hgrow="ALWAYS">
+            <VBox alignment="TOP_CENTER" spacing="10" HBox.hgrow="ALWAYS">
                 <padding>
                     <Insets topRightBottomLeft="10"></Insets>
                 </padding>
