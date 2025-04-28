@@ -11,7 +11,7 @@
 <!--Using BorderPane to dynamically sort title and contents of page regardless of
     window size-->
 <BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.cab302assessment1project.Controller.CreateQuizController"
+            fx:controller="com.example.quizapp.Controllers.CreateQuizController"
 >
     <!--Where the title and back button is located-->
     <top>

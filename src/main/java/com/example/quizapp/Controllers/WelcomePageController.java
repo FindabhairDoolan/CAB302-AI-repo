@@ -1,5 +1,6 @@
 package com.example.quizapp.Controllers;
 
+import com.example.quizapp.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +15,8 @@ public class WelcomePageController{
     private Button loginButton;
     @FXML
     private Button signupButton;
+    @FXML
+    public Button tempButton;
 
     public void handleLogin() throws IOException {
         System.out.println("Login Button clicked");
@@ -34,6 +37,15 @@ public class WelcomePageController{
         stage.setScene(scene);
 
 
+    }
+
+    @FXML
+    protected void onTempButtonClick() throws IOException {
+        Stage stage = (Stage) tempButton.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("create-quiz-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), Main.WIDTH, Main.HEIGHT);
+        stage.setScene(scene);
+        //Will be in the home page controller, this is just temporary
     }
 
 

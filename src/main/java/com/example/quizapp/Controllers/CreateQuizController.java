@@ -1,6 +1,6 @@
-package com.example.cab302assessment1project.Controller;
+package com.example.quizapp.Controllers;
 
-import com.example.cab302assessment1project.HelloApplication;
+import com.example.quizapp.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -35,8 +35,8 @@ public class CreateQuizController {
     @FXML
     public void onBack(ActionEvent actionEvent) throws IOException {
         Stage stage = (Stage) backButton.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), HelloApplication.WIDTH, HelloApplication.HEIGHT);
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("WelcomePage.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), Main.WIDTH, Main.HEIGHT);
         stage.setScene(scene);
         //This will lead back to the home page in future
     }
