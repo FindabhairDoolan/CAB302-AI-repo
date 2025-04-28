@@ -9,9 +9,16 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Controller class for the temporary entry page for the application
+ */
 public class HelloController {
     public Button tempButton;
 
+    /**
+     * Temporary method that sends user to the create quiz page
+     * @throws IOException
+     */
     @FXML
     protected void onTempButtonClick() throws IOException {
         Stage stage = (Stage) tempButton.getScene().getWindow();
