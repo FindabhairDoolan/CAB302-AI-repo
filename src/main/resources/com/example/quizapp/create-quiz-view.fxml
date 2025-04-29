@@ -60,8 +60,12 @@
                 </padding>
                 <!--Insert year level, country, difficulty, number of questions,
                 quiz mode switch and time limit here -->
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="Number of Questions:" />
+                    <VBox fx:id="numQuestionsContainer" alignment="CENTER_LEFT" />
+                </HBox>
+
             </VBox>
         </HBox>
     </center>
-
 </BorderPane>
