@@ -15,22 +15,23 @@
 >
     <!--Where the title and back button is located-->
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="10">
+        <BorderPane>
+
             <padding>
                 <Insets topRightBottomLeft="10"></Insets>
             </padding>
 
-            <!--The back button-->
-            <Button fx:id="backButton" text="&lt;" onAction="#onBack"></Button>
+            <left>
+                <!--The back button-->
+                <Button fx:id="backButton" text="&lt;" onAction="#onBack"></Button>
+            </left>
 
-            <!--Allows for the alignment of the button to be dynamic by setting the
-            spacer object to grow when there is available space-->
-            <Region HBox.hgrow="ALWAYS" />
+            <center>
+                <!--The title-->
+                <Label text="Create a quiz" style="-fx-font-size: 20px; -fx-padding: 0 40 0 0;"></Label>
+            </center>
 
-            <Label text="Create a quiz" style="-fx-font-size: 20px;"></Label>
-
-            <Region HBox.hgrow="ALWAYS" />
-        </HBox>
+        </BorderPane>
     </top>
 
     <!--Where the main contents used to create the quiz is located-->
@@ -39,31 +40,42 @@
 
             <!--Contains the topic input and quiz create button-->
             <VBox alignment="TOP_LEFT" spacing="10" HBox.hgrow="ALWAYS">
+
                 <padding>
-                    <Insets topRightBottomLeft="10"></Insets>
+                    <Insets topRightBottomLeft="10"/>
                 </padding>
-                <Label text="Topic" />
+
+                <!--Label that indicates what should be input into the text area below-->
+                <Label text="Topic"/>
+
                 <!--If text reaches border of text area, it will continue on a new line
                 the text area will also dynamically grow if the page size is increased-->
                 <TextArea fx:id="topicTextArea" VBox.vgrow="ALWAYS" wrapText="true"/>
-                <Button fx:id="createButton" text="Create" onAction="#onCreate"></Button>
+
+                <!--Button that creates a quiz based on user input-->
+                <Button fx:id="createButton" text="Create" maxWidth="Infinity" prefHeight="50"  style="-fx-font-size: 15px;" onAction="#onCreate" />
+
             </VBox>
 
             <!--Adds space between the two sections that dynamically grows if page
             size is increased-->
-            <Region HBox.hgrow="ALWAYS" />
+            <Region HBox.hgrow="ALWAYS"/>
 
             <!--Where all other quiz customisation options are aligned-->
             <VBox alignment="TOP_CENTER" spacing="10" HBox.hgrow="ALWAYS">
+
                 <padding>
-                    <Insets topRightBottomLeft="10"></Insets>
+                    <Insets topRightBottomLeft="10"/>
                 </padding>
-                <!--Insert year level, country, difficulty, number of questions,
-                quiz mode switch and time limit here -->
+
                 <HBox alignment="CENTER_LEFT" spacing="10">
+                    <!--Combobox for selecting number of questions in the quiz-->
                     <Label text="Number of Questions:" />
                     <VBox fx:id="numQuestionsContainer" alignment="CENTER_LEFT" />
                 </HBox>
+
+                <!--Insert year level, country, difficulty, number of questions,
+                quiz mode switch and time limit here -->
 
             </VBox>
         </HBox>
