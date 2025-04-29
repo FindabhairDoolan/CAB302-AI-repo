@@ -17,6 +17,7 @@ import java.io.IOException;
  */
 public class CreateQuizController {
     public Button backButton;
+    public Button createButton;
 
     @FXML
     private VBox numQuestionsContainer; // Reference to the VBox in FXML
@@ -37,11 +38,17 @@ public class CreateQuizController {
      *Compiles user customisations choices to generate a personalised quiz, sends
      * the user to the quiz page.
      * @param actionEvent
+     * @@throws IOException
      */
-    public void onCreate(ActionEvent actionEvent) {
+    public void onCreate(ActionEvent actionEvent) throws IOException {
         //Get inputted customisation inputs and send to AI
         //retrieve AI response and store new quiz in database
+
         //Send user to Quiz page
+        Stage stage = (Stage) createButton.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("quiz.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), Main.WIDTH, Main.HEIGHT);
+        stage.setScene(scene);
     }
 
     /**
