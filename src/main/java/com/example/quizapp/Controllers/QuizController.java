@@ -3,17 +3,17 @@ package com.example.quizapp.Controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import java.io.IOException;
 import java.util.Optional;
 
 public class QuizController {
+
+    @FXML
+    private Label feedbackLabel;
 
     @FXML
     private Button exitButton;
@@ -54,5 +54,12 @@ public class QuizController {
      * @param actionEvent
      */
     public void onNext(ActionEvent actionEvent) {
+    }
+
+    // Placeholder method to check the answer
+    private boolean checkAnswer(String answer) {
+        // Replace with actual AI logic later
+        // For now, the correct answer is "Option A"
+        return "Option A".equals(answer);
     }
 }
