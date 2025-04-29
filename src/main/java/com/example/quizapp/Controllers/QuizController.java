@@ -1,5 +1,6 @@
 package com.example.quizapp.Controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -45,5 +46,13 @@ public class QuizController {
             }
         }
         // If No is selected, do nothing
+    }
+
+    /**
+     * Evaluates the user's answer and displays feedback on first press
+     * On second press it displays the next question
+     * @param actionEvent
+     */
+    public void onNext(ActionEvent actionEvent) {
     }
 }

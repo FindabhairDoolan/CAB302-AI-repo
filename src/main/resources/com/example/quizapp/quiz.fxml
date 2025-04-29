@@ -66,7 +66,7 @@
             <right>
                 <VBox alignment="CENTER">
 
-                    <!--The label that displays the question feedback-->
+                    <!--The label that displays the question feedback, not visible until question submitted-->
                     <Label fx:id="feedbackLabel" text="Sample" wrapText="true" prefWidth="200" visible="false"/>
 
                     <!--Pushes feedback closer to centre-->
@@ -76,6 +76,19 @@
 
                 </VBox>
             </right>
+
         </BorderPane>
     </center>
+
+    <bottom>
+        <BorderPane>
+            <center>
+
+                <!--The exit button, not visible until question selected-->
+                <Button fx:id="nextButton" text="Next" style="-fx-font-size: 15px;"  visible="false" onAction="#onNext"/>
+
+            </center>
+        </BorderPane>
+    </bottom>
+
 </BorderPane>
