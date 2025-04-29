@@ -33,6 +33,7 @@
         </HBox>
     </top>
 
+
     <!--Where the main contents used to create the quiz is located-->
     <center>
         <HBox>

@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import com.example.quizapp.Models.SqliteUserDAO;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * Controller class for the create quiz page
@@ -19,11 +20,11 @@ public class CreateQuizController {
     public Button backButton;
 
     @FXML
-    private VBox numQuestionsContainer; // Reference to the VBox in FXML
-    private SqliteUserDAO userDAO; // Declare SqliteUser DAO
+    private VBox numQuestionsContainer;
+    private SqliteUserDAO userDAO;
 
     public CreateQuizController() {
-        userDAO = new SqliteUserDAO(); // Initialize the SqliteUser DAO
+        userDAO = new SqliteUserDAO();
     }
 
     @FXML
@@ -31,6 +32,37 @@ public class CreateQuizController {
         // Add the question dropdown from SqliteUser DAO to the numQuestionsContainer
         ComboBox<Integer> questionDropdown = userDAO.getQuestionDropdown();
         numQuestionsContainer.getChildren().add(questionDropdown);
+    }
+
+    @FXML
+    public void onBack(ActionEvent actionEvent) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Exit Create Quiz");
+        alert.setHeaderText(null);
+        alert.setContentText("Are you sure you want to go back? Your changes may not be saved.");
+
+        // Define Yes and No buttons
+        ButtonType yesButton = new ButtonType("Yes");
+        ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        // Set the buttons to the alert
+        alert.getButtonTypes().setAll(yesButton, noButton);
+
+        // Show the alert and wait for user response
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent() && result.get() == yesButton) {
+            // User chose Yes – go back to the dashboard
+            Stage stage = (Stage) backButton.getScene().getWindow(); // Get the current stage
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/WelcomePage.fxml"));
+            try {
+                Scene scene = new Scene(fxmlLoader.load(), Main.WIDTH, Main.HEIGHT);
+                stage.setScene(scene);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        // If No is selected, do nothing and close the dialog
     }
 
     /**
@@ -49,12 +81,5 @@ public class CreateQuizController {
      * @param actionEvent
      * @throws IOException
      */
-    @FXML
-    public void onBack(ActionEvent actionEvent) throws IOException {
-        Stage stage = (Stage) backButton.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("WelcomePage.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), Main.WIDTH, Main.HEIGHT);
-        stage.setScene(scene);
-        //This will lead back to the home page in future
-    }
+
 }
