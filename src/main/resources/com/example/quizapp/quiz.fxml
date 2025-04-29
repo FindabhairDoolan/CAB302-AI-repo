@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.quizapp.Controllers.QuizController">
+    <children>
+        <Label text="Quiz Question Here" layoutX="20" layoutY="20"/>
+        <Button fx:id="exitButton" text="EXIT" onAction="#handleExit" layoutX="10" layoutY="10"/>
+        <!-- Add other quiz components here: questions, answer options, etc. -->
+    </children>
+</AnchorPane>
