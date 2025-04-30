@@ -23,13 +23,14 @@
 
             <!-- HBox 1: Search Bar -->
             <HBox spacing="10" alignment="CENTER">
+                <Button text="Filter By"/>
                 <TextField fx:id="searchField" promptText="Search..." />
                 <Button text="Search" onAction="#handleSearch" />
             </HBox>
 
             <!-- HBox 2: Placeholder for middle content -->
             <HBox alignment="CENTER">
-                <Label text="Middle HBox content here" />
+                <Label text="Quizzes for ### topic -> content here" />
             </HBox>
 
             <!-- HBox 3: Placeholder for bottom content -->
@@ -38,5 +39,6 @@
             </HBox>
         </VBox>
     </center>
+    <bottom></bottom>
 
 </BorderPane>
