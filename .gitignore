@@ -37,3 +37,6 @@ build/
 ### Mac OS ###
 .DS_Store
 /docs/javadoc/
+
+## database
+*.db

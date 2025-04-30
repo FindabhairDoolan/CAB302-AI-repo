@@ -32,22 +32,6 @@ public interface IUserDAO {
     boolean validateCredentials(String username, String password);
 
 
-    /**
-     * Adds a new username to the database.
-     * @param username The username to add.
-     */
-    public void addUsername(String username);
-    /**
-     * Adds a new emailaddress to the database.
-     * @param emailaddress The EmailAddress to add.
-     */
-    public void addEmailaddress(String emailaddress);
-    /**
-     * Adds a new password to the database.
-     * @param password The password to add.
-     */
-    public void addpassword(String password);
-
 }
 
 

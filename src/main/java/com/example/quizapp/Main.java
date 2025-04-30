@@ -35,6 +35,8 @@ public static final int HEIGHT = 550;
         primaryStage.show();
     }
 
+
+
 /**
  * The main method of the project, launches JavaFX
  */
