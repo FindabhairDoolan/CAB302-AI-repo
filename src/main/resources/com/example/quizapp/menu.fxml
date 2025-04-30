@@ -5,7 +5,7 @@
     <!-- Top MenuBar -->
     <MenuBar xmlns:fx="http://javafx.com/fxml"
              fx:controller="com.example.quizapp.Controllers.MenuBarController">
-            <Menu text="Home"/>
+            <Menu fx:id="home" text="Home" onAction="#handleHome"/>
             <Menu text="Quiz">
                 <MenuItem fx:id="menuItem3" text="My Quizzes" onAction="#handleMenuItem3"/>
                 <MenuItem fx:id="menuItem4" text="Take Quiz" onAction="#handleMenuItem4"/>
