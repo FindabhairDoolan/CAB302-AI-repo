@@ -69,13 +69,16 @@ public class QuizController {
     private boolean showingFeedback = false;
     private int questionIndex = 1;
     private int totalQuestions;
+    private List<Question> questionList;
+    SqliteQuestionDAO questionDAO = new SqliteQuestionDAO();
 
     // Placeholder, to be replaced with AI logic
     private String correctAnswer = "Option A";
 
     @FXML
     public void initialize() {
-        loadQuestion(questionIndex);
+        questionList = questionDAO.getQuestionsForQuiz(1);
+        loadQuestion(questionList.get(questionIndex - 1));
         updateProgressLabel(); // Update the progress label on initialization
     }
 
@@ -84,18 +87,17 @@ public class QuizController {
         updateProgressLabel(); // Update the progress label when total questions are set
     }
 
-    private void loadQuestion(int index) {
+    private void loadQuestion(Question question) {
         feedbackLabel.setVisible(false);
         answerToggleGroup.selectToggle(null);
         showingFeedback = false;
 
-
-
-        questionsLabel.setText("AI question" + index);
-        option1.setText("Option A");
-        option2.setText("Option B");
-        option3.setText("Option C");
-        option4.setText("Option D");
+        questionsLabel.setText(question.getQuestionText());
+        List<String> answers = question.getShuffledAnswers();
+        option1.setText(answers.get(0));
+        option2.setText(answers.get(1));
+        option3.setText(answers.get(2));
+        option4.setText(answers.get(3));
 
         updateProgressLabel(); // Updating the progress heading as each question is done
         nextButton.setVisible(true);
@@ -128,7 +130,7 @@ public class QuizController {
         } else {
             if (questionIndex < totalQuestions) {
                 questionIndex++;
-                loadQuestion(questionIndex);
+                loadQuestion(questionList.get(questionIndex - 1));
             } else {
                 showQuizCompletedScreen();
             }
