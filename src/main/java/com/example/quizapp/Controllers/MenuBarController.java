@@ -3,7 +3,7 @@ package com.example.quizapp.Controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 
-public class MenuBarController {
+public abstract class MenuBarController {
 
     @FXML
     protected MenuItem menuItem1; // Account
@@ -28,9 +28,10 @@ public class MenuBarController {
     }
 
     @FXML
-    protected void handleMenuItem2() {
+    protected void handleLogout() {
         System.out.println("Logging out...");
         // add logout logic
+        //SceneManager.switchScene("/com/example/pages/WelcomePage.fxml", "Welcome");
     }
 
     @FXML
@@ -56,6 +57,7 @@ public class MenuBarController {
         System.out.println("Going to Quiz History...");
         // add  logic
     }
+
 
 
 }

@@ -14,6 +14,6 @@
             </Menu>
             <Menu text="Profile">
                 <MenuItem fx:id="menuItem1" text="Account" onAction="#handleMenuItem1"/>
-                <MenuItem fx:id="menuItem2" text="Logout" onAction="#handleMenuItem2"/>
+                <MenuItem fx:id="menuItem2" text="Logout" onAction="#handleLogout"/>
             </Menu>
     </MenuBar>
