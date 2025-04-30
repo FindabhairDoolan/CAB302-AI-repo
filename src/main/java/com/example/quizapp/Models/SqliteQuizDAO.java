@@ -2,6 +2,7 @@ package com.example.quizapp.Models;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -106,24 +107,96 @@ public class SqliteQuizDAO implements IQuizDAO {
         }
     }
 
-
     @Override
-    public void addQuestionToQuiz(String username) {
+    public List<Quiz> searchQuizByTopic(String topic) {
+        List<Quiz> quizzes = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM quizzes where quizTopic = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, topic);
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()) {
+                //might be some problems with the question id and quizID?
+                Quiz quiz = new Quiz(
+                        rs.getString("quizName"),
+                        rs.getString("quizTopic"),
+                        rs.getString("quizMode"),
+                        rs.getString("difficulty"),
+                        rs.getString("yearLevel"),
+                        rs.getString("country"),
+                        rs.getInt("creatorID")
+                );
+                quiz.setQuizID(rs.getInt("id"));
+                quizzes.add(quiz);
 
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return quizzes;
     }
 
     @Override
-    public void removeQuestionFromQuiz(String emailaddress) {
+    public List<Quiz> getQuizzesByCreator(int creatorID) {
+        List<Quiz> quizzes = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM quizzes where creatorID = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, creatorID);
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()) {
+                //might be some problems with the question id and quizID?
+                Quiz quiz = new Quiz(
+                        rs.getString("quizName"),
+                        rs.getString("quizTopic"),
+                        rs.getString("quizMode"),
+                        rs.getString("difficulty"),
+                        rs.getString("yearLevel"),
+                        rs.getString("country"),
+                        creatorID
+                );
+                quiz.setQuizID(rs.getInt("id"));
+                quizzes.add(quiz);
 
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return quizzes;
     }
 
 
-    @Override
-    public List<Question> getQuestionsForQuiz(int quizId) {
 
+    @Override
+    public List<Question> getQuestionsForQuiz(Quiz quiz) {
         List<Question> questions = new ArrayList<>();
-        String query = "SELECT * FROM questions where quizID = ?";
-        return List.of();
+        int quizID = quiz.getQuizID();
+        try {
+            String query = "SELECT * FROM questions where quizID = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, quizID);
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()) {
+                //might be some problems with the question id and quizID?
+                Question question = new Question(
+                        rs.getInt("quizID"),
+                        rs.getString("questionText"),
+                        rs.getString("correctAnswer"),
+                        rs.getString("incorrectAnswer1"),
+                        rs.getString("incorrectAnswer1"),
+                        rs.getString("incorrectAnswer1")
+                );
+                question.setId(rs.getInt("id"));
+                questions.add(question);
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return questions;
     }
 
 }
