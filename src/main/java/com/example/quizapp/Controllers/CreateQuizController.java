@@ -1,6 +1,7 @@
 package com.example.quizapp.Controllers;
 
 import com.example.quizapp.Main;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -16,11 +17,14 @@ import java.util.Optional;
  * Controller class for the create quiz page
  */
 public class CreateQuizController {
+    @FXML
     public Button backButton;
+    @FXML
     public Button createButton;
-
     @FXML
     private VBox numQuestionsContainer;
+    @FXML
+    private ToggleGroup modeToggleGroup;
     private SqliteUserDAO userDAO;
 
     public CreateQuizController() {
@@ -37,15 +41,28 @@ public class CreateQuizController {
     /**
      *Compiles user customisations choices to generate a personalised quiz, sends
      * the user to the quiz page.
-     * @@throws IOException
+     * @throws IOException
      */
+    @FXML
     public void onCreate() throws IOException {
+
+        //If the user hasn't selected a quiz mode they may not create the quiz
+        if (modeToggleGroup.getSelectedToggle() == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("No selected mode");
+            alert.setHeaderText(null);
+            alert.setContentText("You must select a quiz mode.");
+            alert.showAndWait();
+
+            return;
+        }
+
         //Get inputted customisation inputs and send to AI
         ComboBox<Integer> questionDropdown = (ComboBox<Integer>) numQuestionsContainer.getChildren().get(0);
         Integer selectedQuestions = questionDropdown.getValue();
 
         // Send user to Quiz page
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/com/example/quizapp/quiz.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/com/example/quizapp/Quiz.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), Main.WIDTH, Main.HEIGHT);
 
         // Get the controller and set the total questions
@@ -61,7 +78,6 @@ public class CreateQuizController {
      *Sends user to the previous page they were on.
      * @throws IOException
      */
-
     @FXML
     public void onBack() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -81,11 +97,11 @@ public class CreateQuizController {
         if (result.isPresent() && result.get() == yesButton) {
             // User chose Yes – go to dashboard
             Stage stage = (Stage) backButton.getScene().getWindow();
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("home.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/WelcomePage.fxml"));
             try {
                 Scene scene = new Scene(fxmlLoader.load(), Main.WIDTH, Main.HEIGHT);
                 stage.setScene(scene);
-                //This will lead back to the home page in future
+                //This will lead back to the home page
             } catch (IOException e) {
                 e.printStackTrace();
             }

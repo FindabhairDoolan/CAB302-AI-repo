@@ -31,7 +31,7 @@ public class QuizController {
     @FXML
     private RadioButton option4;
     @FXML
-    private ToggleGroup answer;
+    private ToggleGroup answerToggleGroup;
 
     @FXML
     public void handleExit() {
@@ -52,7 +52,7 @@ public class QuizController {
         if (result.isPresent() && result.get() == yesButton) {
             // User chose Yes – go to dashboard
             Stage stage = (Stage) exitButton.getScene().getWindow();
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("home.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/WelcomePage.fxml"));
             try {
                 Scene scene = new Scene(fxmlLoader.load(), 800, 550);
                 stage.setScene(scene);
@@ -69,7 +69,6 @@ public class QuizController {
      *
      * @param actionEvent
      */
-
     private boolean showingFeedback = false;
     private int questionIndex = 1;
     private int totalQuestions;
@@ -90,7 +89,7 @@ public class QuizController {
 
     private void loadQuestion() {
         feedbackLabel.setVisible(false);
-        answer.selectToggle(null);
+        answerToggleGroup.selectToggle(null);
         showingFeedback = false;
 
         questionsLabel.setText("AI-generated question " + questionIndex);
@@ -109,7 +108,7 @@ public class QuizController {
 
     public void onNext() {
         if (!showingFeedback) {
-            RadioButton selected = (RadioButton) answer.getSelectedToggle();
+            RadioButton selected = (RadioButton) answerToggleGroup.getSelectedToggle();
             if (selected == null) {
                 feedbackLabel.setText("Please select an answer by clicking the circles.");
                 feedbackLabel.setVisible(true);
