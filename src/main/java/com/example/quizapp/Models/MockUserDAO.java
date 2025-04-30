@@ -1,6 +1,9 @@
-/**package com.example.quizapp.Models;
+package com.example.quizapp.Models;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MockUserDAO implements IUserDAO{
 
@@ -17,14 +20,26 @@ public class MockUserDAO implements IUserDAO{
     }
     @Override
     public void addUser(User user) {
-        user.setId(autoIncrementedId);
-        autoIncrementedId++;
+        if (isEmailRegistered(user.getEmail())) {
+            System.out.println("Email already registered. Cannot add user.");
+            return;
+        }
+
+        user.setUserID(autoIncrementedId++);
+        // Hash password before storing
+        user.setPassword(hashPassword(user.getPassword()));
         users.add(user);
     }
     @Override
     public void updateUser(User user) {
         for (int i = 0; i < users.size(); i++) {
-            if (users.get(i).getId() == user.getId()) {
+            if (users.get(i).getUserID() == user.getUserID()) {
+                // [FIXED] Avoid double-hashing already hashed password
+                String newPassword = user.getPassword();
+                if (!newPassword.equals(users.get(i).getPassword())) {
+                    newPassword = hashPassword(newPassword);
+                }
+                user.setPassword(newPassword);
                 users.set(i, user);
                 break;
             }
@@ -35,31 +50,62 @@ public class MockUserDAO implements IUserDAO{
         users.remove(user);
     }
     @Override
-    public boolean validateCredentials(String username, String password) {
-        User user = getUserByUsername(username);
-        return user != null && user.getPassword().equals(password);
-    }
-
-    @Override
-    public void addUsername(String username) {
-
-    }
-
-    @Override
-    public void addEmailaddress(String emailaddress) {
+    public boolean validateCredentials(String email, String password) {
+        for (User user : users) {
+            if (user.getEmail().equalsIgnoreCase(email)) {
+                String hashedInput = hashPassword(password);// Hashes the input password string
+                return Objects.equals(user.getPassword(), hashedInput);
+            }
+        }
+        return false; // No user found with the given username
 
     }
+    public boolean isSignupValid(User user) {
+        // Check for duplicate email
+        for (User existingUser : users) {
+            if (existingUser.getEmail().equalsIgnoreCase(user.getEmail())) {
+                System.out.println("Email already registered");
+                return false;
+            }
+        }
 
-    @Override
-    public void addpassword(String password) {
+        // Validate password
+        String password = user.getPassword();
+        if (password.length() < 8) {
+            System.out.println("Password should be at least 8 characters long");
+            return false;
+        }
+        if (!password.matches(".*[A-Za-z].*") || !password.matches(".*\\d.*")) {
+            System.out.println("Password must contain both letters and digits");
+            return false;
+        }
 
+        return true;
+    }
+    public boolean isEmailRegistered(String email) {
+        for (User existingUser : users) {
+            if (existingUser.getEmail().equalsIgnoreCase(email)) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    @Override
-    public void addUsername(string username) {
-        user.add(user);
+
+    private String hashPassword(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hashed = md.digest(password.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for (byte b : hashed) {
+                sb.append(String.format("%02x", b));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("SHA-256 hashing not available", e);
+        }
     }
 }
 
-*/
+
 
