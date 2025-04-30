@@ -36,7 +36,6 @@ public static final int HEIGHT = 550;
     }
 
 
-
 /**
  * The main method of the project, launches JavaFX
  */

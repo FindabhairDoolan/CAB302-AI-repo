@@ -25,7 +25,7 @@ public class SqliteUserDAO implements IUserDAO {
         try {
             Statement statement = connection.createStatement();
             String query = "CREATE TABLE IF NOT EXISTS users ("
-                    + "userID INTEGER PRIMARY KEY AUTOINCREMENT,"
+                    + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + "userName VARCHAR NOT NULL,"
                     + "email VARCHAR NOT NULL,"
                     + "password VARCHAR NOT NULL"
@@ -65,8 +65,6 @@ public class SqliteUserDAO implements IUserDAO {
         }
     }
 
-
-
     @Override
     public void addUser(User user) {
         try {
@@ -91,6 +89,7 @@ public class SqliteUserDAO implements IUserDAO {
         statement.setString(2, user.getEmail());
         statement.setString(3, user.getPassword());
         statement.setInt(4, user.getUserID());
+        statement.executeUpdate();
 
     } catch (Exception e) {
         e.printStackTrace();
@@ -126,20 +125,6 @@ public class SqliteUserDAO implements IUserDAO {
         }
     }
 
-    @Override
-    public void addUsername(String username) {
-
-    }
-
-    @Override
-    public void addEmailaddress(String emailaddress) {
-
-    }
-
-    @Override
-    public void addpassword(String password) {
-
-    }
 
 }
 

@@ -1,10 +1,8 @@
 package com.example.quizapp.Models;
 
 public class User {
-    private int userID;
-    private String userName;
-    private String email;
-    private String password;
+    private int id;
+    private String userName, email, password;
 
     public User(String userName, String email, String password) {
         this.userName = userName;
@@ -13,7 +11,7 @@ public class User {
 
     }
     public int getUserID() {
-        return userID;
+        return id;
     }
     public String getUserName() {
         return userName;
@@ -25,7 +23,7 @@ public class User {
         return password;
     }
     public void setUserID(int userID) {
-        this.userID = userID;
+        this.id = userID;
     }
     public void setUserName(String userName) {
         this.userName = userName;
@@ -37,7 +35,11 @@ public class User {
         this.password = password;
     }
 
-
+    @Override
+    public String toString() {
+        return String.format("User{id=%d, username='%s', email='%s', password='%s'}",
+               id, userName, email, password);
+    }
 
 
 }
