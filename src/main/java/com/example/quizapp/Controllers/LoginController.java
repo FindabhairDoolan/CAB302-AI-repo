@@ -51,18 +51,16 @@ public class LoginController {
         boolean isValid = userDAO.validateCredentials(email, password);
         if (isValid) {
             showAlert("Login successful!", Alert.AlertType.INFORMATION);
-            loadDashboard(); // Open next window
             System.out.println("Successful login -> Dashboard");
             // Swap to dashboard
             Stage stage = (Stage) loginButton.getScene().getWindow();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/home.fxml"));
-            Scene scene = null;
             try {
-                scene = new Scene(fxmlLoader.load(), 800, 650);
+                Scene scene = new Scene(fxmlLoader.load(), 800, 550);
+                stage.setScene(scene);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
-            stage.setScene(scene);
         }
         else {
             showAlert("Incorrect email or password", Alert.AlertType.ERROR);

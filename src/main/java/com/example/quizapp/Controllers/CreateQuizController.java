@@ -97,7 +97,7 @@ public class CreateQuizController {
         if (result.isPresent() && result.get() == yesButton) {
             // User chose Yes – go to dashboard
             Stage stage = (Stage) backButton.getScene().getWindow();
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/WelcomePage.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/home.fxml"));
             try {
                 Scene scene = new Scene(fxmlLoader.load(), Main.WIDTH, Main.HEIGHT);
                 stage.setScene(scene);

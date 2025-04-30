@@ -19,7 +19,7 @@ public class QuizCompletedController {
         Stage stage = (Stage) finishButton.getScene().getWindow();
 
         // Load the WelcomePage when finish button is clicked
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/WelcomePage.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/home.fxml"));
         try {
             Scene scene = new Scene(fxmlLoader.load(), 800, 550);
             stage.setScene(scene);

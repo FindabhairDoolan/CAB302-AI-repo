@@ -71,7 +71,7 @@ public class MenuBarController {
 
             // Load new FXML
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/WelcomePage.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 800, 650);
+            Scene scene = new Scene(fxmlLoader.load(), 800, 550);
 
             // Set new scene on the same stage
             stage.setScene(scene);
@@ -98,7 +98,7 @@ public class MenuBarController {
     @FXML
     protected void handleMenuItem4() {
         System.out.println("Take Quiz");
-        //
+        
     }
 
     @FXML
