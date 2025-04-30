@@ -1,0 +1,42 @@
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.quizapp.Controllers.HomeController">
+
+    <top>
+        <fx:include source="../quizapp/menu.fxml"/>
+    </top>
+
+
+    <!-- Center Content -->
+    <center>
+        <VBox spacing="100" alignment="TOP_CENTER" >
+            <!-- Page-specific content -->
+            <Label text="Welcome to the Home Page!" />
+
+            <padding>
+                <Insets top="100"/>
+            </padding>
+
+            <!-- HBox 1: Search Bar -->
+            <HBox spacing="10" alignment="CENTER">
+                <TextField fx:id="searchField" promptText="Search..." />
+                <Button text="Search" onAction="#handleSearch" />
+            </HBox>
+
+            <!-- HBox 2: Placeholder for middle content -->
+            <HBox alignment="CENTER">
+                <Label text="Middle HBox content here" />
+            </HBox>
+
+            <!-- HBox 3: Placeholder for bottom content -->
+            <HBox alignment="CENTER">
+                <Label text="Bottom HBox content here" />
+            </HBox>
+        </VBox>
+    </center>
+
+</BorderPane>
