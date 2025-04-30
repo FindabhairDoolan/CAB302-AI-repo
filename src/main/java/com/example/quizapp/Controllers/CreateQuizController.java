@@ -1,7 +1,6 @@
 package com.example.quizapp.Controllers;
 
 import com.example.quizapp.Main;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -38,10 +37,9 @@ public class CreateQuizController {
     /**
      *Compiles user customisations choices to generate a personalised quiz, sends
      * the user to the quiz page.
-     * @param actionEvent
      * @@throws IOException
      */
-    public void onCreate(ActionEvent actionEvent) throws IOException {
+    public void onCreate() throws IOException {
         //Get inputted customisation inputs and send to AI
         ComboBox<Integer> questionDropdown = (ComboBox<Integer>) numQuestionsContainer.getChildren().get(0);
         Integer selectedQuestions = questionDropdown.getValue();
@@ -61,7 +59,6 @@ public class CreateQuizController {
 
     /**
      *Sends user to the previous page they were on.
-     * @param actionEvent
      * @throws IOException
      */
 
@@ -84,7 +81,7 @@ public class CreateQuizController {
         if (result.isPresent() && result.get() == yesButton) {
             // User chose Yes – go to dashboard
             Stage stage = (Stage) backButton.getScene().getWindow();
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/WelcomePage.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("home.fxml"));
             try {
                 Scene scene = new Scene(fxmlLoader.load(), Main.WIDTH, Main.HEIGHT);
                 stage.setScene(scene);

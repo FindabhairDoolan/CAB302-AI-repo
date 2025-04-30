@@ -1,6 +1,5 @@
 package com.example.quizapp.Controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -108,7 +107,7 @@ public class QuizController {
         progressLabel.setText("Question " + questionIndex + " of " + totalQuestions);
     }
 
-    public void onNext(ActionEvent actionEvent) {
+    public void onNext() {
         if (!showingFeedback) {
             RadioButton selected = (RadioButton) answer.getSelectedToggle();
             if (selected == null) {
