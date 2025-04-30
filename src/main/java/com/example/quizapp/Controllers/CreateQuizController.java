@@ -6,7 +6,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import com.example.quizapp.Models.SqliteUserDAO;
 
 import java.io.IOException;
 
@@ -15,6 +17,21 @@ import java.io.IOException;
  */
 public class CreateQuizController {
     public Button backButton;
+
+    @FXML
+    private VBox numQuestionsContainer; // Reference to the VBox in FXML
+    private SqliteUserDAO userDAO; // Declare SqliteUser DAO
+
+    public CreateQuizController() {
+        userDAO = new SqliteUserDAO(); // Initialize the SqliteUser DAO
+    }
+
+    @FXML
+    public void initialize() {
+        // Add the question dropdown from SqliteUser DAO to the numQuestionsContainer
+        ComboBox<Integer> questionDropdown = userDAO.getQuestionDropdown();
+        numQuestionsContainer.getChildren().add(questionDropdown);
+    }
 
     /**
      *Compiles user customisations choices to generate a personalised quiz, sends
