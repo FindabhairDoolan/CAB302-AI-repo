@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.quizapp.Controllers.QuizController">
+
+    <!-- Declare ToggleGroup for radio buttons -->
+    <fx:define>
+        <ToggleGroup fx:id="answer" />
+    </fx:define>
+
+    <padding>
+        <Insets topRightBottomLeft="10"></Insets>
+    </padding>
+
+    <top>
+        <BorderPane>
+
+            <left>
+                <!--The exit button-->
+                <Button fx:id="exitButton" text="EXIT" onAction="#handleExit"/>
+            </left>
+
+            <center>
+                <!--The title-->
+                <Label fx:id="progressLabel" text="Question X of Y" style="-fx-font-size: 20px; -fx-padding: 0 40 0 0;"/>
+            </center>
+
+        </BorderPane>
+    </top>
+
+    <center>
+        <BorderPane>
+            <top>
+                <HBox alignment="CENTER" spacing="10.0">
+
+                    <!--The label that displays the current question-->
+                    <Label fx:id="questionsLabel" text="temporary" wrapText="true" textAlignment="CENTER" maxWidth="Infinity"/>
+
+                    <!--Makes space between the title and the current question-->
+                    <padding>
+                        <Insets top="50"/>
+                    </padding>
+
+                </HBox>
+            </top>
+
+            <left>
+
+                <!--The answer options-->
+                <VBox spacing="10.0" alignment="CENTER_RIGHT">
+                    <RadioButton text="Option 1" wrapText="true" prefWidth="300" toggleGroup="$answer"/>
+                    <RadioButton text="Option 2" wrapText="true" prefWidth="300" toggleGroup="$answer"/>
+                    <RadioButton text="Option 3" wrapText="true" prefWidth="300" toggleGroup="$answer"/>
+                    <RadioButton text="Option 4" wrapText="true" prefWidth="300" toggleGroup="$answer"/>
+
+                    <!--Pushes radio buttons closer to centre-->
+                    <padding>
+                        <Insets left="100"/>
+                    </padding>
+
+                </VBox>
+            </left>
+
+            <right>
+                <VBox alignment="CENTER">
+
+                    <!--The label that displays the question feedback, not visible until question submitted-->
+                    <Label fx:id="feedbackLabel" text="Sample" wrapText="true" prefWidth="200" visible="false"/>
+
+                    <!--Pushes feedback closer to centre-->
+                    <padding>
+                        <Insets right="100"/>
+                    </padding>
+
+                </VBox>
+            </right>
+
+        </BorderPane>
+    </center>
+
+    <bottom>
+        <BorderPane>
+            <center>
+
+                <!--The exit button, not visible until question selected-->
+                <Button fx:id="nextButton" text="Next" style="-fx-font-size: 15px;"  visible="false" onAction="#onNext"/>
+
+            </center>
+        </BorderPane>
+    </bottom>
+
+</BorderPane>
