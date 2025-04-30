@@ -47,66 +47,23 @@ public class SignupController {
     }
 
 
-    @FXML
     public void handleSignup(ActionEvent actionEvent) {
-        String email = emailField.getText().trim();
+        String email = emailField.getText();
         String password = passwordField.getText();
-        String userName = usernameField.getText().trim();
+        String userName = usernameField.getText();
 
-        // Check if any fields are empty
-        if (userName.isEmpty() || email.isEmpty() || password.isEmpty()) {
-            showAlert(Alert.AlertType.ERROR, "All fields are required.");
-            return;
-        }
+        userDAO.addUser(new User(userName, email, password));
 
-        // Email uniqueness check
-        if (userDAO.isEmailRegistered(email)) {
-            showAlert(Alert.AlertType.WARNING, "Email already registered.");
-            return;
-        }
-
-        // Password strength check (at least 8 chars, includes letters and digits)
-        if (!isValidPassword(password)) {
-            showAlert(Alert.AlertType.WARNING, "Password should be at least 8 characters long and contain both letters and digits.");
-            return;
-        }
-
+        System.out.println("Signup button clicked");
+        // Swap to Signup screen
+        Stage stage = (Stage) signupButton.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/login.fxml"));
+        Scene scene = null;
         try {
-            // All validations passed – register the user
-            userDAO.addUser(new User(userName, email, password));
-            showAlert(Alert.AlertType.INFORMATION, "Signup successful!");
-
-            // Swap to Login screen
-            Stage stage = (Stage) signupButton.getScene().getWindow();
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/login.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 800, 650);
-            stage.setScene(scene);
-        } catch (Exception e) {
-            e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Something went wrong during signup. Please try again.");
+            scene = new Scene(fxmlLoader.load(), 800, 650);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+        stage.setScene(scene);
     }
-    private void showAlert(Alert.AlertType alertType, String message) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle("Signup Validation");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    private boolean isValidPassword(String password) {
-        if (password.length() < 8) return false;
-        boolean hasLetter = false;
-        boolean hasDigit = false;
-
-        for (char ch : password.toCharArray()) {
-            if (Character.isLetter(ch)) hasLetter = true;
-            if (Character.isDigit(ch)) hasDigit = true;
-        }
-
-        return hasLetter && hasDigit;
-    }
-
-
-
 }
