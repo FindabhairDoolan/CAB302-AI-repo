@@ -45,6 +45,7 @@ public class Question {
     public String getIncorrectAnswer3() { return incorrectAnswer3; }
     public void setIncorrectAnswer3(String incorrectAnswer3) { this.incorrectAnswer3 = incorrectAnswer3; }
 
+    //Randomise the order of the answers so users cannot cheat
     public List<String> getShuffledAnswers() {
         List<String> shuffled = new ArrayList<>(allAnswers);
         Collections.shuffle(shuffled);
