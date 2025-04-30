@@ -1,9 +1,16 @@
 package com.example.quizapp.Controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.MenuItem;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
 
-public abstract class MenuBarController {
+import java.io.IOException;
+
+public class MenuBarController {
 
     @FXML
     protected MenuItem menuItem1; // Account
@@ -17,21 +24,69 @@ public abstract class MenuBarController {
     protected MenuItem menuItem5; // Create Quiz
     @FXML
     protected MenuItem menuItem6; // Quiz History
+    @FXML
+    protected Menu home; //Home
 
 
 
+
+
+
+    @FXML
+    protected void handleHome(ActionEvent event) {
+        //SceneManager.switchScene("/com/example/pages/WelcomePage.fxml", "Welcome");
+        // Swap to home
+        try {
+            System.out.println("Going to home page...");
+
+            // Get current stage from any node (make sure 'home' is defined)
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            // Load new FXML
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/home.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 800, 650);
+
+            // Set new scene on the same stage
+            stage.setScene(scene);
+            stage.setTitle("Home");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @FXML
+    protected void handleLogout(ActionEvent event) {
+        System.out.println("Logging out...");
+        // add logout logic
+        //SceneManager.switchScene("/com/example/pages/WelcomePage.fxml", "Welcome");
+
+        //Swap to Welcome
+        try {
+            System.out.println("Going to home page...");
+
+            // Get current stage from any node (make sure 'home' is defined)
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            // Load new FXML
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/WelcomePage.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 800, 650);
+
+            // Set new scene on the same stage
+            stage.setScene(scene);
+            stage.setTitle("Home");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     @FXML
     protected void handleMenuItem1() {
         System.out.println("Navigating to Account page...");
         // add shared navigation logic
-    }
-
-    @FXML
-    protected void handleLogout() {
-        System.out.println("Logging out...");
-        // add logout logic
-        //SceneManager.switchScene("/com/example/pages/WelcomePage.fxml", "Welcome");
     }
 
     @FXML

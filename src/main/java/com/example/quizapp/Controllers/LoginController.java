@@ -37,7 +37,7 @@ public class LoginController {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/WelcomePage.fxml"));
         Scene scene = null;
         try {
-            scene = new Scene(fxmlLoader.load(), 800, 650);
+            scene = new Scene(fxmlLoader.load(), 800, 550);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -54,6 +54,15 @@ public class LoginController {
             loadDashboard(); // Open next window
             System.out.println("Successful login -> Dashboard");
             // Swap to dashboard
+            Stage stage = (Stage) loginButton.getScene().getWindow();
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/home.fxml"));
+            Scene scene = null;
+            try {
+                scene = new Scene(fxmlLoader.load(), 800, 650);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            stage.setScene(scene);
         }
         else {
             showAlert("Incorrect email or password", Alert.AlertType.ERROR);

@@ -7,7 +7,7 @@
             fx:controller="com.example.quizapp.Controllers.HomeController">
 
     <top>
-        <fx:include source="../quizapp/menu.fxml"/>
+        <fx:include source="menu.fxml"/>
     </top>
 
 
