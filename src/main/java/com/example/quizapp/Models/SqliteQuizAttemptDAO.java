@@ -2,7 +2,11 @@ package com.example.quizapp.Models;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
 
@@ -94,6 +98,36 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public List<QuizAttempt> getAttemptsByUserAndQuiz(int userID, int quizID) {
+        List<QuizAttempt> quizAttempts = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM quizAttempts where userID = ? AND quizID = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, userID);
+            statement.setInt(1, quizID);
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()) {
+                //might be some problems with the question id and quizID?
+                QuizAttempt quizAttempt = new QuizAttempt(
+                        quizID,
+                        userID,
+                        rs.getInt("score")
+                );
+                quizAttempt.setId(rs.getInt("id"));
+                String timeStr = rs.getString("attemptTime");
+                if (timeStr != null) {
+                    quizAttempt.setAttemptTime(LocalDateTime.parse(timeStr));
+                }
+                quizAttempts.add(quizAttempt);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return quizAttempts;
     }
 
 
