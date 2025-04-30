@@ -1,8 +1,8 @@
 package com.example.quizapp.Models;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SqliteQuestionDAO implements IQuestionDAO {
 
@@ -11,7 +11,7 @@ public class SqliteQuestionDAO implements IQuestionDAO {
     public SqliteQuestionDAO() {
         connection = SqliteConnection.getInstance();
         createTable();
-        //insertSampleData(); //for testing, to be removed later
+        insertSampleData(); //for testing, to be removed later
     }
 
 
@@ -20,7 +20,7 @@ public class SqliteQuestionDAO implements IQuestionDAO {
         try {
             Statement statement = connection.createStatement();
             String query = "CREATE TABLE IF NOT EXISTS questions ("
-                    + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                    + "questionID INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + "quizID INTEGER NOT NULL,"
                     + "questionText VARCHAR NOT NULL,"
                     + "correctAnswer VARCHAR NOT NULL,"
@@ -35,26 +35,53 @@ public class SqliteQuestionDAO implements IQuestionDAO {
         }
     }
 
-/**
+
     private void insertSampleData() {
         try {
             Statement clearStatement = connection.createStatement();
-            String clearQuery = "DELETE FROM quizzes";
+            String clearQuery = "DELETE FROM questions";
             clearStatement.execute(clearQuery);
             Statement insertStatement = connection.createStatement();
-            //Need to be modified if wanted to use for testing purposes:
-            //String insertQuery = "INSERT INTO quizzes (userName, email, password) VALUES "
-            //        + "('John Doe', 'johndoe@example.com', 'secret1'),"
-            //        + "('Jane Doe', 'janedoe@example.com', 'secret1'),"
-            //       + "('Jay Doe', 'jaydoe@example.com', 'secret1')";
-            //insertStatement.execute(insertQuery);
+            String insertQuery = "INSERT INTO questions (quizID, questionText, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3) VALUES "
+                    + "('1', 'What is 1+1?', '2', '1', '0', '4'),"
+                    + "('1', 'What symbol represents subtraction?', '-', '+', 'x', '%'),"
+                    + "('1', 'How many sides does a square have?', '4', '1', '5', '3'),"
+                    + "('1', 'What is 10x1?', '10', '1', '20', '11'),"
+                    + "('1', 'How many sides does a triangle have?', '3', '4', '2', '1')";
+            insertStatement.execute(insertQuery);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
- */
 
     @Override
+    public List<Question> getQuestionsForQuiz(int quizId) {
+
+        List<Question> questions = new ArrayList<>();
+
+        try {
+            Statement getAll = connection.createStatement();
+            ResultSet rs = getAll.executeQuery("SELECT quizID, questionText, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3 FROM questions");
+            while (rs.next()) {
+                questions.add(
+                        new Question(
+                                rs.getInt("quizID"),
+                                rs.getString("questionText"),
+                                rs.getString("correctAnswer"),
+                                rs.getString("incorrectAnswer1"),
+                                rs.getString("incorrectAnswer2"),
+                                rs.getString("incorrectAnswer3")
+                        )
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return questions;
+    }
+
+
+        @Override
     public void addQuestion(Question question) {
         try {
             String query = "INSERT INTO questions (quizID, questionText, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3) VALUES (?, ?, ?, ?, ?, ?)";
@@ -83,7 +110,7 @@ public class SqliteQuestionDAO implements IQuestionDAO {
             statement.setString(4, question.getIncorrectAnswer1());
             statement.setString(5, question.getIncorrectAnswer2());
             statement.setString(6, question.getIncorrectAnswer3());
-            statement.setInt(7, question.getId());
+            statement.setInt(7, question.getQuestionID());
             statement.executeUpdate();
 
         } catch (Exception e) {
@@ -96,7 +123,7 @@ public class SqliteQuestionDAO implements IQuestionDAO {
         try {
             String query = "DELETE FROM questions WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, question.getId());
+            statement.setInt(1, question.getQuestionID());
             statement.executeUpdate();
 
         } catch (Exception e) {

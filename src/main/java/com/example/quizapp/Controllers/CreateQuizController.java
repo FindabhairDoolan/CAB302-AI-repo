@@ -11,20 +11,24 @@ import javafx.stage.Stage;
 import com.example.quizapp.Models.SqliteUserDAO;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * Controller class for the create quiz page
  */
 public class CreateQuizController {
-    public Button backButton;
-    public Button createButton;
-
     @FXML
-    private VBox numQuestionsContainer; // Reference to the VBox in FXML
-    private SqliteUserDAO userDAO; // Declare SqliteUser DAO
+    public Button backButton;
+    @FXML
+    public Button createButton;
+    @FXML
+    private VBox numQuestionsContainer;
+    @FXML
+    private ToggleGroup modeToggleGroup;
+    private SqliteUserDAO userDAO;
 
     public CreateQuizController() {
-        userDAO = new SqliteUserDAO(); // Initialize the SqliteUser DAO
+        userDAO = new SqliteUserDAO();
     }
 
     @FXML
@@ -37,31 +41,72 @@ public class CreateQuizController {
     /**
      *Compiles user customisations choices to generate a personalised quiz, sends
      * the user to the quiz page.
-     * @param actionEvent
-     * @@throws IOException
+     * @throws IOException
      */
-    public void onCreate(ActionEvent actionEvent) throws IOException {
-        //Get inputted customisation inputs and send to AI
-        //retrieve AI response and store new quiz in database
+    @FXML
+    public void onCreate() throws IOException {
 
-        //Send user to Quiz page
-        Stage stage = (Stage) createButton.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("quiz.fxml"));
+        //If the user hasn't selected a quiz mode they may not create the quiz
+        if (modeToggleGroup.getSelectedToggle() == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("No selected mode");
+            alert.setHeaderText(null);
+            alert.setContentText("You must select a quiz mode.");
+            alert.showAndWait();
+
+            return;
+        }
+
+        //Get inputted customisation inputs and send to AI
+        ComboBox<Integer> questionDropdown = (ComboBox<Integer>) numQuestionsContainer.getChildren().get(0);
+        Integer selectedQuestions = questionDropdown.getValue();
+
+        // Send user to Quiz page
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/com/example/quizapp/Quiz.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), Main.WIDTH, Main.HEIGHT);
+
+        // Get the controller and set the total questions
+        QuizController quizController = fxmlLoader.getController();
+        quizController.setTotalQuestions(selectedQuestions);
+
+        Stage stage = (Stage) createButton.getScene().getWindow();
         stage.setScene(scene);
+
     }
 
     /**
      *Sends user to the previous page they were on.
-     * @param actionEvent
      * @throws IOException
      */
     @FXML
-    public void onBack(ActionEvent actionEvent) throws IOException {
-        Stage stage = (Stage) backButton.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("WelcomePage.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), Main.WIDTH, Main.HEIGHT);
-        stage.setScene(scene);
-        //This will lead back to the home page in future
+    public void onBack() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Exit Create Quiz");
+        alert.setHeaderText(null);
+        alert.setContentText("Are you sure you want to exit? Your changes may not be saved.");
+
+        // Define Yes and No buttons
+        ButtonType yesButton = new ButtonType("Yes");
+        ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        // Set the buttons to the alert
+        alert.getButtonTypes().setAll(yesButton, noButton);
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent() && result.get() == yesButton) {
+            // User chose Yes – go to dashboard
+            Stage stage = (Stage) backButton.getScene().getWindow();
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/WelcomePage.fxml"));
+            try {
+                Scene scene = new Scene(fxmlLoader.load(), Main.WIDTH, Main.HEIGHT);
+                stage.setScene(scene);
+                //This will lead back to the home page
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        // If No is selected, do nothing
+
     }
 }

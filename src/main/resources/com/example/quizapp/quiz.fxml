@@ -7,7 +7,7 @@
 
     <!-- Declare ToggleGroup for radio buttons -->
     <fx:define>
-        <ToggleGroup fx:id="answer" />
+        <ToggleGroup fx:id="answerToggleGroup" />
     </fx:define>
 
     <padding>
@@ -38,11 +38,6 @@
                     <!--The label that displays the current question-->
                     <Label fx:id="questionsLabel" text="temporary" wrapText="true" textAlignment="CENTER" maxWidth="Infinity"/>
 
-                    <!--Makes space between the title and the current question-->
-                    <padding>
-                        <Insets top="50"/>
-                    </padding>
-
                 </HBox>
             </top>
 
@@ -50,15 +45,10 @@
 
                 <!--The answer options-->
                 <VBox spacing="10.0" alignment="CENTER_RIGHT">
-                    <RadioButton text="Option 1" wrapText="true" prefWidth="300" toggleGroup="$answer"/>
-                    <RadioButton text="Option 2" wrapText="true" prefWidth="300" toggleGroup="$answer"/>
-                    <RadioButton text="Option 3" wrapText="true" prefWidth="300" toggleGroup="$answer"/>
-                    <RadioButton text="Option 4" wrapText="true" prefWidth="300" toggleGroup="$answer"/>
-
-                    <!--Pushes radio buttons closer to centre-->
-                    <padding>
-                        <Insets left="100"/>
-                    </padding>
+                    <RadioButton fx:id="option1" text="Option 1" wrapText="true" prefWidth="300" toggleGroup="$answerToggleGroup"/>
+                    <RadioButton fx:id="option2" text="Option 2" wrapText="true" prefWidth="300" toggleGroup="$answerToggleGroup"/>
+                    <RadioButton fx:id="option3" text="Option 3" wrapText="true" prefWidth="300" toggleGroup="$answerToggleGroup"/>
+                    <RadioButton fx:id="option4" text="Option 4" wrapText="true" prefWidth="300" toggleGroup="$answerToggleGroup"/>
 
                 </VBox>
             </left>

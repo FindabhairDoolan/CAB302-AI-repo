@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class QuizTest {
     private static final String quizName = "Science Quiz";
     private static final String quizTopic = "Physics";
-    private static final String quizMode = "Multiple Choice";
+    private static final String quizMode = "Practice";
     private static final String difficulty = "Hard";
     private static final String yearLevel = "10";
     private static final String country = "Australia";
@@ -15,7 +15,7 @@ public class QuizTest {
 
     private static final String quizName_2 = "Math Quiz";
     private static final String quizTopic_2 = "Algebra";
-    private static final String quizMode_2 = "True/False";
+    private static final String quizMode_2 = "Practice";
     private static final String difficulty_2 = "Easy";
     private static final String yearLevel_2 = "8";
     private static final String country_2 = "New Zealand";

@@ -10,4 +10,6 @@ public interface IQuizDAO {
     public List<Quiz> searchQuizByTopic(String topic);
     public List<Quiz> getQuizzesByCreator(int creatorID);
     public List<Question> getQuestionsForQuiz(Quiz quiz);
+    public void addQuestionToQuiz(String username); //not yet implemented
+    public void removeQuestionFromQuiz(String emailaddress); //not yet implemented
 }

@@ -29,8 +29,8 @@ public class QuestionTest {
 
     @Test
     public void testSetId() {
-        question.setId(3);
-        assertEquals(3, question.getId());
+        question.setQuestionID(3);
+        assertEquals(3, question.getQuestionID());
     }
 
     @Test

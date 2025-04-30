@@ -44,7 +44,6 @@ public class SqliteUserDAO implements IUserDAO {
         questionDropdown.setValue(5);
     }
 
-    // Method to get the ComboBox for number of questions
     public ComboBox<Integer> getQuestionDropdown() {
         return questionDropdown; // Return the ComboBox
     }

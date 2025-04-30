@@ -5,7 +5,6 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <?import javafx.geometry.Insets?>
 
 <!--Using BorderPane to dynamically sort title and contents of page regardless of
@@ -13,6 +12,11 @@
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.example.quizapp.Controllers.CreateQuizController"
 >
+
+    <fx:define>
+        <ToggleGroup fx:id="modeToggleGroup" />
+    </fx:define>
+
     <!--Where the title and back button is located-->
     <top>
         <BorderPane>
@@ -69,9 +73,30 @@
                 </padding>
 
                 <HBox alignment="CENTER_LEFT" spacing="10">
+
                     <!--Combobox for selecting number of questions in the quiz-->
                     <Label text="Number of Questions:" />
                     <VBox fx:id="numQuestionsContainer" alignment="CENTER_LEFT" />
+
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="10">
+
+                    <!--Quiz mode toggle label-->
+                    <Label text="Quiz mode"/>
+
+                    <!-- Practice Mode: Selected and enabled -->
+                    <ToggleButton fx:id="practiceToggleButton"
+                                  text="Practice"
+                                  selected="true"
+                                  toggleGroup="$modeToggleGroup" />
+
+                    <!-- Exam Mode: Disabled and unselectable -->
+                    <ToggleButton fx:id="examToggleButton"
+                                  text="Exam"
+                                  disable="true"
+                                  toggleGroup="$modeToggleGroup" />
+
                 </HBox>
 
                 <!--Insert year level, country, difficulty, number of questions,
