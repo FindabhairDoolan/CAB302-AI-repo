@@ -14,9 +14,25 @@ public class QuizController {
 
     @FXML
     private Label feedbackLabel;
-
     @FXML
     private Button exitButton;
+    @FXML
+    private Label questionsLabel;
+    @FXML
+    private Label progressLabel;
+    @FXML
+    private Button nextButton;
+
+    @FXML
+    private RadioButton option1;
+    @FXML
+    private RadioButton option2;
+    @FXML
+    private RadioButton option3;
+    @FXML
+    private RadioButton option4;
+    @FXML
+    private ToggleGroup answer;
 
     @FXML
     public void handleExit() {
@@ -51,15 +67,82 @@ public class QuizController {
     /**
      * Evaluates the user's answer and displays feedback on first press
      * On second press it displays the next question
+     *
      * @param actionEvent
      */
-    public void onNext(ActionEvent actionEvent) {
+
+    private boolean showingFeedback = false;
+    private int questionIndex = 1;
+    private int totalQuestions;
+
+    // Placeholder, to be replaced with AI logic
+    private String correctAnswer = "Option A";
+
+    @FXML
+    public void initialize() {
+        loadQuestion();
+        updateProgressLabel(); // Update the progress label on initialization
     }
 
-    // Placeholder method to check the answer
-    private boolean checkAnswer(String answer) {
-        // Replace with actual AI logic later
-        // For now, the correct answer is "Option A"
-        return "Option A".equals(answer);
+    public void setTotalQuestions(int total) {
+        this.totalQuestions = total; // Set the total number of questions
+        updateProgressLabel(); // Update the progress label when total questions are set
     }
+
+    private void loadQuestion() {
+        feedbackLabel.setVisible(false);
+        answer.selectToggle(null);
+        showingFeedback = false;
+
+        questionsLabel.setText("AI-generated question " + questionIndex);
+        option1.setText("Option A");
+        option2.setText("Option B");
+        option3.setText("Option C");
+        option4.setText("Option D");
+
+        updateProgressLabel(); // Updating the progress heading as each question is done
+        nextButton.setVisible(true);
+    }
+
+    private void updateProgressLabel() {
+        progressLabel.setText("Question " + questionIndex + " of " + totalQuestions);
+    }
+
+    public void onNext(ActionEvent actionEvent) {
+        if (!showingFeedback) {
+            RadioButton selected = (RadioButton) answer.getSelectedToggle();
+            if (selected == null) {
+                feedbackLabel.setText("Please select an answer by clicking the circles.");
+                feedbackLabel.setVisible(true);
+                return;
+            }
+
+            String selectedText = selected.getText();
+            boolean isCorrect = selectedText.equals(correctAnswer);
+
+            feedbackLabel.setText(isCorrect ? "Correct" : "Incorrect");
+            feedbackLabel.setVisible(true);
+            showingFeedback = true;
+        } else {
+            if (questionIndex < totalQuestions) {
+                questionIndex++;
+                loadQuestion();
+            } else {
+                showQuizCompletedScreen();
+            }
+        }
+    }
+
+    private void showQuizCompletedScreen() {
+        Stage stage = (Stage) nextButton.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/quiz-completed.fxml"));
+        try {
+            Scene scene = new Scene(fxmlLoader.load(), 800,550);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
+

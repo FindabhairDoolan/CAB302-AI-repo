@@ -21,11 +21,11 @@ public class CreateQuizController {
     public Button createButton;
 
     @FXML
-    private VBox numQuestionsContainer; // Reference to the VBox in FXML
-    private SqliteUserDAO userDAO; // Declare SqliteUser DAO
+    private VBox numQuestionsContainer;
+    private SqliteUserDAO userDAO;
 
     public CreateQuizController() {
-        userDAO = new SqliteUserDAO(); // Initialize the SqliteUser DAO
+        userDAO = new SqliteUserDAO();
     }
 
     @FXML
@@ -43,13 +43,20 @@ public class CreateQuizController {
      */
     public void onCreate(ActionEvent actionEvent) throws IOException {
         //Get inputted customisation inputs and send to AI
-        //retrieve AI response and store new quiz in database
+        ComboBox<Integer> questionDropdown = (ComboBox<Integer>) numQuestionsContainer.getChildren().get(0);
+        Integer selectedQuestions = questionDropdown.getValue();
 
-        //Send user to Quiz page
-        Stage stage = (Stage) createButton.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("quiz.fxml"));
+        // Send user to Quiz page
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/com/example/quizapp/quiz.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), Main.WIDTH, Main.HEIGHT);
+
+        // Get the controller and set the total questions
+        QuizController quizController = fxmlLoader.getController();
+        quizController.setTotalQuestions(selectedQuestions);
+
+        Stage stage = (Stage) createButton.getScene().getWindow();
         stage.setScene(scene);
+
     }
 
     /**
