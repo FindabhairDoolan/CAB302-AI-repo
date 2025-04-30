@@ -122,7 +122,7 @@ public class QuizController {
             }
 
             String selectedText = selected.getText();
-            boolean isCorrect = selectedText.equals(correctAnswer);
+            boolean isCorrect = selectedText.equals(questionList.get(questionIndex - 1).getCorrectAnswer());
 
             feedbackLabel.setText(isCorrect ? "Correct" : "Incorrect");
             feedbackLabel.setVisible(true);

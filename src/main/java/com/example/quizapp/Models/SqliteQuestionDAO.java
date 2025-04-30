@@ -47,7 +47,7 @@ public class SqliteQuestionDAO implements IQuestionDAO {
                     + "('1', 'What symbol represents subtraction?', '-', '+', 'x', '%'),"
                     + "('1', 'How many sides does a square have?', '4', '1', '5', '3'),"
                     + "('1', 'What is 10x1?', '10', '1', '20', '11'),"
-                    + "('1', 'How many sides does a triangle have?', '3', '4', '2', '1'),";
+                    + "('1', 'How many sides does a triangle have?', '3', '4', '2', '1')";
             insertStatement.execute(insertQuery);
         } catch (Exception e) {
             e.printStackTrace();
