@@ -9,5 +9,4 @@ public interface IQuizDAO {
     public void deleteQuiz(Quiz quiz);
     public void addQuestionToQuiz(String username); //not yet implemented
     public void removeQuestionFromQuiz(String emailaddress); //not yet implemented
-    public List<Question> getQuestionsForQuiz(int quizId); //not yet implemented
 }

@@ -1,5 +1,7 @@
 package com.example.quizapp.Controllers;
 
+import com.example.quizapp.Models.Question;
+import com.example.quizapp.Models.SqliteQuestionDAO;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -7,6 +9,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 public class QuizController {
@@ -63,12 +66,6 @@ public class QuizController {
         // If No is selected, do nothing
     }
 
-    /**
-     * Evaluates the user's answer and displays feedback on first press
-     * On second press it displays the next question
-     *
-     * @param actionEvent
-     */
     private boolean showingFeedback = false;
     private int questionIndex = 1;
     private int totalQuestions;
@@ -78,7 +75,7 @@ public class QuizController {
 
     @FXML
     public void initialize() {
-        loadQuestion();
+        loadQuestion(questionIndex);
         updateProgressLabel(); // Update the progress label on initialization
     }
 
@@ -87,12 +84,14 @@ public class QuizController {
         updateProgressLabel(); // Update the progress label when total questions are set
     }
 
-    private void loadQuestion() {
+    private void loadQuestion(int index) {
         feedbackLabel.setVisible(false);
         answerToggleGroup.selectToggle(null);
         showingFeedback = false;
 
-        questionsLabel.setText("AI-generated question " + questionIndex);
+
+
+        questionsLabel.setText("AI question" + index);
         option1.setText("Option A");
         option2.setText("Option B");
         option3.setText("Option C");
@@ -106,6 +105,11 @@ public class QuizController {
         progressLabel.setText("Question " + questionIndex + " of " + totalQuestions);
     }
 
+
+    /**
+     * Evaluates the user's answer and displays feedback on first press
+     * On second press it displays the next question
+     */
     public void onNext() {
         if (!showingFeedback) {
             RadioButton selected = (RadioButton) answerToggleGroup.getSelectedToggle();
@@ -124,7 +128,7 @@ public class QuizController {
         } else {
             if (questionIndex < totalQuestions) {
                 questionIndex++;
-                loadQuestion();
+                loadQuestion(questionIndex);
             } else {
                 showQuizCompletedScreen();
             }

@@ -117,14 +117,5 @@ public class SqliteQuizDAO implements IQuizDAO {
 
     }
 
-
-    @Override
-    public List<Question> getQuestionsForQuiz(int quizId) {
-
-        List<Question> questions = new ArrayList<>();
-        String query = "SELECT * FROM questions where quizID = ?";
-        return List.of();
-    }
-
 }
 

@@ -1,7 +1,7 @@
 package com.example.quizapp.Models;
 
 public class Question {
-    private int id, quizID;
+    private int questionID, quizID;
     private String questionText, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3;
 
     public Question(int quizID, String questionText, String correctAnswer, String incorrectAnswer1, String incorrectAnswer2, String incorrectAnswer3) {
@@ -13,8 +13,8 @@ public class Question {
         this.incorrectAnswer3 = incorrectAnswer3;
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public int getQuestionID() { return questionID; }
+    public void setQuestionID(int questionID) { this.questionID = questionID; }
 
     public int getQuizID() { return quizID; }
     public void setQuizID(int quizID) { this.quizID = quizID; }
@@ -37,6 +37,6 @@ public class Question {
     @Override
     public String toString() {
         return String.format("Question{id=%d, quizID=%d, text='%s', correct='%s', wrong1='%s', wrong2='%s', wrong3='%s'}",
-                id, quizID, questionText, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3);
+                questionID, quizID, questionText, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3);
     }
 }
