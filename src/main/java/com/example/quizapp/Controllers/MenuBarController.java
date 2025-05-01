@@ -63,24 +63,8 @@ public class MenuBarController {
         //SceneManager.switchScene("/com/example/pages/WelcomePage.fxml", "Welcome");
 
         //Swap to Welcome
-        try {
-            System.out.println("Going to home page...");
 
-            // Get current stage from any node (make sure 'home' is defined)
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-            // Load new FXML
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/WelcomePage.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 800, 650);
-
-            // Set new scene on the same stage
-            stage.setScene(scene);
-            stage.setTitle("Home");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+           
     }
 
     @FXML

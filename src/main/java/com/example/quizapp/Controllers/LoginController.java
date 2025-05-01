@@ -54,7 +54,7 @@ public class LoginController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/home.fxml"));
             Scene scene = null;
             try {
-                scene = new Scene(fxmlLoader.load(), 800, 650);
+                scene = new Scene(fxmlLoader.load(), 800, 550);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
