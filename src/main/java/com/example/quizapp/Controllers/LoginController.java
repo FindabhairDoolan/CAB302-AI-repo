@@ -1,6 +1,7 @@
 package com.example.quizapp.Controllers;
 
 import com.example.quizapp.Models.SqliteUserDAO;
+import com.example.quizapp.Models.IUserDAO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,7 +14,15 @@ import java.io.IOException;
 
 public class LoginController {
 
-    private SqliteUserDAO userDAO = new SqliteUserDAO();
+    private IUserDAO userDAO;
+
+    public LoginController() {
+        userDAO = new SqliteUserDAO();
+    }
+
+    public LoginController(IUserDAO mockUserDAO) {
+        userDAO = mockUserDAO;
+    }
 
     @FXML
     private Button backButton;
@@ -46,8 +55,8 @@ public class LoginController {
     public void handleLogin(ActionEvent actionEvent) {
         String email = emailField.getText();
         String password = passwordField.getText();
-        boolean isValid = userDAO.validateCredentials(email, password);
-        if (isValid) {
+        boolean loginSucceeded = login(email, password);
+        if (loginSucceeded) {
             System.out.println("Successful login -> Dashboard");
             // Swap to dashboard
             Stage stage = (Stage) loginButton.getScene().getWindow();
@@ -63,5 +72,10 @@ public class LoginController {
         else {
             System.out.println("Incorrect credentials!");
         }
+    }
+
+    public boolean login(String email, String password) {
+        boolean isValid = userDAO.validateCredentials(email, password);
+        return isValid;
     }
 }

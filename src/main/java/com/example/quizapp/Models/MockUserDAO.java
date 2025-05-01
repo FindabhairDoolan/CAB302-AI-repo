@@ -9,7 +9,7 @@ public class MockUserDAO implements IUserDAO{
 
      // A static list of users to be stored as a mock database
 
-    public static final ArrayList<User> users = new ArrayList<>();
+    private final ArrayList<User> users = new ArrayList<>();
     private static int autoIncrementedId = 0;
 
     public MockUserDAO() {
@@ -30,6 +30,7 @@ public class MockUserDAO implements IUserDAO{
         user.setPassword(hashPassword(user.getPassword()));
         users.add(user);
     }
+
     @Override
     public void updateUser(User user) {
         for (int i = 0; i < users.size(); i++) {
