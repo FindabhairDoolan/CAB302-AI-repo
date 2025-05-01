@@ -52,6 +52,11 @@
             <VBox spacing="5" alignment="CENTER">
                 <Label text="Password:"/>
                 <PasswordField fx:id="passwordField" promptText="Create a password" maxWidth="400"/>
+                <Label fx:id="passwordHintLabel"
+                       text="Password must have letters and numbers and be at least 8 characters long."
+                       textFill="red"
+                       wrapText="true"
+                       maxWidth="400"/>
             </VBox>
 
             <VBox alignment="CENTER">

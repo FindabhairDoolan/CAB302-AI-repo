@@ -95,6 +95,11 @@ public class SignupController {
             showAlert(Alert.AlertType.WARNING, "Email already registered.");
             return false;
         }
+        // Email format validation
+        if (!isValidEmail(email)) {
+            showAlert(Alert.AlertType.WARNING, "Invalid email format. It should be like user@example.com");
+            return false;
+        }
 
         // Password strength check (at least 8 chars, includes letters and digits)
         if (!isValidPassword(password)) {
@@ -128,6 +133,10 @@ public class SignupController {
         }
 
         return hasLetter && hasDigit;
+    }
+    private boolean isValidEmail(String email) {
+        // Regex pattern
+        return email.matches("^[^@\\s]+@[^@\\s]+\\.com$");
     }
 
 

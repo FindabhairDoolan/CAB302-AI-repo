@@ -3,7 +3,7 @@
 
 
     <!-- Top MenuBar -->
-    <MenuBar xmlns:fx="http://javafx.com/fxml"
+    <MenuBar fx:id="menuBar" xmlns:fx="http://javafx.com/fxml"
              fx:controller="com.example.quizapp.Controllers.MenuBarController">
             <Menu fx:id="home" text="Home" onAction="#handleHome"/>
             <Menu text="Quiz">
