@@ -32,6 +32,7 @@ public interface IUserDAO {
      */
     boolean validateCredentials(String username, String password);
 
+    public boolean isEmailRegistered(String email);
 
 }
 
