@@ -3,6 +3,7 @@ package com.example.quizapp.Models;
 import java.util.List;
 public interface IUserDAO {
     /**
+     *
      * Adds a new user to the database.
      * @param user The user to add.
      */
