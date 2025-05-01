@@ -65,18 +65,19 @@ public class MenuBarController {
         // add logout logic
         //SceneManager.switchScene("/com/example/pages/WelcomePage.fxml", "Welcome");
         //Swap to Welcome
-        try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("WelcomePage.fxml"));
-            Parent root = loader.load();
-            Scene scene = new Scene(root, 800, 550);
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/WelcomePage.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 800, 550);
+
+            // Use the menuBar to get the scene's stage
             Stage stage = (Stage) menuBar.getScene().getWindow();
+
             stage.setScene(scene);
             stage.setTitle("Welcome");
-
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-    }
+            throw new RuntimeException("Failed to load WelcomePage.fxml", e);
+        }
 
            
     }
