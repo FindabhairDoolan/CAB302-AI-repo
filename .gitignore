@@ -12,6 +12,8 @@ target/
 *.iml
 *.ipr
 
+git_report.txt
+
 ### Eclipse ###
 .apt_generated
 .classpath
