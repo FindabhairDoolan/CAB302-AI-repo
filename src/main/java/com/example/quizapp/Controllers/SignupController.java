@@ -1,5 +1,6 @@
 package com.example.quizapp.Controllers;
 
+import com.example.quizapp.Models.IUserDAO;
 import com.example.quizapp.Models.SqliteUserDAO;
 import com.example.quizapp.Models.User;
 import javafx.event.ActionEvent;
@@ -14,7 +15,17 @@ import java.io.IOException;
 
 public class SignupController {
 
-    private SqliteUserDAO userDAO = new SqliteUserDAO();
+    private IUserDAO userDAO;
+
+    public SignupController() {
+        userDAO = new SqliteUserDAO();
+    }
+
+    public SignupController(IUserDAO mockUserDAO) {
+        userDAO = mockUserDAO;
+    }
+
+    public static boolean disableAlertsForTesting = false;
 
     @FXML
     private Button backButton;
@@ -53,27 +64,11 @@ public class SignupController {
         String password = passwordField.getText();
         String userName = usernameField.getText().trim();
 
-        // Check if any fields are empty
-        if (userName.isEmpty() || email.isEmpty() || password.isEmpty()) {
-            showAlert(Alert.AlertType.ERROR, "All fields are required.");
-            return;
-        }
-
-        // Email uniqueness check
-        if (userDAO.isEmailRegistered(email)) {
-            showAlert(Alert.AlertType.WARNING, "Email already registered.");
-            return;
-        }
-
-        // Password strength check (at least 8 chars, includes letters and digits)
-        if (!isValidPassword(password)) {
-            showAlert(Alert.AlertType.WARNING, "Password should be at least 8 characters long and contain both letters and digits.");
-            return;
-        }
-
         try {
             // All validations passed – register the user
-            userDAO.addUser(new User(userName, email, password));
+            boolean signUpSuccessful = signup(userName, email, password);
+            if (!signUpSuccessful) return;
+
             showAlert(Alert.AlertType.INFORMATION, "Signup successful!");
 
             // Swap to Login screen
@@ -86,7 +81,35 @@ public class SignupController {
             showAlert(Alert.AlertType.ERROR, "Something went wrong during signup. Please try again.");
         }
     }
+
+    public boolean signup(String userName, String email, String password) {
+
+        // Check if any fields are empty
+        if (userName.isEmpty() || email.isEmpty() || password.isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "All fields are required.");
+            return false;
+        }
+
+        // Email uniqueness check
+        if (userDAO.isEmailRegistered(email)) {
+            showAlert(Alert.AlertType.WARNING, "Email already registered.");
+            return false;
+        }
+
+        // Password strength check (at least 8 chars, includes letters and digits)
+        if (!isValidPassword(password)) {
+            showAlert(Alert.AlertType.WARNING, "Password should be at least 8 characters long and contain both letters and digits.");
+            return false;
+        }
+
+        userDAO.addUser(new User(userName, email, password));
+        return true;
+
+    }
+
     private void showAlert(Alert.AlertType alertType, String message) {
+        if(disableAlertsForTesting) return;
+
         Alert alert = new Alert(alertType);
         alert.setTitle("Signup Validation");
         alert.setHeaderText(null);
