@@ -30,7 +30,7 @@ public class LoginTest {
     }
 
     @Test
-    public void testIncorrectUsername() {
+    public void testIncorrectEmail() {
         boolean successfulLogin = loginController.login("admin@example.con", "admin123");
         assertFalse(successfulLogin);
     }
