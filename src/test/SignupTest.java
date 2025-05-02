@@ -26,53 +26,53 @@ public class SignupTest {
 
     @Test
     public void testRejectEmptyUsername() {
-        boolean successfulLogin = signupController.signup("", "admin@example.com", "admin12345");
-        assertFalse(successfulLogin);
+        boolean successfulSignup = signupController.signup("", "admin@example.com", "admin12345");
+        assertFalse(successfulSignup);
     }
 
     @Test
     public void testRejectEmptyEmail() {
-        boolean successfulLogin = signupController.signup("username1", "", "admin12345");
-        assertFalse(successfulLogin);
+        boolean successfulSignup = signupController.signup("username1", "", "admin12345");
+        assertFalse(successfulSignup);
     }
 
 
     @Test
     public void testRejectEmptyPassword() {
-        boolean successfulLogin = signupController.signup("username2", "admin@example.com", "");
-        assertFalse(successfulLogin);
+        boolean successfulSignup = signupController.signup("username2", "admin@example.com", "");
+        assertFalse(successfulSignup);
     }
 
 
     @Test
     public void testRejectExistingEmail() {
-        boolean successfulLogin = signupController.signup("user5", "admin@example.com", "adminPassword1");
-        assertFalse(successfulLogin);
+        boolean successfulSignup = signupController.signup("user5", "admin@example.com", "adminPassword1");
+        assertFalse(successfulSignup);
     }
 
     @Test
     public void testRejectInvalidEmail() {
-        boolean successfulLogin = signupController.signup("user5", "admin", "adminPassword1");
-        assertFalse(successfulLogin);
+        boolean successfulSignup = signupController.signup("user5", "admin", "adminPassword1");
+        assertFalse(successfulSignup);
     }
 
     @Test
     public void testRejectTooShortPassword() {
-        boolean successfulLogin = signupController.signup("user5", "admin4@example.com", "pass12");
-        assertFalse(successfulLogin);
+        boolean successfulSignup = signupController.signup("user5", "admin4@example.com", "pass12");
+        assertFalse(successfulSignup);
     }
 
 
     @Test
     public void testRejectTextOnlyPassword() {
-        boolean successfulLogin = signupController.signup("user5", "admin4@example.com", "adminpassword");
-        assertFalse(successfulLogin);
+        boolean successfulSignup = signupController.signup("user5", "admin4@example.com", "adminpassword");
+        assertFalse(successfulSignup);
     }
 
     @Test
     public void testRejectNumbersOnlyPassword() {
-        boolean successfulLogin = signupController.signup("user5", "admin4@example.com", "123456789");
-        assertFalse(successfulLogin);
+        boolean successfulSignup = signupController.signup("user5", "admin4@example.com", "123456789");
+        assertFalse(successfulSignup);
     }
 
 
