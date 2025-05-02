@@ -51,6 +51,12 @@ public class SignupTest {
     }
 
     @Test
+    public void testRejectInvalidEmail() {
+        boolean successfulLogin = signupController.signup("user5", "admin", "adminPassword1");
+        assertFalse(successfulLogin);
+    }
+
+    @Test
     public void testRejectTooShortPassword() {
         boolean successfulLogin = signupController.signup("user5", "admin4@example.com", "pass12");
         assertFalse(successfulLogin);
