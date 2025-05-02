@@ -57,6 +57,7 @@ public class LoginController {
         String password = passwordField.getText();
         boolean loginSucceeded = login(email, password);
         if (loginSucceeded) {
+            showAlert("Login successful!", Alert.AlertType.INFORMATION);
             System.out.println("Successful login -> Dashboard");
             // Swap to dashboard
             Stage stage = (Stage) loginButton.getScene().getWindow();
@@ -70,8 +71,16 @@ public class LoginController {
             stage.setScene(scene);
         }
         else {
+            showAlert("Incorrect email or password", Alert.AlertType.ERROR);
             System.out.println("Incorrect credentials!");
         }
+    }
+
+    private void showAlert(String message, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setContentText(message);
+        alert.setHeaderText(null);
+        alert.showAndWait();
     }
 
     public boolean login(String email, String password) {
