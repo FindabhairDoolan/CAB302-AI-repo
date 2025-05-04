@@ -1,19 +1,28 @@
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
 
 
     <!-- Top MenuBar -->
-    <MenuBar fx:id="menuBar" xmlns:fx="http://javafx.com/fxml"
-             fx:controller="com.example.quizapp.Controllers.MenuBarController">
-            <Menu fx:id="home" text="Home" onAction="#handleHome"/>
-            <Menu text="Quiz">
-                <MenuItem fx:id="menuItem3" text="My Quizzes" onAction="#handleMenuItem3"/>
-                <MenuItem fx:id="menuItem4" text="Take Quiz" onAction="#handleMenuItem4"/>
-                <MenuItem fx:id="menuItem5" text="Create Quiz" onAction="#handleMenuItem5"/>
-                <MenuItem fx:id="menuItem6" text="Quiz History" onAction="#handleMenuItem6"/>
-            </Menu>
-            <Menu text="Profile">
-                <MenuItem fx:id="menuItem1" text="Account" onAction="#handleMenuItem1"/>
-                <MenuItem fx:id="menuItem2" text="Logout" onAction="#handleLogout"/>
-            </Menu>
+    <HBox xmlns:fx="http://javafx.com/fxml"
+          fx:controller="com.example.quizapp.Controllers.MenuBarController">
+<!--    <Region HBox.hgrow="ALWAYS"/>-->
+    <MenuBar fx:id="menuBar">
+        <Menu fx:id="home" text="Home" onAction="#handleHome"/>
+        <Menu text="Quiz">
+            <MenuItem fx:id="menuItem3" text="My Quizzes" onAction="#handleMenuItem3"/>
+            <MenuItem fx:id="menuItem4" text="Take Quiz" onAction="#handleMenuItem4"/>
+            <MenuItem fx:id="menuItem5" text="Create Quiz" onAction="#handleMenuItem5"/>
+            <MenuItem fx:id="menuItem6" text="Quiz History" onAction="#handleMenuItem6"/>
+        </Menu>
+        <Menu text="Profile">
+            <MenuItem fx:id="menuItem1" text="Account" onAction="#handleMenuItem1"/>
+            <MenuItem fx:id="menuItem2" text="Logout" onAction="#handleLogout"/>
+        </Menu>
     </MenuBar>
+
+
+</HBox>
+
+
