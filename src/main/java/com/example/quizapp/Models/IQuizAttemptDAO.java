@@ -6,5 +6,6 @@ public interface IQuizAttemptDAO {
     public void addQuizAttempt(QuizAttempt quizAttempt);
     public void updateQuizAttempt(QuizAttempt quizAttempt);
     public void deleteQuizAttempt(QuizAttempt quizAttempt);
-    public List<QuizAttempt> getAttemptsByUserAndQuiz(int UserID, int quizID); //not implemented yet
+    public List<QuizAttempt> getAttemptsByUserAndQuiz(int UserID, int quizID);
+    public List<Quiz> getQuizzesAttemptedByUser(int UserID);
 }

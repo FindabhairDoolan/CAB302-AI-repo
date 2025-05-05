@@ -14,7 +14,7 @@ public class AuthManager {
     private IUserDAO userDAO;
 
     //keep track of the current user by storing their email
-    private String currentUser = null;
+    private User currentUser = null;
 
     //To disable alerts while testing since tests don't work with alerts on
     public static boolean disableAlertsForTesting = false;
@@ -46,7 +46,7 @@ public class AuthManager {
     public boolean login(String email, String password) {
         boolean isValid = userDAO.validateCredentials(email, password);
         if(isValid){
-            currentUser = email;
+            currentUser = userDAO.getUserByEmail(email);
         };
         return isValid;
     }

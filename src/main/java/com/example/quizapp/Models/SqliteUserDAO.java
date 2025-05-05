@@ -87,6 +87,7 @@ public class SqliteUserDAO implements IUserDAO {
             e.printStackTrace();
         }
     }
+
     @Override
     public boolean isEmailRegistered(String email) {
         try {
@@ -105,17 +106,20 @@ public class SqliteUserDAO implements IUserDAO {
     public User getUserByEmail(String email) {
         User user = null;
         try {
-            String query = "SELECT 1 FROM users WHERE email = ?";
+            String query = "SELECT * FROM users WHERE email = ?";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, email);
-            ResultSet rs = statement.executeQuery(query);
-            rs.next();
-                //might be some problems with the question id and quizID?
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
                 user = new User(
                         rs.getString("userName"),
                         rs.getString("email"),
-                        rs.getString("password") //though we might not want this?
+                        rs.getString("password")
                 );
+                int id = rs.getInt("id");
+                user.setUserID(id);
+                user.setPassword(null); //we don't want to actually host the password here
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

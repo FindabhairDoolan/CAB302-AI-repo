@@ -14,10 +14,17 @@ public class MockUserDAO implements IUserDAO{
 
     public MockUserDAO() {
         // Add some initial users to the mock database
-        addUser(new User("admin", "admin@example.com", "admin123"));
-        addUser(new User("user1", "user1@example.com", "password1"));
-        addUser(new User("user2", "user2@example.com", "password2"));
+        User user1 = new User("admin", "admin@example.com", "admin123");
+        User user2 = new User("user1", "user1@example.com", "password1");
+        User user3 = new User("user2", "user2@example.com", "password2");
+        user1.setUserID(1);
+        user2.setUserID(2);
+        user3.setUserID(3);
+        addUser(user1);
+        addUser(user2);
+        addUser(user3);
     }
+
     @Override
     public void addUser(User user) {
         if (isEmailRegistered(user.getEmail())) {

@@ -107,7 +107,7 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
             String query = "SELECT * FROM quizAttempts where userID = ? AND quizID = ?";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, userID);
-            statement.setInt(1, quizID);
+            statement.setInt(2, quizID);
             ResultSet rs = statement.executeQuery(query);
             while (rs.next()) {
                 //might be some problems with the question id and quizID?
@@ -128,6 +128,36 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
             e.printStackTrace();
         }
         return quizAttempts;
+    }
+
+    //work in progress
+    @Override
+    public List<Quiz> getQuizzesAttemptedByUser(int userID) {
+        List<QuizAttempt> quizAttempts = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM quizAttempts where userID = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, userID);
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()) {
+                //might be some problems with the question id and quizID?
+                QuizAttempt quizAttempt = new QuizAttempt(
+                        rs.getInt("quizID"),
+                        userID,
+                        rs.getInt("score")
+                );
+                quizAttempt.setId(rs.getInt("id"));
+                String timeStr = rs.getString("attemptTime");
+                if (timeStr != null) {
+                    quizAttempt.setAttemptTime(LocalDateTime.parse(timeStr));
+                }
+                quizAttempts.add(quizAttempt);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 
