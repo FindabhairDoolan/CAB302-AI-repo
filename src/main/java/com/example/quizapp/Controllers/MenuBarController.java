@@ -1,5 +1,6 @@
 package com.example.quizapp.Controllers;
 
+import com.example.quizapp.Models.AuthManager;
 import com.example.quizapp.utils.SceneManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -45,6 +46,7 @@ public class MenuBarController {
         //Swap to Welcome
         Stage stage = (Stage) menuBar.getScene().getWindow();
         SceneManager.switchScene("/com/example/quizapp/WelcomePage.fxml", "Welcome", stage);
+        AuthManager.getInstance().logOut();
         System.out.println("Logging out...");
         // add logout logic
 

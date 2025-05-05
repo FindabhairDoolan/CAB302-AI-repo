@@ -9,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SqliteUserDAO implements IUserDAO {
 
@@ -64,7 +66,7 @@ public class SqliteUserDAO implements IUserDAO {
                     + "('John Doe', 'johndoe@example.com', 'secret1'),"
                     + "('Jane Doe', 'janedoe@example.com', 'secret1'),"
                     + "('Jay Doe', 'jaydoe@example.com', 'secret1')";
-            insertStatement.execute(insertQuery);
+            //insertStatement.execute(insertQuery);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -98,6 +100,28 @@ public class SqliteUserDAO implements IUserDAO {
             return false;
         }
     }
+
+    @Override
+    public User getUserByEmail(String email) {
+        User user = null;
+        try {
+            String query = "SELECT 1 FROM users WHERE email = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, email);
+            ResultSet rs = statement.executeQuery(query);
+            rs.next();
+                //might be some problems with the question id and quizID?
+                user = new User(
+                        rs.getString("userName"),
+                        rs.getString("email"),
+                        rs.getString("password") //though we might not want this?
+                );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
     @Override
     public void updateUser(User user) {
     try {

@@ -1,7 +1,6 @@
 package com.example.quizapp.Controllers;
 
-import com.example.quizapp.Models.SqliteUserDAO;
-import com.example.quizapp.Models.IUserDAO;
+import com.example.quizapp.Models.AuthManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,15 +13,9 @@ import java.io.IOException;
 
 public class LoginController {
 
-    private IUserDAO userDAO;
+    private AuthManager authManager = AuthManager.getInstance();
 
-    public LoginController() {
-        userDAO = new SqliteUserDAO();
-    }
-
-    public LoginController(IUserDAO mockUserDAO) {
-        userDAO = mockUserDAO;
-    }
+    public LoginController() {}
 
     @FXML
     private Button backButton;
@@ -55,9 +48,9 @@ public class LoginController {
     public void handleLogin(ActionEvent actionEvent) {
         String email = emailField.getText();
         String password = passwordField.getText();
-        boolean loginSucceeded = login(email, password);
+        boolean loginSucceeded = authManager.login(email, password);
         if (loginSucceeded) {
-            showAlert("Login successful!", Alert.AlertType.INFORMATION);
+            authManager.showAlert(Alert.AlertType.INFORMATION, "Login successful!", false);
             System.out.println("Successful login -> Dashboard");
             // Swap to dashboard
             Stage stage = (Stage) loginButton.getScene().getWindow();
@@ -71,20 +64,12 @@ public class LoginController {
             stage.setScene(scene);
         }
         else {
-            showAlert("Incorrect email or password", Alert.AlertType.ERROR);
+            authManager.showAlert(Alert.AlertType.ERROR, "Incorrect email or password", false);
             System.out.println("Incorrect credentials!");
         }
     }
 
-    private void showAlert(String message, Alert.AlertType type) {
-        Alert alert = new Alert(type);
-        alert.setContentText(message);
-        alert.setHeaderText(null);
-        alert.showAndWait();
-    }
 
-    public boolean login(String email, String password) {
-        boolean isValid = userDAO.validateCredentials(email, password);
-        return isValid;
-    }
+
+
 }

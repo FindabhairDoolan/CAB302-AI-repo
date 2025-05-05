@@ -34,6 +34,7 @@ public interface IUserDAO {
 
     public boolean isEmailRegistered(String email);
 
+    public User getUserByEmail(String email);
 }
 
 

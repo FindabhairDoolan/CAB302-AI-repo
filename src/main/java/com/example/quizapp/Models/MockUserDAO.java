@@ -92,6 +92,16 @@ public class MockUserDAO implements IUserDAO{
         return false;
     }
 
+    @Override
+    public User getUserByEmail(String email) {
+            for (User user : users) {
+                if (user.getEmail().equalsIgnoreCase(email)) {
+                    return user;
+                }
+            }
+            return null; // or throw an exception if preferred
+    }
+
 
     private String hashPassword(String password) {
         try {

@@ -109,12 +109,58 @@ public class SqliteQuizDAO implements IQuizDAO {
 
     @Override
     public List<Quiz> searchQuizByTopic(String topic) {
-        return List.of();
+        List<Quiz> quizzes = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM quizzes where quizTopic = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, topic);
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()) {
+                //might be some problems with the question id and quizID?
+                Quiz quiz = new Quiz(
+                        rs.getString("quizName"),
+                        rs.getString("quizTopic"),
+                        rs.getString("quizMode"),
+                        rs.getString("difficulty"),
+                        rs.getString("yearLevel"),
+                        rs.getString("country"),
+                        rs.getInt("creatorID")
+                );
+                quiz.setQuizID(rs.getInt("id"));
+                quizzes.add(quiz);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return quizzes;
     }
 
     @Override
     public List<Quiz> getQuizzesByCreator(int creatorID) {
-        return List.of();
+        List<Quiz> quizzes = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM quizzes where creatorID = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, creatorID);
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()) {
+                //might be some problems with the question id and quizID?
+                Quiz quiz = new Quiz(
+                        rs.getString("quizName"),
+                        rs.getString("quizTopic"),
+                        rs.getString("quizMode"),
+                        rs.getString("difficulty"),
+                        rs.getString("yearLevel"),
+                        rs.getString("country"),
+                        creatorID
+                );
+                quiz.setQuizID(rs.getInt("id"));
+                quizzes.add(quiz);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return quizzes;
     }
 
 
