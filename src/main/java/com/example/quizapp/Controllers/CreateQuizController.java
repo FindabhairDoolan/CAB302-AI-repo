@@ -24,6 +24,8 @@ public class CreateQuizController {
     @FXML
     private VBox numQuestionsContainer;
     @FXML
+    private ToggleGroup difficultyGroup;
+    @FXML
     private ToggleGroup modeToggleGroup;
     private SqliteUserDAO userDAO;
 
@@ -57,9 +59,21 @@ public class CreateQuizController {
             return;
         }
 
+        // Check if a difficulty level has been selected
+        if (difficultyGroup.getSelectedToggle() == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("No selected difficulty");
+            alert.setHeaderText(null);
+            alert.setContentText("You must select a difficulty level.");
+            alert.showAndWait();
+            return;
+        }
+
         //Get inputted customisation inputs and send to AI
         ComboBox<Integer> questionDropdown = (ComboBox<Integer>) numQuestionsContainer.getChildren().get(0);
         Integer selectedQuestions = questionDropdown.getValue();
+        ToggleButton selectedDifficultyButton = (ToggleButton) difficultyGroup.getSelectedToggle();
+        String selectedDifficulty = selectedDifficultyButton.getText();
 
         // Send user to Quiz page
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/com/example/quizapp/Quiz.fxml"));
@@ -68,6 +82,7 @@ public class CreateQuizController {
         // Get the controller and set the total questions
         QuizController quizController = fxmlLoader.getController();
         quizController.setTotalQuestions(selectedQuestions);
+        quizController.setDifficulty(selectedDifficulty);
 
         Stage stage = (Stage) createButton.getScene().getWindow();
         stage.setScene(scene);
