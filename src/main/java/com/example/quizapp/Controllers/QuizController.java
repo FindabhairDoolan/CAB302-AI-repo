@@ -50,6 +50,11 @@ public class QuizController {
         this.difficulty = difficulty;
     }
 
+    private String yearLevel;
+
+    public void setYearLevel(String yearLevel) {
+        this.yearLevel = yearLevel;
+    }
     /**
      * Exits the quiz and returns to home page
      */
