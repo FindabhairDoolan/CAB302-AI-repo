@@ -36,6 +36,7 @@ public class QuizController {
     @FXML
     private ToggleGroup answerToggleGroup;
 
+
     //Declaration of further variables
     private boolean showingFeedback = false;
     private int questionIndex = 1;
@@ -43,6 +44,17 @@ public class QuizController {
     private List<Question> questionList;
     SqliteQuestionDAO questionDAO = new SqliteQuestionDAO();
 
+    private String difficulty;
+
+    public void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    private String yearLevel;
+
+    public void setYearLevel(String yearLevel) {
+        this.yearLevel = yearLevel;
+    }
     /**
      * Exits the quiz and returns to home page
      */
@@ -81,7 +93,6 @@ public class QuizController {
      */
     @FXML
     public void initialize() {
-
         //Currently only mock data for 1 quiz so quizID 1 is the only option
         questionList = questionDAO.getQuestionsForQuiz(1);
         loadQuestion(questionList.get(questionIndex - 1));

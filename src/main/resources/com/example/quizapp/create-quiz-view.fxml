@@ -6,6 +6,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.collections.FXCollections?>
+
 
 <!--Using BorderPane to dynamically sort title and contents of page regardless of
     window size-->
@@ -15,6 +17,7 @@
 
     <fx:define>
         <ToggleGroup fx:id="modeToggleGroup" />
+        <ToggleGroup fx:id="difficultyGroup" />
     </fx:define>
 
     <!--Where the title and back button is located-->
@@ -65,16 +68,46 @@
             size is increased-->
             <Region HBox.hgrow="ALWAYS"/>
 
-            <!--Where all other quiz customisation options are aligned-->
             <VBox alignment="TOP_CENTER" spacing="10" HBox.hgrow="ALWAYS">
 
                 <padding>
                     <Insets topRightBottomLeft="10"/>
                 </padding>
 
+                <VBox spacing="10" alignment="TOP_LEFT">
+                    <Label text="Year Level"  />
+                    <ComboBox fx:id="yearLevelComboBox" prefWidth="90.0">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="Year 1" />
+                                <String fx:value="Year 2" />
+                                <String fx:value="Year 3" />
+                                <String fx:value="Year 4" />
+                                <String fx:value="Year 5" />
+                                <String fx:value="Year 6" />
+                                <String fx:value="Year 7" />
+                                <String fx:value="Year 8" />
+                                <String fx:value="Year 9" />
+                                <String fx:value="Year 10" />
+                                <String fx:value="Year 11" />
+                                <String fx:value="Year 12" />
+                            </FXCollections>
+                        </items>
+                    </ComboBox>
+                </VBox>
+
+                <VBox spacing="10" alignment="TOP_LEFT">
+                    <Label text="Difficulty"  />
+                    <HBox alignment="CENTER_LEFT" spacing="5" >
+                        <ToggleButton text="Easy" toggleGroup="$difficultyGroup" styleClass="difficulty-toggle" />
+                        <ToggleButton text="Medium" toggleGroup="$difficultyGroup" styleClass="difficulty-toggle" />
+                        <ToggleButton text="Hard" toggleGroup="$difficultyGroup" styleClass="difficulty-toggle" />
+                        <ToggleButton text="Random" toggleGroup="$difficultyGroup" styleClass="difficulty-toggle" />
+                    </HBox>
+                </VBox>
+
                 <HBox alignment="CENTER_LEFT" spacing="10">
 
-                    <!--Combobox for selecting number of questions in the quiz-->
                     <Label text="Number of Questions:" />
                     <VBox fx:id="numQuestionsContainer" alignment="CENTER_LEFT" />
 
@@ -99,7 +132,7 @@
 
                 </HBox>
 
-                <!--Insert year level, country, difficulty, number of questions,
+                <!--Insert year level, country, difficulty,
                 quiz mode switch and time limit here -->
 
             </VBox>
