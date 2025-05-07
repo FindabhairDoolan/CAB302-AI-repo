@@ -9,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SqliteUserDAO implements IUserDAO {
 
@@ -64,7 +66,7 @@ public class SqliteUserDAO implements IUserDAO {
                     + "('John Doe', 'johndoe@example.com', 'secret1'),"
                     + "('Jane Doe', 'janedoe@example.com', 'secret1'),"
                     + "('Jay Doe', 'jaydoe@example.com', 'secret1')";
-            insertStatement.execute(insertQuery);
+            //insertStatement.execute(insertQuery);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -85,6 +87,7 @@ public class SqliteUserDAO implements IUserDAO {
             e.printStackTrace();
         }
     }
+
     @Override
     public boolean isEmailRegistered(String email) {
         try {
@@ -98,6 +101,31 @@ public class SqliteUserDAO implements IUserDAO {
             return false;
         }
     }
+
+    @Override
+    public User getUserByEmail(String email) {
+        User user = null;
+        try {
+            String query = "SELECT * FROM users WHERE email = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, email);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                user = new User(
+                        rs.getString("userName"),
+                        rs.getString("email"),
+                        rs.getString("password")
+                );
+                int id = rs.getInt("id");
+                user.setUserID(id);
+                user.setPassword(null); //we don't want to actually host the password here
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
     @Override
     public void updateUser(User user) {
     try {

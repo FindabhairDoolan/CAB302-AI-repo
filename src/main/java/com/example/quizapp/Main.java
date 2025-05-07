@@ -1,5 +1,6 @@
 package com.example.quizapp;
 
+import com.example.quizapp.data.DatabaseSeeder;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -30,6 +31,9 @@ public class Main extends Application {
         primaryStage.setTitle(TITLE);
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        //Method to seed the database with initial data
+        new DatabaseSeeder().seed();
     }
 
     /**
