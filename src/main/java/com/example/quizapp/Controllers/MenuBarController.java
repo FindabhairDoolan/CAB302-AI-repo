@@ -25,8 +25,6 @@ public class MenuBarController {
     @FXML
     protected Button home; //Home
     @FXML
-    private MenuBar menuBar1;
-    @FXML
     private ToolBar menuBar;
 
 

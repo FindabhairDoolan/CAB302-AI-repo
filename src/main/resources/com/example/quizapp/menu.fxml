@@ -5,6 +5,8 @@
 
 
 <!-- Top MenuBar -->
+<!--Insert into page using  <fx:include source="menu.fxml"/>-->
+
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.quizapp.Controllers.MenuBarController">
     <right>
         <ToolBar fx:id="menuBar">
