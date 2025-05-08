@@ -1,8 +1,10 @@
 package com.example.quizapp.Controllers;
 
 import com.example.quizapp.Models.Question;
+import com.example.quizapp.Models.Quiz;
 import com.example.quizapp.Models.SqliteQuestionDAO;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
@@ -43,6 +45,7 @@ public class QuizController {
     private int totalQuestions;
     private List<Question> questionList;
     SqliteQuestionDAO questionDAO = new SqliteQuestionDAO();
+    private Quiz quiz =  null;
 
     private String difficulty;
 
@@ -55,6 +58,7 @@ public class QuizController {
     public void setYearLevel(String yearLevel) {
         this.yearLevel = yearLevel;
     }
+
     /**
      * Exits the quiz and returns to home page
      */
@@ -93,10 +97,27 @@ public class QuizController {
      */
     @FXML
     public void initialize() {
-        //Currently only mock data for 1 quiz so quizID 1 is the only option
-        questionList = questionDAO.getQuestionsForQuiz(1);
+        loadQuiz();
+    }
+
+    public void setQuiz(Quiz quiz) {
+        this.quiz = quiz;
+    }
+
+    private void loadQuiz() {
+
+        // If quizID is null, use default (1)
+        int idToLoad = (quiz != null) ? quiz.getQuizID() : 1;
+        questionList = questionDAO.getQuestionsForQuiz(idToLoad);
+
+        if (questionList.isEmpty()) {
+            //System.err.println("No questions found for quiz ID " + idToLoad);
+            // Optionally show an alert dialog to the user
+            return;
+        }
+
         loadQuestion(questionList.get(questionIndex - 1));
-        updateProgressLabel(); // Update the progress label on initialization
+        updateProgressLabel();
     }
 
     /**
@@ -184,11 +205,19 @@ public class QuizController {
      * Sends the user to the quiz completion page
      */
     private void showQuizCompletedScreen() {
-        Stage stage = (Stage) nextButton.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/quiz-completed.fxml"));
+
         try {
-            Scene scene = new Scene(fxmlLoader.load(), 800,550);
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/quiz-completed.fxml"));
+            Parent root = fxmlLoader.load();
+
+            QuizCompletedController QCcontroller = fxmlLoader.getController();
+            QCcontroller.setQuiz(quiz);
+            Stage stage = (Stage) nextButton.getScene().getWindow();
+            Scene scene = new Scene(root, 800, 550);
             stage.setScene(scene);
+            stage.setTitle("Quiz Result");
+            stage.show();
+
         } catch (IOException e) {
             e.printStackTrace();
         }

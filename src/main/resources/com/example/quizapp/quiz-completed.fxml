@@ -5,5 +5,6 @@
     <children>
         <Label text="Quiz Completed!" layoutX="100" layoutY="50" style="-fx-font-size: 24;"/>
         <Button fx:id="finishButton" text="Finish" layoutX="100" layoutY="100" onAction="#handleFinish"/>
+        <Button fx:id="retakeButton" text="Retake" layoutX="100" layoutY="150" onAction="#handleRetakeQuiz"/>
     </children>
 </AnchorPane>

@@ -11,7 +11,6 @@ public class QuizWithScore {
     public QuizWithScore(Quiz quiz, List<Integer> scores) {
         this.quiz = quiz;
         this.scores = scores;
-        //this.time = time;
     }
 
     public Quiz getQuiz() {
@@ -22,7 +21,4 @@ public class QuizWithScore {
         return scores;
     }
 
-   // public Timestamp getTime() {
-   //     return time;
-    // }
 }

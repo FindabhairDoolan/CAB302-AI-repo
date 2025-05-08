@@ -4,6 +4,7 @@ import com.example.quizapp.utils.SceneManager;
 import com.example.quizapp.Models.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -13,12 +14,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class QuizHistoryController {
 
@@ -28,6 +26,11 @@ public class QuizHistoryController {
     @FXML
     private Button backButton;
 
+    //populate the listview when the scene is loaded
+    @FXML
+    public void initialize() {
+        displayQuizzes();
+    }
 
     //return to home
     @FXML
@@ -42,7 +45,7 @@ public class QuizHistoryController {
         }
     }
 
-    //create a list of mock quizzes for testing etc
+    //create a list of mock quizzes for testing
     public ObservableList<Quiz> createMockQuizzes() {
         ObservableList<Quiz> quizzes = FXCollections.observableArrayList();
 
@@ -54,13 +57,14 @@ public class QuizHistoryController {
         return quizzes;
     }
 
+    //A function to retrieve quizzes from the database
     public ObservableList<QuizWithScore> getQuizzes() {
         User user = AuthManager.getInstance().getCurrentUser();
         ObservableList<QuizWithScore> quizzes = FXCollections.observableArrayList(new SqliteQuizAttemptDAO().getQuizzesAttemptedByUser(user.getUserID()));
         return quizzes;
     }
 
-    //display the quizzes
+    //Display the quizzes
     public void displayQuizzes() {
         ObservableList<QuizWithScore> quizzes = getQuizzes();
         quizListView.setItems(quizzes);
@@ -94,15 +98,27 @@ public class QuizHistoryController {
         });
     }
 
+
     private void handleRetakeQuiz(Quiz quiz) {
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/quizapp/quiz.fxml"));
+        Parent root = loader.load();
+
+        QuizController quizController = loader.getController();
+        quizController.setQuiz(quiz);
+
+        int numOfQs = new SqliteQuizDAO().getNumberOfQuestions(quiz);
+        quizController.setTotalQuestions(numOfQs);
+
         Stage stage = (Stage) backButton.getScene().getWindow();
-        SceneManager.switchScene("/com/example/quizapp/quiz.fxml", "Take quiz", stage);
+        Scene scene = new Scene(root, 800, 550);
+        stage.setScene(scene);
+        stage.setTitle("Take quiz");
+        stage.show();
+
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
     }
 
-
-    //populate the listview when the scene is loaded
-    @FXML
-    public void initialize() {
-        displayQuizzes();
-    }
 }

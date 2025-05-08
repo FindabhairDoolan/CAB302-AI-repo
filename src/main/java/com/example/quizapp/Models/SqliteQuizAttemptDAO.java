@@ -3,7 +3,6 @@ package com.example.quizapp.Models;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
 
@@ -12,7 +11,6 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
     public SqliteQuizAttemptDAO() {
         connection = SqliteConnection.getInstance();
         createTable();
-        //insertSampleData(); //for testing, to be removed later
     }
 
 
@@ -35,24 +33,6 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
         }
     }
 
-/**
-    private void insertSampleData() {
-        try {
-            Statement clearStatement = connection.createStatement();
-            String clearQuery = "DELETE FROM quizzes";
-            clearStatement.execute(clearQuery);
-            Statement insertStatement = connection.createStatement();
-            //Need to be modified if wanted to use for testing purposes:
-            //String insertQuery = "INSERT INTO quizzes (userName, email, password) VALUES "
-            //        + "('John Doe', 'johndoe@example.com', 'secret1'),"
-            //        + "('Jane Doe', 'janedoe@example.com', 'secret1'),"
-            //       + "('Jay Doe', 'jaydoe@example.com', 'secret1')";
-            //insertStatement.execute(insertQuery);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
- */
 
     @Override
     public void addQuizAttempt(QuizAttempt quizAttempt) {
