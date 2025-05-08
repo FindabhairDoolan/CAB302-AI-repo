@@ -16,6 +16,7 @@ public class DatabaseSeeder {
     private final SqliteQuizDAO quizDAO;
     private final SqliteQuestionDAO questionDAO;
     private final SqliteQuizAttemptDAO quizAttemptDAO;
+    private final AuthManager authManager;
 
     public DatabaseSeeder() {
         this.connection = SqliteConnection.getInstance();
@@ -23,6 +24,7 @@ public class DatabaseSeeder {
         this.quizDAO = new SqliteQuizDAO();
         this.questionDAO = new SqliteQuestionDAO();
         this.quizAttemptDAO = new SqliteQuizAttemptDAO();
+        this.authManager = AuthManager.getInstance();
     }
 
     public void seed() {
@@ -31,16 +33,17 @@ public class DatabaseSeeder {
             stmt.executeUpdate("DELETE FROM quizAttempts");
             stmt.executeUpdate("DELETE FROM questions");
             stmt.executeUpdate("DELETE FROM quizzes");
+            //stmt.executeUpdate("DELETE FROM users");
 
             User alice = userDAO.getUserByEmail("alice@example.com");
             if (alice == null) {
-                userDAO.addUser(new User("alice", "alice@example.com", "password1"));
+                userDAO.addUser(new User("alice", "alice@example.com", authManager.hashPassword("password1")));
                 alice = userDAO.getUserByEmail("alice@example.com");
             }
 
             User bob = userDAO.getUserByEmail("bob@example.com");
             if (bob == null) {
-                userDAO.addUser(new User("bob", "bob@example.com", "password2"));
+                userDAO.addUser(new User("bob", "bob@example.com", authManager.hashPassword("password2")));
                 bob = userDAO.getUserByEmail("bob@example.com");
             }
 

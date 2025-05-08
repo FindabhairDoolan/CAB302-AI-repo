@@ -1,26 +1,36 @@
 package com.example.quizapp.Controllers;
 
-import com.example.quizapp.Models.Quiz;
+import com.example.quizapp.utils.SceneManager;
+import com.example.quizapp.Models.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Parent;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.List;
 
 public class QuizHistoryController {
 
     @FXML
-    public ListView<String> quizListView;
+    public ListView<QuizWithScore> quizListView;
 
     @FXML
     private Button backButton;
 
+    //populate the listview when the scene is loaded
+    @FXML
+    public void initialize() {
+        displayQuizzes();
+    }
 
     //return to home
     @FXML
@@ -35,7 +45,7 @@ public class QuizHistoryController {
         }
     }
 
-    //create a list of mock quizzes for testing etc
+    //create a list of mock quizzes for testing
     public ObservableList<Quiz> createMockQuizzes() {
         ObservableList<Quiz> quizzes = FXCollections.observableArrayList();
 
@@ -47,29 +57,68 @@ public class QuizHistoryController {
         return quizzes;
     }
 
-    public ObservableList<Quiz> getQuizzes() {
-        ObservableList<Quiz> quizzes = FXCollections.observableArrayList();
-
-
+    //A function to retrieve quizzes from the database
+    public ObservableList<QuizWithScore> getQuizzes() {
+        User user = AuthManager.getInstance().getCurrentUser();
+        ObservableList<QuizWithScore> quizzes = FXCollections.observableArrayList(new SqliteQuizAttemptDAO().getQuizzesAttemptedByUser(user.getUserID()));
         return quizzes;
     }
 
-    //display the quizzes
+    //Display the quizzes
     public void displayQuizzes() {
-        ObservableList<Quiz> quizzes = createMockQuizzes();
+        ObservableList<QuizWithScore> quizzes = getQuizzes();
+        quizListView.setItems(quizzes);
 
-        ObservableList<String> quizDisplayList = FXCollections.observableArrayList();
+        quizListView.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(QuizWithScore item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setGraphic(null);
 
-        for (Quiz quiz : quizzes) {
-            quizDisplayList.add(quiz.getQuizName() + " - " + quiz.getQuizTopic());
-        }
 
-        quizListView.setItems(quizDisplayList);
+                    setText(null);
+                } else {
+                    VBox box = new VBox(5);
+
+                    String quizName = item.getQuiz().getQuizName();
+                    String topic = item.getQuiz().getQuizTopic();
+                    List<Integer> scores = item.getScores();
+
+                    Label title = new Label(quizName + " - " + topic);
+                    Label score = new Label("Scores: " + scores.toString());
+
+                    Button retakeButton = new Button("Retake Quiz");
+                    retakeButton.setOnAction(e -> handleRetakeQuiz(item.getQuiz()));
+
+                    box.getChildren().addAll(title, score, retakeButton);
+                    setGraphic(box);
+                }
+            }
+        });
     }
 
-    //populate the listview when the scene is loaded
-    @FXML
-    public void initialize() {
-        displayQuizzes();
+
+    private void handleRetakeQuiz(Quiz quiz) {
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/quizapp/quiz.fxml"));
+        Parent root = loader.load();
+
+        QuizController quizController = loader.getController();
+        quizController.setQuiz(quiz);
+
+        int numOfQs = new SqliteQuizDAO().getNumberOfQuestions(quiz);
+        quizController.setTotalQuestions(numOfQs);
+
+        Stage stage = (Stage) backButton.getScene().getWindow();
+        Scene scene = new Scene(root, 800, 550);
+        stage.setScene(scene);
+        stage.setTitle("Take quiz");
+        stage.show();
+
+    } catch (IOException e) {
+        e.printStackTrace();
     }
+    }
+
 }

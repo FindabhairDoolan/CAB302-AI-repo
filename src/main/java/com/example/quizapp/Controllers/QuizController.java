@@ -1,9 +1,11 @@
 package com.example.quizapp.Controllers;
 
 import com.example.quizapp.Models.Question;
+import com.example.quizapp.Models.Quiz;
 import com.example.quizapp.Models.SqliteQuestionDAO;
 import com.example.quizapp.utils.SceneManager;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
@@ -44,6 +46,8 @@ public class QuizController {
     private int totalQuestions;
     private List<Question> questionList;
     SqliteQuestionDAO questionDAO = new SqliteQuestionDAO();
+    private Quiz quiz =  null;
+
     private int correctAnswers = 0;
     private String difficulty;
     private String yearLevel;
@@ -94,8 +98,26 @@ public class QuizController {
      */
     @FXML
     public void initialize() {
-        //Currently only mock data for 1 quiz so quizID 1 is the only option
-        questionList = questionDAO.getQuestionsForQuiz(1);
+        loadQuiz();
+    }
+
+    public void setQuiz(Quiz quiz) {
+        this.quiz = quiz;
+        loadQuiz();
+    }
+
+    private void loadQuiz() {
+
+        // If quizID is null, use default (1)
+        int idToLoad = (quiz != null) ? quiz.getQuizID() : 1;
+        questionList = questionDAO.getQuestionsForQuiz(idToLoad);
+
+        if (questionList.isEmpty()) {
+            //System.err.println("No questions found for quiz ID " + idToLoad);
+            // Optionally show an alert dialog to the user
+            return;
+        }
+
         loadQuestion(questionList.get(questionIndex - 1));
         updateProgressLabel(); // Update the progress label on initialization
         setTotalQuestions(totalQuestions);
@@ -191,17 +213,18 @@ public class QuizController {
      * Sends the user to the quiz completion page
      */
     private void showQuizCompletedScreen() {
-        Stage stage = (Stage) nextButton.getScene().getWindow();
 
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/quiz-completed.fxml"));
-            Scene newScene = new Scene(fxmlLoader.load(), 800, 550);
-            QuizCompletedController completedController = fxmlLoader.getController();
+            Parent root = fxmlLoader.load();
 
-            completedController.setResults(correctAnswers, totalQuestions, difficulty, yearLevel);
-
-            stage.setScene(newScene);
-            stage.setTitle("Quiz Completed");
+            QuizCompletedController QCcontroller = fxmlLoader.getController();
+            QCcontroller.setQuiz(quiz);
+            QCcontroller.setResults(correctAnswers, totalQuestions, difficulty, yearLevel);
+            Stage stage = (Stage) nextButton.getScene().getWindow();
+            Scene scene = new Scene(root, 800, 550);
+            stage.setScene(scene);
+            stage.setTitle("Quiz Result");
             stage.show();
 
         } catch (IOException e) {

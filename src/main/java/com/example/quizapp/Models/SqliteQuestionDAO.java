@@ -39,8 +39,8 @@ public class SqliteQuestionDAO implements IQuestionDAO {
     private void insertSampleData() {
         try {
             Statement clearStatement = connection.createStatement();
-            String clearQuery = "DELETE FROM questions";
-            clearStatement.execute(clearQuery);
+            //String clearQuery = "DELETE FROM questions";
+            //clearStatement.execute(clearQuery);
             Statement insertStatement = connection.createStatement();
             String insertQuery = "INSERT INTO questions (quizID, questionText, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3) VALUES "
                     + "('1', 'What is 1+1?', '2', '1', '0', '4'),"
@@ -60,8 +60,10 @@ public class SqliteQuestionDAO implements IQuestionDAO {
         List<Question> questions = new ArrayList<>();
 
         try {
-            Statement getAll = connection.createStatement();
-            ResultSet rs = getAll.executeQuery("SELECT quizID, questionText, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3 FROM questions");
+            String query = "SELECT quizID, questionText, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3 FROM questions WHERE quizID = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, quizId);
+            ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 questions.add(
                         new Question(

@@ -4,6 +4,9 @@ import com.example.quizapp.Models.IUserDAO;
 
 import javafx.scene.control.Alert;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 //create a singleton object to keep track of the currently logged in user
 public class AuthManager {
 
@@ -42,12 +45,18 @@ public class AuthManager {
         instance = new AuthManager(mockUserDAO);
     }
 
+
+    public User getCurrentUser() {
+        return this.currentUser;
+    }
+
     //login
     public boolean login(String email, String password) {
-        boolean isValid = userDAO.validateCredentials(email, password);
+        boolean isValid = userDAO.validateCredentials(email, hashPassword(password));
         if(isValid){
             currentUser = userDAO.getUserByEmail(email);
         };
+
         return isValid;
     }
 
@@ -81,7 +90,7 @@ public class AuthManager {
             return false;
         }
 
-        userDAO.addUser(new User(userName, email, password));
+        userDAO.addUser(new User(userName, email, hashPassword(password)));
         return true;
 
     }
@@ -113,4 +122,17 @@ public class AuthManager {
         return email.matches("^[^@\\s]+@[^@\\s]+\\.com$");
     }
 
+    public String hashPassword(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hashed = md.digest(password.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for (byte b : hashed) {
+                sb.append(String.format("%02x", b)); // Convert to hex
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("SHA-256 hashing not available", e);
+        }
+    }
 }

@@ -210,9 +210,8 @@ public class SqliteQuizDAO implements IQuizDAO {
             String query = "SELECT * FROM questions where quizID = ?";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, quizID);
-            ResultSet rs = statement.executeQuery(query);
+            ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                //might be some problems with the question id and quizID?
                 Question question = new Question(
                         rs.getInt("quizID"),
                         rs.getString("questionText"),
@@ -230,6 +229,13 @@ public class SqliteQuizDAO implements IQuizDAO {
             e.printStackTrace();
         }
         return questions;
+    }
+
+    public int getNumberOfQuestions(Quiz quiz) {
+        List<Question> questions = getQuestionsForQuiz(quiz);
+        long numOfQuestions = questions.size();
+        return ((int) numOfQuestions);
+
     }
 
 }
