@@ -1,12 +1,9 @@
 package com.example.quizapp.Models;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
 
@@ -132,32 +129,52 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
 
     //work in progress
     @Override
-    public List<Quiz> getQuizzesAttemptedByUser(int userID) {
-        List<QuizAttempt> quizAttempts = new ArrayList<>();
+    public List<QuizWithScore> getQuizzesAttemptedByUser(int userID) {
+        List<QuizWithScore> groupedQuizzes = new ArrayList<>();
+        Map<Integer, Quiz> quizMap = new HashMap<>();
+        Map<Integer, List<Integer>> scoreMap = new HashMap<>();
+
         try {
-            String query = "SELECT * FROM quizAttempts where userID = ?";
+            String query = " SELECT q.*, qa.score FROM quizAttempts qa JOIN quizzes q ON qa.quizID = q.id WHERE qa.userID = ? ORDER BY qa.attemptTime DESC ";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, userID);
-            ResultSet rs = statement.executeQuery(query);
+            ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                //might be some problems with the question id and quizID?
-                QuizAttempt quizAttempt = new QuizAttempt(
-                        rs.getInt("quizID"),
-                        userID,
-                        rs.getInt("score")
-                );
-                quizAttempt.setId(rs.getInt("id"));
-                String timeStr = rs.getString("attemptTime");
-                if (timeStr != null) {
-                    quizAttempt.setAttemptTime(LocalDateTime.parse(timeStr));
+                int quizID = rs.getInt("id");
+
+                // Store quiz object once
+                if (!quizMap.containsKey(quizID)) {
+                    Quiz quiz = new Quiz(
+                            rs.getString("quizName"),
+                            rs.getString("quizTopic"),
+                            rs.getString("quizMode"),
+                            rs.getString("difficulty"),
+                            rs.getString("yearLevel"),
+                            rs.getString("country"),
+                            rs.getInt("creatorID")
+                    );
+                    quiz.setQuizID(quizID);
+                    quizMap.put(quizID, quiz);
                 }
-                quizAttempts.add(quizAttempt);
+
+                //Timestamp time = rs.getTimestamp("attemptTime"); <- not working, maybe try later again
+                int score = rs.getInt("score");
+                scoreMap.computeIfAbsent(quizID, k -> new ArrayList<>()).add(score);
+                }
+
+                for (Map.Entry<Integer, Quiz> entry : quizMap.entrySet()) {
+                    int quizIDforMapping = entry.getKey();
+                    Quiz quiz = entry.getValue();
+                    List<Integer> scores = scoreMap.getOrDefault(quizIDforMapping, List.of());
+                    groupedQuizzes.add(new QuizWithScore(quiz, scores));
+
             }
+
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return groupedQuizzes;
     }
 
 

@@ -74,13 +74,12 @@ public class SqliteUserDAO implements IUserDAO {
     @Override
     public void addUser(User user) {
         try {
-            String hashedPassword = hashPassword(user.getPassword());
             String query = "INSERT INTO users (userName, email, password) VALUES (?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, user.getUserName());
             statement.setString(2, user.getEmail());
             //statement.setString(3, user.getPassword());
-            statement.setString(3, hashedPassword); // Store hashed password
+            statement.setString(3, user.getPassword()); // Store hashed password
             statement.executeUpdate();
         }
         catch (Exception e) {
@@ -118,8 +117,7 @@ public class SqliteUserDAO implements IUserDAO {
                 );
                 int id = rs.getInt("id");
                 user.setUserID(id);
-                user.setPassword(null); //we don't want to actually host the password here
-            }
+                }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -129,7 +127,7 @@ public class SqliteUserDAO implements IUserDAO {
     @Override
     public void updateUser(User user) {
     try {
-        String hashedPassword = hashPassword(user.getPassword());
+        String hashedPassword = user.getPassword(); //hash the password in the previous function if needed
         String query = "UPDATE users SET userName = ?, email = ?, password = ? WHERE userID = ?";
         PreparedStatement statement = connection.prepareStatement(query);
         statement.setString(1, user.getUserName());
@@ -159,11 +157,10 @@ public class SqliteUserDAO implements IUserDAO {
     @Override
     public boolean validateCredentials(String email, String password) {
         try {
-            String hashedPassword = hashPassword(password); // Hash the input password
             String query = "SELECT * FROM users WHERE email = ? AND password = ?";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, email);
-            statement.setString(2, hashedPassword);
+            statement.setString(2, password);
             var resultSet = statement.executeQuery();
             return resultSet.next();
         } catch (Exception e) {
@@ -194,24 +191,6 @@ public class SqliteUserDAO implements IUserDAO {
             return false;
         }
     }
-
-
-    private String hashPassword(String password) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hashed = md.digest(password.getBytes());
-            StringBuilder sb = new StringBuilder();
-            for (byte b : hashed) {
-                sb.append(String.format("%02x", b)); // Convert to hex
-            }
-            return sb.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("SHA-256 hashing not available", e);
-        }
-    }
-
-
-
 
 
 }

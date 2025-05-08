@@ -7,5 +7,5 @@ public interface IQuizAttemptDAO {
     public void updateQuizAttempt(QuizAttempt quizAttempt);
     public void deleteQuizAttempt(QuizAttempt quizAttempt);
     public List<QuizAttempt> getAttemptsByUserAndQuiz(int UserID, int quizID);
-    public List<Quiz> getQuizzesAttemptedByUser(int UserID);
+    public List<QuizWithScore> getQuizzesAttemptedByUser(int UserID);
 }
