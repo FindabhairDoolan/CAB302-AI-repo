@@ -30,22 +30,17 @@
 
             <!-- HBox 2: Placeholder for middle content -->
             <HBox alignment="CENTER">
-                <Button fx:id="tempButton" onAction="#onTempButtonClick" text="Go to Create Quiz"/>
-                <!--Label text="Quizzes for ### topic -> content here" />-->
+                <Label text="Quizzes for ### topic -> content here" />
             </HBox>
 
             <!-- HBox 2: Placeholder for middle content -->
             <HBox alignment="CENTER">
-                <Button fx:id="tempButton2" onAction="#onTempButton2Click" text="Go to Quiz History"/>
-                <!--Label text="Quizzes for ### topic -> content here" />-->
-            </HBox>
-
-            <!-- HBox 3: Placeholder for bottom content -->
-            <HBox alignment="CENTER">
-                <Label text="Bottom HBox content here" />
+                <Label text="Quizzes for ### topic -> content here" />
             </HBox>
         </VBox>
     </center>
-    <bottom></bottom>
+    <bottom>
+        <Label text="Bottom border" />
+    </bottom>
 
 </BorderPane>

@@ -4,25 +4,22 @@
 
 
 
-    <!-- Top MenuBar -->
-    <HBox xmlns:fx="http://javafx.com/fxml"
-          fx:controller="com.example.quizapp.Controllers.MenuBarController">
-<!--    <Region HBox.hgrow="ALWAYS"/>-->
-    <MenuBar fx:id="menuBar">
-        <Menu fx:id="home" text="Home" onAction="#handleHome"/>
-        <Menu text="Quiz">
-            <MenuItem fx:id="menuItem3" text="My Quizzes" onAction="#handleMyQuizzes"/>
-            <MenuItem fx:id="menuItem4" text="Take Quiz" onAction="#handleMenuItem4"/>
-            <MenuItem fx:id="menuItem5" text="Create Quiz" onAction="#handleCreateQuiz"/>
-            <MenuItem fx:id="menuItem6" text="Quiz History" onAction="#handleQuizHistory"/>
-        </Menu>
-        <Menu text="Profile">
-            <MenuItem fx:id="menuItem1" text="Account" onAction="#handleAccount"/>
-            <MenuItem fx:id="menuItem2" text="Logout" onAction="#handleLogout"/>
-        </Menu>
-    </MenuBar>
+<!-- Top MenuBar -->
+<!--Insert into page using  <fx:include source="menu.fxml"/>-->
 
-
-</HBox>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.quizapp.Controllers.MenuBarController">
+    <right>
+        <ToolBar fx:id="menuBar">
+            <Button fx:id="home"  onAction="#handleHome" text="Home"/>
+            <Separator orientation="VERTICAL"/>
+            <Button fx:id="menuItem3" text="My Quizzes" onAction="#handleMyQuizzes"/>
+            <Button fx:id="menuItem5" text="Create Quiz" onAction="#handleCreateQuiz"/>
+            <Button fx:id="menuItem6" text="Quiz History" onAction="#handleQuizHistory"/>
+            <Separator orientation="VERTICAL"/>
+            <!--        <MenuItem fx:id="menuItem1" text="Account" onAction="#handleAccount"/>-->
+            <Button fx:id="menuItem2" text="Logout" onAction="#handleLogout"/>
+        </ToolBar>
+    </right>
+</BorderPane>
 
 

@@ -2,35 +2,41 @@ package com.example.quizapp.Controllers;
 
 import com.example.quizapp.Models.AuthManager;
 import com.example.quizapp.utils.SceneManager;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.*;
 import javafx.stage.*;
+
 
 
 public class MenuBarController {
     @FXML
     public Region spacer;
     @FXML
-    protected MenuItem menuItem1; // Account
+    protected Button menuItem1; // Account
     @FXML
-    protected MenuItem menuItem2; // Logout
+    protected Button menuItem2; // Logout
     @FXML
-    protected MenuItem menuItem3; // My Quizzes
+    protected Button menuItem3; // My Quizzes
     @FXML
-    protected MenuItem menuItem4; // Take Quiz
+    protected Button menuItem5; // Create Quiz
     @FXML
-    protected MenuItem menuItem5; // Create Quiz
+    protected Button menuItem6; // Quiz History
     @FXML
-    protected MenuItem menuItem6; // Quiz History
+    protected Button home; //Home
     @FXML
-    protected Menu home; //Home
-    @FXML
-    private MenuBar menuBar;
+    private ToolBar menuBar;
 
 
 
+    @FXML
+    public void initialize() {
+        // Ensure the spacer behaves like a flexible expander
+        if (spacer != null) {
+            spacer.setMaxWidth(Double.MAX_VALUE); // allow the spacer to expand
+            HBox.setHgrow(spacer, Priority.ALWAYS); // correctly set grow priority
+        }
+    }
 
 
     @FXML
@@ -66,11 +72,6 @@ public class MenuBarController {
         System.out.println("Going to my quizzes...");
     }
 
-    @FXML
-    protected void handleMenuItem4() {
-        System.out.println("Take Quiz");
-        //rid
-    }
 
     @FXML
     protected void handleCreateQuiz() {
