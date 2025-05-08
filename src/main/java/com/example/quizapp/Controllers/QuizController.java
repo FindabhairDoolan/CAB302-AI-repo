@@ -102,6 +102,7 @@ public class QuizController {
 
     public void setQuiz(Quiz quiz) {
         this.quiz = quiz;
+        loadQuiz();
     }
 
     private void loadQuiz() {
