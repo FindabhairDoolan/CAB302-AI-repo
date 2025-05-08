@@ -2,6 +2,7 @@ package com.example.quizapp.Controllers;
 
 import com.example.quizapp.Models.Question;
 import com.example.quizapp.Models.SqliteQuestionDAO;
+import com.example.quizapp.utils.SceneManager;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -43,18 +44,18 @@ public class QuizController {
     private int totalQuestions;
     private List<Question> questionList;
     SqliteQuestionDAO questionDAO = new SqliteQuestionDAO();
-
+    private int correctAnswers = 0;
     private String difficulty;
+    private String yearLevel;
 
     public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
     }
 
-    private String yearLevel;
-
     public void setYearLevel(String yearLevel) {
         this.yearLevel = yearLevel;
     }
+
     /**
      * Exits the quiz and returns to home page
      */
@@ -97,6 +98,7 @@ public class QuizController {
         questionList = questionDAO.getQuestionsForQuiz(1);
         loadQuestion(questionList.get(questionIndex - 1));
         updateProgressLabel(); // Update the progress label on initialization
+        setTotalQuestions(totalQuestions);
     }
 
     /**
@@ -170,7 +172,12 @@ public class QuizController {
             feedbackLabel.setText(isCorrect ? "Correct" : "Incorrect");
             feedbackLabel.setVisible(true);
             showingFeedback = true;
-        } else {
+            // Increment correctAnswers if the answer is correct
+            if (isCorrect) {
+                correctAnswers++;
+            }
+        }
+        else {
             if (questionIndex < totalQuestions) {
                 questionIndex++;
                 loadQuestion(questionList.get(questionIndex - 1));
@@ -185,14 +192,21 @@ public class QuizController {
      */
     private void showQuizCompletedScreen() {
         Stage stage = (Stage) nextButton.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/quiz-completed.fxml"));
+
         try {
-            Scene scene = new Scene(fxmlLoader.load(), 800,550);
-            stage.setScene(scene);
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/quiz-completed.fxml"));
+            Scene newScene = new Scene(fxmlLoader.load(), 800, 550);
+            QuizCompletedController completedController = fxmlLoader.getController();
+
+            completedController.setResults(correctAnswers, totalQuestions, difficulty, yearLevel);
+
+            stage.setScene(newScene);
+            stage.setTitle("Quiz Completed");
+            stage.show();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 }
 
