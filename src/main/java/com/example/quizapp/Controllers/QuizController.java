@@ -1,8 +1,6 @@
 package com.example.quizapp.Controllers;
 
-import com.example.quizapp.Models.Question;
-import com.example.quizapp.Models.Quiz;
-import com.example.quizapp.Models.SqliteQuestionDAO;
+import com.example.quizapp.Models.*;
 import com.example.quizapp.utils.SceneManager;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -46,7 +44,7 @@ public class QuizController {
     private int totalQuestions;
     private List<Question> questionList;
     SqliteQuestionDAO questionDAO = new SqliteQuestionDAO();
-    private Quiz quiz =  null;
+    private Quiz quiz = QuizManager.getInstance().getCurrentQuiz();
 
     private int correctAnswers = 0;
     private String difficulty;

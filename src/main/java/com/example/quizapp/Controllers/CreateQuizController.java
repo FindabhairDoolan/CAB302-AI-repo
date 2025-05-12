@@ -1,6 +1,7 @@
 package com.example.quizapp.Controllers;
 
 import com.example.quizapp.Main;
+import com.example.quizapp.Models.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,7 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import com.example.quizapp.Models.SqliteUserDAO;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -29,10 +30,17 @@ public class CreateQuizController {
     private ToggleGroup difficultyGroup;
     @FXML
     private ToggleGroup modeToggleGroup;
+    @FXML
+    private TextArea topicTextArea;
+
     private SqliteUserDAO userDAO;
+    private SqliteQuizDAO quizDAO;
+    private SqliteQuestionDAO questionDAO;
 
     public CreateQuizController() {
         userDAO = new SqliteUserDAO();
+        quizDAO = new SqliteQuizDAO();
+        questionDAO = new SqliteQuestionDAO();
     }
 
     @FXML
@@ -81,12 +89,83 @@ public class CreateQuizController {
             return;
         }
 
-        //Get inputted customisation inputs and send to AI
+        //Get inputted customisation inputs
         ComboBox<Integer> questionDropdown = (ComboBox<Integer>) numQuestionsContainer.getChildren().get(0);
         Integer selectedQuestions = questionDropdown.getValue();
         ToggleButton selectedDifficultyButton = (ToggleButton) difficultyGroup.getSelectedToggle();
         String selectedDifficulty = selectedDifficultyButton.getText();
         String selectedYearLevel = yearLevelComboBox.getValue();
+        String userTopic = topicTextArea.getText();
+        ToggleButton selectedModeButton = (ToggleButton) modeToggleGroup.getSelectedToggle();
+        String selectedMode = selectedModeButton.getText();
+        String selectedCountry = "Australia"; //Placeholder until country selection is implemented
+
+        //Send request to AI
+        String questionPrompt = String.format("You are a helpful assistant. Please output the following data as JSON:\n" +
+                        "            {\n" +
+                        "              \"Quiz\": [\n" +
+                        "                {\n" +
+                        "                  \"question\": \"...\",\n" +
+                        "                  \"correctAnswer\": \"...\",\n" +
+                        "                  \"incorrectAnswer1\": \"...\",\n" +
+                        "                  \"incorrectAnswer2\": \"...\",\n" +
+                        "                  \"incorrectAnswer3\": \"...\"\n" +
+                        "                }\n" +
+                        "              ]\n" +
+                        "            }\n" +
+                        "\n" +
+                        "            Populate the 'quiz' array with %d entries for %d questions on the topic of %s, subject of %s %s math, %s difficulty .\n" +
+                        "            Use realistic data for:\n" +
+                        "            - question\n" +
+                        "            - correctAnswer\n" +
+                        "            - incorrectAnswer1\n" +
+                        "            - incorrectAnswer2\n" +
+                        "            - incorrectAnswer3\n" +
+                        "\n" +
+                        "            Only return valid JSON without additional commentary.\n"
+                , selectedQuestions, selectedQuestions, userTopic, selectedYearLevel, selectedCountry, selectedDifficulty);
+        OllamaResponse generateQuestionResponse = new OllamaResponse(questionPrompt);
+
+        try {
+            String JSONResponse = generateQuestionResponse.ollamaReturnResponse();
+            String titlePrompt = String.format("Generate a single title that summarises the topic of this " +
+                    "quiz:\n%s\nThe response is just one title in quotations like such: \"title\"", JSONResponse);
+            OllamaResponse generateTitleResponse = new OllamaResponse(titlePrompt);
+            String titleResponse = generateTitleResponse.ollamaReturnResponse();
+
+            if(quizDAO.getQuizByName(titleResponse) != null){
+                int duplicateNum = 1;
+                String titleDuplicate = titleResponse + duplicateNum;
+                while (quizDAO.getQuizByName(titleDuplicate) != null) {
+                    duplicateNum ++;
+                    titleDuplicate = titleResponse + duplicateNum;
+                }
+                titleResponse = titleDuplicate;
+            }
+
+            if (selectedMode.equals("Exam")) {
+                String timePrompt = String.format("Generate a reasonable total time limit for a person" +
+                        " in %s to complete all the following questions in this quiz:\n" +
+                        "%s\nThe response is only the total time in seconds to complete the entire quiz." +
+                        " Only display the seconds.", selectedYearLevel, JSONResponse);
+                OllamaResponse generateTimeResponse = new OllamaResponse(timePrompt);
+                String timeResponse = generateTimeResponse.ollamaReturnResponse();
+            }
+
+            User user = AuthManager.getInstance().getCurrentUser();
+            Quiz quiz = new Quiz(titleResponse, userTopic, selectedMode, selectedDifficulty, selectedYearLevel, selectedCountry, user.getUserID());
+            quizDAO.addQuiz(quiz);
+
+            //Get quiz now that ID has been auto incremented in database
+            quiz = quizDAO.getQuizByName(titleResponse);
+            QuizManager.getInstance().setCurrentQuiz(quiz);
+            int quizID = quizDAO.getQuizByName(titleResponse).getQuizID();
+
+            questionDAO.addAIQuestions(JSONResponse, quizID);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
         // Send user to Quiz page
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/com/example/quizapp/Quiz.fxml"));

@@ -1,7 +1,11 @@
 module com.example.cab302assessment1project {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.net.http;
     requires java.sql;
+    requires ollama4j;
+    requires org.apache.commons.lang3;
+    requires org.json;
 
 
     opens com.example.quizapp to javafx.fxml;
