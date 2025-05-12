@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -89,6 +90,14 @@ public class CreateQuizController {
             return;
         }
 
+        //Display information window and cancel generation if user cancels
+        boolean confirmation = confirmGenerate();
+        if (!confirmation){
+            return;
+        }
+
+        System.out.println("Generating quiz...");
+
         //Get inputted customisation inputs
         ComboBox<Integer> questionDropdown = (ComboBox<Integer>) numQuestionsContainer.getChildren().get(0);
         Integer selectedQuestions = questionDropdown.getValue();
@@ -124,8 +133,8 @@ public class CreateQuizController {
                         "\n" +
                         "            Only return valid JSON without additional commentary.\n"
                 , selectedQuestions, selectedQuestions, userTopic, selectedYearLevel, selectedCountry, selectedDifficulty);
-        OllamaResponse generateQuestionResponse = new OllamaResponse(questionPrompt);
 
+        OllamaResponse generateQuestionResponse = new OllamaResponse(questionPrompt);
         try {
             String JSONResponse = generateQuestionResponse.ollamaReturnResponse();
             String titlePrompt = String.format("Generate a single title that summarises the topic of this " +
@@ -133,6 +142,8 @@ public class CreateQuizController {
             OllamaResponse generateTitleResponse = new OllamaResponse(titlePrompt);
             String titleResponse = generateTitleResponse.ollamaReturnResponse();
 
+            //If there is already a quiz with the same name, add a number next to the name indicating
+            //which duplicate it is
             if(quizDAO.getQuizByName(titleResponse) != null){
                 int duplicateNum = 1;
                 String titleDuplicate = titleResponse + duplicateNum;
@@ -143,6 +154,7 @@ public class CreateQuizController {
                 titleResponse = titleDuplicate;
             }
 
+            //If it is exam mode, request the AI to generate a default timer
             if (selectedMode.equals("Exam")) {
                 String timePrompt = String.format("Generate a reasonable total time limit for a person" +
                         " in %s to complete all the following questions in this quiz:\n" +
@@ -163,22 +175,37 @@ public class CreateQuizController {
 
             questionDAO.addAIQuestions(JSONResponse, quizID);
 
+            // Send user to Quiz page
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/com/example/quizapp/Quiz.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), Main.WIDTH, Main.HEIGHT);
+
+            // Get the controller and set the total questions
+            QuizController quizController = fxmlLoader.getController();
+            quizController.setTotalQuestions(selectedQuestions);
+            quizController.setDifficulty(selectedDifficulty);
+            quizController.setYearLevel(selectedYearLevel);
+
+            Stage stage = (Stage) createButton.getScene().getWindow();
+            stage.setScene(scene);
+
         } catch (Exception ex) {
             ex.printStackTrace();
+
+            //Delete wrongly generated quiz and questions
+            Quiz failedQuiz = QuizManager.getInstance().getCurrentQuiz();
+            List<Question> failedQuestions = questionDAO.getQuestionsForQuiz(failedQuiz.getQuizID());
+            for (Question question : failedQuestions) {
+                questionDAO.deleteQuestion(question);
+            }
+            quizDAO.deleteQuiz(failedQuiz);
+
+            //Display error window
+            Alert alertError = new Alert(Alert.AlertType.ERROR);
+            alertError.setTitle("Quiz generation error");
+            alertError.setHeaderText(null);
+            alertError.setContentText("An error occurred while generating your quiz, please try again.");
+            alertError.showAndWait();
         }
-
-        // Send user to Quiz page
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/com/example/quizapp/Quiz.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), Main.WIDTH, Main.HEIGHT);
-
-        // Get the controller and set the total questions
-        QuizController quizController = fxmlLoader.getController();
-        quizController.setTotalQuestions(selectedQuestions);
-        quizController.setDifficulty(selectedDifficulty);
-        quizController.setYearLevel(selectedYearLevel);
-
-        Stage stage = (Stage) createButton.getScene().getWindow();
-        stage.setScene(scene);
 
     }
 
@@ -216,5 +243,29 @@ public class CreateQuizController {
         }
         // If No is selected, do nothing
 
+    }
+
+    public boolean confirmGenerate() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm quiz generation");
+        alert.setHeaderText(null);
+        alert.setContentText("Quiz generation process may take up to a few minutes, start generation?.");
+
+        // Define Yes and No buttons
+        ButtonType yesButton = new ButtonType("Yes");
+        ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        // Set the buttons to the alert
+        alert.getButtonTypes().setAll(yesButton, noButton);
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent() && result.get() == noButton) {
+            // User chose Yes – go to dashboard
+            return false;
+        }
+
+        // If Yes is selected, start generation
+        return true;
     }
 }

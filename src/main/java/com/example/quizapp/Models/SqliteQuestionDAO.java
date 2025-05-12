@@ -90,7 +90,6 @@ public class SqliteQuestionDAO implements IQuestionDAO {
     public void addAIQuestions(String JSONResponse, int quizID) throws SQLException, OllamaBaseException, IOException, InterruptedException {
 
         JSONObject json = new JSONObject(JSONResponse);
-        System.out.println(json);
         JSONArray quizArray = json.getJSONArray("Quiz");
         for (int i = 0; i < quizArray.length(); i++) {
             JSONObject questionObj = quizArray.getJSONObject(i);
