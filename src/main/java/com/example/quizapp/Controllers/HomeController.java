@@ -8,7 +8,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.*;
 
-import javafx.event.ActionEvent;
 import java.io.IOException;
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class HomeController extends MenuBarController  {
     private void handleSearch() {
         quizResults.getItems().clear();
         String search = searchField.getText();
-        List<Quiz> quizzes = quizDAO.searchQuizByTopic(search);
+        List<Quiz> quizzes = quizDAO.searchQuiz(search);
         quizResults.getItems().addAll(quizzes);
         //debug
         System.out.println("Searching for: " + search);

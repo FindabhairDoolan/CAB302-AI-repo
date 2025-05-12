@@ -108,7 +108,7 @@ public class SqliteQuizDAO implements IQuizDAO {
     }
 
     @Override
-    public List<Quiz> searchQuizByTopic(String topic) {
+    public List<Quiz> searchQuiz(String topic) {
         List<Quiz> quizzes = new ArrayList<>();
         try {
             //query and database are changed to lowercase and, and search is
