@@ -14,4 +14,5 @@ public interface IQuizDAO {
     public int getNumberOfQuestions(Quiz quiz);
     public void addQuestionToQuiz(String username);
     public void removeQuestionFromQuiz(String emailaddress);
+    List<Quiz> getAllQuizzes();
 }

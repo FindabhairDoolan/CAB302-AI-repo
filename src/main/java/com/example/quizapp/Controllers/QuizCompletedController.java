@@ -2,6 +2,7 @@ package com.example.quizapp.Controllers;
 
 import com.example.quizapp.Models.Quiz;
 import com.example.quizapp.Models.SqliteQuizDAO;
+import com.example.quizapp.utils.SceneManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -48,13 +49,7 @@ public class QuizCompletedController {
         Stage stage = (Stage) finishButton.getScene().getWindow();
 
         // Load the WelcomePage when finish button is clicked
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/home.fxml"));
-        try {
-            Scene scene = new Scene(fxmlLoader.load(), 800, 550);
-            stage.setScene(scene);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        SceneManager.switchScene("/com/example/quizapp/home.fxml", "Home", stage);
     }
 
     @FXML

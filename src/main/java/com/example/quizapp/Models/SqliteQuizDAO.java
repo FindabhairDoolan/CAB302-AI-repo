@@ -111,12 +111,44 @@ public class SqliteQuizDAO implements IQuizDAO {
     public List<Quiz> searchQuizByTopic(String topic) {
         List<Quiz> quizzes = new ArrayList<>();
         try {
-            String query = "SELECT * FROM quizzes where quizTopic = ?";
+            //query and database are changed to lowercase and, and search is
+            // for both topic and name to ensure more reliable and better matching
+            String query = "SELECT * FROM quizzes WHERE LOWER(quizTopic) LIKE ? OR LOWER(quizName) LIKE ?";
+
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, topic);
-            ResultSet rs = statement.executeQuery(query);
+            var phrase = "%" + topic.toLowerCase().trim() + "%";
+            statement.setString(1, phrase);
+            statement.setString(2, phrase);
+
+            ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 //might be some problems with the question id and quizID?
+                Quiz quiz = new Quiz(
+                        rs.getString("quizName"),
+                        rs.getString("quizTopic"),
+                        rs.getString("quizMode"),
+                        rs.getString("difficulty"),
+                        rs.getString("yearLevel"),
+                        rs.getString("country"),
+                        rs.getInt("creatorID")
+                );
+                quiz.setQuizID(rs.getInt("id"));
+                quizzes.add(quiz);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return quizzes;
+    }
+
+    @Override
+    public List<Quiz> getAllQuizzes() {
+        List<Quiz> quizzes = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM quizzes";
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
                 Quiz quiz = new Quiz(
                         rs.getString("quizName"),
                         rs.getString("quizTopic"),
