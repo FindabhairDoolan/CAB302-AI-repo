@@ -78,8 +78,7 @@ public class HomeController extends MenuBarController {
         filterOverlay.setVisible(!filterOverlay.isVisible());
     }
 
-<<<<<<< HEAD
-=======
+
     public void clearFilter(){
         yearSetting.setValue(null);
         subjectSetting.setValue(null);
@@ -108,6 +107,5 @@ public class HomeController extends MenuBarController {
         filterOverlay.setVisible(false); // Hide overlay after applying
 
     }
->>>>>>> HomePage
 }
 
