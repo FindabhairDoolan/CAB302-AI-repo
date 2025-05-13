@@ -15,7 +15,7 @@ public class HomeController extends MenuBarController {
     private TextField searchField;
 
     @FXML
-    public ListView<Quiz> quizResults;
+    private ListView<Quiz> quizResults;
     @FXML
     public ComboBox<String> difficultySetting;
     @FXML
