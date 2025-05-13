@@ -13,11 +13,18 @@ public class QuizManager {
         return instance;
     }
 
-    // Set the quiz (list of questions)
+    /**
+     * Given quiz will be the current quiz in use
+     * @param quiz sets quiz to the current quiz
+     */
     public void setCurrentQuiz(Quiz quiz) {
         this.currentQuiz = quiz;
     }
 
+    /**
+     * Returns the current quiz
+     * @return Quiz: The current quiz
+     */
     public Quiz getCurrentQuiz() {
         return this.currentQuiz;
     }

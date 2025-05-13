@@ -50,10 +50,12 @@ public class DatabaseSeeder {
             int aliceID = alice.getUserID();
             int bobID = bob.getUserID();
 
+            //If quiz does not exist in database yet, adds it
             Quiz quiz1 = quizDAO.getQuizByName("Algebra Basics");
             if (quiz1 == null) {
                 quizDAO.addQuiz(new Quiz("Algebra Basics", "Mathematics", "Online", "Easy", "Year 10", "Australia", aliceID));
                 quiz1 = quizDAO.getQuizByName("Algebra Basics");
+                //Add same question 5 times
                 for (int i = 1; i <= 5; i++) {
                     int quiz1ID = quizDAO.getQuizByName("Algebra Basics").getQuizID();
                     questionDAO.addQuestion(new Question(quiz1ID, "What is 2 + " + i + "?", "" + (2 + i), "" + (2 + i + 1), "" + (2 + i - 1), "" + (2 * i)));
@@ -80,6 +82,7 @@ public class DatabaseSeeder {
                 }
             }
 
+            //Get the quiz ID after database autoincrements it
             int quiz1ID = quizDAO.getQuizByName("Algebra Basics").getQuizID();
             int quiz2ID = quizDAO.getQuizByName("Photosynthesis").getQuizID();
             int quiz3ID = quizDAO.getQuizByName("World War II").getQuizID();
