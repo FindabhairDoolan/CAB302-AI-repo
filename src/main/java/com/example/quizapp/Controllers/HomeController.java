@@ -8,20 +8,17 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.*;
 
-import java.io.IOException;
 import java.util.List;
 
-public class HomeController extends MenuBarController  {
+public class HomeController extends MenuBarController {
     @FXML
     private TextField searchField;
     @FXML
-    public Button tempButton;
 
     private IQuizDAO quizDAO = new SqliteQuizDAO();
 
     @FXML
     private ListView<Quiz> quizResults;
-
 
 
     @FXML
@@ -53,24 +50,5 @@ public class HomeController extends MenuBarController  {
         primaryStage.show();
     }
 
-//    ARCHIVE CODE
-
-    @FXML
-    protected void onTempButtonClick() throws IOException {
-        Stage stage = (Stage) tempButton.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("create-quiz-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 800, 550);
-        stage.setScene(scene);
-    }
-
-    @FXML
-    protected void onTempButton2Click() throws IOException {
-        Stage stage = (Stage) tempButton.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("quiz-history.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 800, 550);
-        stage.setScene(scene);
-    }
-
-
-
 }
+

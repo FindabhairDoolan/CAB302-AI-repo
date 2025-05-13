@@ -12,6 +12,10 @@ import static com.example.quizapp.Main.WIDTH;
 
 public class SceneManager {
 
+    //How to apply SceneManager to Controller for page switching:
+    //  Stage stage = (Stage) InsertNameOfObject.getScene().getWindow();
+    //  SceneManager.switchScene("/com/example/quizapp/InsertFXML_Name.fxml", "InsertWindowTitle", stage);
+    //  Example of this available in MenuBar & Quiz Controllers
 
     public static void switchScene(String fxmlPath, String title, Stage stage) {
         try {

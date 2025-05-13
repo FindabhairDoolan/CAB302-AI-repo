@@ -41,7 +41,7 @@ public class MenuBarController {
 
     @FXML
     protected void handleHome() {
-        // Swap to home
+        // Swap to home/dashboard
         Stage stage = (Stage) menuBar.getScene().getWindow();
         SceneManager.switchScene("/com/example/quizapp/home.fxml", "Home", stage);
         System.out.println("Going to home page...");
