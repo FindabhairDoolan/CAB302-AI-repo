@@ -3,6 +3,7 @@ import com.example.quizapp.Models.AuthManager;
 import com.example.quizapp.Models.MockUserDAO;
 import com.example.quizapp.Models.User;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,12 +32,12 @@ public class LoginTest {
 
     private User user;
 
-/*
+    @Disabled("Temporarily disabled until fixed")
     @Test
     public void testLoginWithCorrectCredentials() {
         boolean successfulLogin = authManager.login("admin@example.com", "admin123");
         assertTrue(successfulLogin);
-    }*/
+    }
 
     @Test
     public void testIncorrectPassword() {
