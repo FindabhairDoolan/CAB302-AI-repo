@@ -3,46 +3,83 @@
 <?import javafx.geometry.Insets?>
 
 
-<BorderPane xmlns:fx="http://javafx.com/fxml"
+<StackPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.example.quizapp.Controllers.HomeController">
 
-    <top>
-        <fx:include source="menu.fxml"/>
-    </top>
+    <!-- Main Page -->
+    <BorderPane>
+
+        <!-- Insert Nav/Menu/Tool Bar -->
+        <top>
+            <fx:include source="menu.fxml"/>
+        </top>
+
+        <!-- Quiz Content -->
+        <center>
+            <VBox spacing="30" alignment="TOP_CENTER" VBox.vgrow="ALWAYS" >
+                <!-- Page-specific content -->
+                <padding>
+                    <Insets top="50"/>
+                </padding>
+                <Label text="Welcome to the Home Page!" />
+
+                <!-- HBox 1: Search & Filter -->
+                <HBox spacing="10" alignment="CENTER">
+                    <TextField fx:id="searchField" promptText="Search..." />
+                    <Button text="Search" onAction="#handleSearch" />
+                    <Button text="Filter By" onAction="#toggleFilter"/>
+
+                </HBox>
 
 
-    <!-- Center Content -->
-    <center>
-        <VBox spacing="30" alignment="TOP_CENTER" VBox.vgrow="ALWAYS" >
-            <!-- Page-specific content -->
-            <padding>
-                <Insets top="50"/>
-            </padding>
-            <Label text="Welcome to the Home Page!" />
+                <!-- HBox 2: Display Quiz & Sort Results -->
+                <HBox spacing="10" alignment="CENTER" >
+                    <ListView fx:id="quizResults" prefHeight="200" prefWidth="550" />
+                </HBox>
 
-            <!-- HBox 1: Search Bar -->
-            <HBox spacing="10" alignment="CENTER">
-                <Button text="Filter By"/>
-                <TextField fx:id="searchField" promptText="Search..." />
-                <Button text="Search" onAction="#handleSearch" />
+            </VBox>
+        </center>
+
+        <bottom>
+            <Label text="Bottom border" />
+        </bottom>
+    </BorderPane>
+
+    <!-- Filter Overlay (Triggered to display) -->
+    <AnchorPane fx:id="filterOverlay" visible="false" style="-fx-background-color: rgba(0, 0, 0, 0.6);">
+        <VBox alignment="CENTER" spacing="15"
+              style="-fx-background-color: white; -fx-padding: 20; -fx-border-radius: 5;">
+            <Label text="Filter Quizzes"/>
+
+            <HBox spacing="10">
+                <Label text="Subject:"/>
+                <ComboBox fx:id="subjectSetting"/>
+            </HBox>
+
+            <HBox spacing="10">
+                <Label text="Difficulty:"/>
+                <ComboBox fx:id="difficultySetting"/>
+            </HBox>
+
+            <HBox spacing="10">
+                <Label text="Year Level:"/>
+                <ComboBox fx:id="yearSetting"/>
+            </HBox>
+
+            <HBox spacing="10">
+                <Label text="Country:"/>
+                <ComboBox fx:id="countrySetting"/>
             </HBox>
 
 
-            <!-- HBox 2: Placeholder for middle content -->
-            <HBox spacing="10" alignment="CENTER" >
-                <ListView fx:id="quizResults" prefHeight="200" prefWidth="550" />
+            <HBox spacing="10">
+                <Button text="Apply Filters" onAction="#applyFilter"/>
+                <Button text="Clear" onAction="#clearFilter"/>
+                <Button text="Close" onAction="#toggleFilter"/>
             </HBox>
-
-            <!-- HBox 2: Placeholder for middle content -->
-            <HBox alignment="CENTER">
-                <Label text="Quizzes for ### topic -> content here" />
-            </HBox>
-
         </VBox>
-    </center>
+    </AnchorPane>
 
-    <bottom>
-        <Label text="Bottom border" />
-    </bottom>
 
-</BorderPane>
+
+</StackPane>
