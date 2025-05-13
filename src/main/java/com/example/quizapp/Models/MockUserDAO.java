@@ -76,7 +76,6 @@ public class MockUserDAO implements IUserDAO{
                 return false;
             }
         }
-
         // Validate password
         String password = user.getPassword();
         if (password.length() < 8) {

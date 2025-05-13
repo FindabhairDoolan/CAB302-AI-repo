@@ -1,6 +1,7 @@
 import com.example.quizapp.Models.IUserDAO;
 import com.example.quizapp.Models.AuthManager;
 import com.example.quizapp.Models.MockUserDAO;
+import com.example.quizapp.Models.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,10 +15,22 @@ public class LoginTest {
     @BeforeEach
     public void setUp() {
         AuthManager.setTestInstance(new MockUserDAO());
+
         authManager = AuthManager.getInstance();
         authManager.disableAlertsForTesting = true;
 
     }
+
+    private static final String userName = "alice";
+    private static final String email = "alice@example.com";
+    private static final String password = "password123";
+
+    private static final String userName_2 = "bob";
+    private static final String email_2 = "bob@example.com";
+    private static final String password_2 = "secure456";
+
+    private User user;
+
 
     @Test
     public void testLoginWithCorrectCredentials() {
