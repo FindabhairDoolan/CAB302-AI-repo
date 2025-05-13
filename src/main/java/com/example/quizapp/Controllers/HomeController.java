@@ -13,9 +13,7 @@ public class HomeController extends MenuBarController {
     public AnchorPane filterOverlay;
     @FXML
     private TextField searchField;
-    @FXML
-<<<<<<< HEAD
-=======
+
     @FXML
     public ListView<Quiz> quizResults;
     @FXML
@@ -26,7 +24,6 @@ public class HomeController extends MenuBarController {
     public ComboBox<String> countrySetting; //unused; for later implementation
     @FXML
     public ComboBox<String> subjectSetting;
->>>>>>> HomePage
 
     private IQuizDAO quizDAO = new SqliteQuizDAO();
 
