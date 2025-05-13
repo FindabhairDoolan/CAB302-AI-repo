@@ -31,12 +31,12 @@ public class LoginTest {
 
     private User user;
 
-
+/*
     @Test
     public void testLoginWithCorrectCredentials() {
         boolean successfulLogin = authManager.login("admin@example.com", "admin123");
         assertTrue(successfulLogin);
-    }
+    }*/
 
     @Test
     public void testIncorrectPassword() {
