@@ -51,6 +51,7 @@ public class QuizController {
     private int correctAnswers = 0;
     private String difficulty;
     private String yearLevel;
+    private String subject;
 
     public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
@@ -58,6 +59,10 @@ public class QuizController {
 
     public void setYearLevel(String yearLevel) {
         this.yearLevel = yearLevel;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
     /**
