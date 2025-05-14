@@ -12,7 +12,7 @@ public class QuizTest {
     private static final String quizTopic = "Physics";
     private static final String quizMode = "Practice";
     private static final String difficulty = "Hard";
-    private static final String yearLevel = "10";
+    private static final String yearLevel = "year 10";
     private static final String country = "Australia";
     private static final int creatorID = 101;
 
@@ -21,7 +21,7 @@ public class QuizTest {
     private static final String quizTopic_2 = "Algebra";
     private static final String quizMode_2 = "Practice";
     private static final String difficulty_2 = "Easy";
-    private static final String yearLevel_2 = "8";
+    private static final String yearLevel_2 = "year 8";
     private static final String country_2 = "New Zealand";
     private static final int creatorID_2 = 202;
 
@@ -125,4 +125,5 @@ public class QuizTest {
         quiz.setCreatorID(creatorID_2);
         assertEquals(creatorID_2, quiz.getCreatorID());
     }
+
 }

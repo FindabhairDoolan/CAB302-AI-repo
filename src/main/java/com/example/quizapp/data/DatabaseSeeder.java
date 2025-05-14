@@ -31,8 +31,8 @@ public class DatabaseSeeder {
         try {
             Statement stmt = connection.createStatement();
             stmt.executeUpdate("DELETE FROM quizAttempts");
-            stmt.executeUpdate("DELETE FROM questions");
-            stmt.executeUpdate("DELETE FROM quizzes");
+            //stmt.executeUpdate("DELETE FROM questions");
+            //stmt.executeUpdate("DELETE FROM quizzes");
             //stmt.executeUpdate("DELETE FROM users");
 
             User alice = userDAO.getUserByEmail("alice@example.com");
@@ -50,22 +50,42 @@ public class DatabaseSeeder {
             int aliceID = alice.getUserID();
             int bobID = bob.getUserID();
 
-            Quiz quiz1 = new Quiz("Algebra Basics", "Mathematics", "Algebra","Online", "Easy", "Year 10", "Australia", aliceID);
-            Quiz quiz2 = new Quiz("Photosynthesis", "Biology", "Photosynthesis", "Online", "Medium", "Year 11", "Australia", bobID);
-            Quiz quiz3 = new Quiz("World War II", "History", "World War II", "Online", "Easy", "Year 10", "Australia", aliceID);
-            quizDAO.addQuiz(quiz1);
-            quizDAO.addQuiz(quiz2);
-            quizDAO.addQuiz(quiz3);
+            //If quiz does not exist in database yet, adds it
+            Quiz quiz1 = quizDAO.getQuizByName("Algebra Basics");
+            if (quiz1 == null) {
+                quizDAO.addQuiz(new Quiz("Algebra Basics", "Mathematics","Algebra", "Practice", "Easy", "Year 10", "Australia", aliceID));
+                quiz1 = quizDAO.getQuizByName("Algebra Basics");
+                //Add same question 5 times
+                for (int i = 1; i <= 5; i++) {
+                    int quiz1ID = quiz1.getQuizID();
+                    questionDAO.addQuestion(new Question(quiz1ID, "What is 2 + " + i + "?", "" + (2 + i), "" + (2 + i + 1), "" + (2 + i - 1), "" + (2 * i)));
+                }
+            }
 
+            Quiz quiz2 = quizDAO.getQuizByName("Photosynthesis");
+            if (quiz2 == null) {
+                quizDAO.addQuiz(new Quiz("Photosynthesis", "Science","Biology", "Practice", "Medium", "Year 11", "Australia", bobID));
+                quiz2 = quizDAO.getQuizByName("Photosynthesis");
+                for (int i = 1; i <= 5; i++) {
+                    int quiz2ID = quiz2.getQuizID();
+                    questionDAO.addQuestion(new Question(quiz2ID, "What is produced in photosynthesis step " + i + "?", "Oxygen", "Carbon Dioxide", "Water", "Glucose"));
+                }
+            }
+
+            Quiz quiz3 = quizDAO.getQuizByName("World War II");
+            if (quiz3 == null) {
+                quizDAO.addQuiz(new Quiz("World War II", "History","Wars", "Online", "Easy", "Year 10", "Australia", aliceID));
+                quiz3 = quizDAO.getQuizByName("World War II");
+                for (int i = 1; i <= 5; i++) {
+                    int quiz3ID = quiz3.getQuizID();
+                    questionDAO.addQuestion(new Question(quiz3ID, "Who led Germany in WW2 (Q" + i + ")?", "Hitler", "Stalin", "Churchill", "Roosevelt"));
+                }
+            }
+
+            //Get the quiz ID after database autoincrements it
             int quiz1ID = quizDAO.getQuizByName("Algebra Basics").getQuizID();
             int quiz2ID = quizDAO.getQuizByName("Photosynthesis").getQuizID();
             int quiz3ID = quizDAO.getQuizByName("World War II").getQuizID();
-
-            for (int i = 1; i <= 5; i++) {
-                questionDAO.addQuestion(new Question(quiz1ID, "What is 2 + " + i + "?", "" + (2 + i), "" + (2 + i + 1), "" + (2 + i - 1), "" + (2 * i)));
-                questionDAO.addQuestion(new Question(quiz2ID, "What is produced in photosynthesis step " + i + "?", "Oxygen", "Carbon Dioxide", "Water", "Glucose"));
-                questionDAO.addQuestion(new Question(quiz3ID, "Who led Germany in WW2 (Q" + i + ")?", "Hitler", "Stalin", "Churchill", "Roosevelt"));
-            }
 
             quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz1ID, aliceID, 4));
             quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz2ID, aliceID, 3));
