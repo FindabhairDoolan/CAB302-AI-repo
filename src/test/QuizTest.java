@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class QuizTest {
     private static final String quizName = "Science Quiz";
+    private static final String subject = "Science";
     private static final String quizTopic = "Physics";
     private static final String quizMode = "Practice";
     private static final String difficulty = "Hard";
@@ -14,6 +15,7 @@ public class QuizTest {
     private static final int creatorID = 101;
 
     private static final String quizName_2 = "Math Quiz";
+    private static final String subject_2 = "Math";
     private static final String quizTopic_2 = "Algebra";
     private static final String quizMode_2 = "Practice";
     private static final String difficulty_2 = "Easy";
@@ -25,7 +27,7 @@ public class QuizTest {
 
     @BeforeEach
     public void setUp() {
-        quiz = new Quiz(quizName, quizTopic, quizMode, difficulty, yearLevel, country, creatorID);
+        quiz = new Quiz(quizName, subject, quizTopic, quizMode, difficulty, yearLevel, country, creatorID);
     }
 
     @Test
@@ -43,6 +45,17 @@ public class QuizTest {
     public void testSetQuizName() {
         quiz.setQuizName(quizName_2);
         assertEquals(quizName_2, quiz.getQuizName());
+    }
+
+    @Test
+    public void testGetQuizSubject() {
+        assertEquals(subject, quiz.getSubject());
+    }
+
+    @Test
+    public void testSetQuizSubject() {
+        quiz.setSubject(subject_2);
+        assertEquals(subject_2, quiz.getSubject());
     }
 
     @Test

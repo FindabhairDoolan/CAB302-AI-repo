@@ -25,7 +25,7 @@ public class Quiz {
     public void setQuizName(String quizName) { this.quizName = quizName; }
 
     public String getSubject() { return subject; }
-    public void   setSubject(String subject) { this.subject = subject; }
+    public void setSubject(String subject) { this.subject = subject; }
 
     public String getQuizTopic() { return quizTopic; }
     public void setQuizTopic(String quizTopic) { this.quizTopic = quizTopic; }
