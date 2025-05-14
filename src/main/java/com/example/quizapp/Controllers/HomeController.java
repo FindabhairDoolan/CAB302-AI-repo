@@ -147,7 +147,7 @@ public class HomeController extends MenuBarController  {
         difficultySetting.getItems().addAll("Easy", "Medium", "Hard", "Any");
         yearSetting.getItems().addAll("Year 1", "Year 2", "Year 3", "Year 4", "Year 5", "Year 6",
                 "Year 7","Year 8","Year 9","Year 10","Year 11","Year 12");
-        subjectSetting.getItems().addAll("English", "Mathematics","Social Science","Science","IT");
+        subjectSetting.getItems().addAll("English", "Mathematics","Social Science","Science","Information Technology");
         countrySetting.getItems().addAll("Australia");
 
         //Set default entries for filter comboboxes
