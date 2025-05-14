@@ -60,8 +60,7 @@ public class MockUserDAO implements IUserDAO{
     public boolean validateCredentials(String email, String password) {
         for (User user : users) {
             if (user.getEmail().equalsIgnoreCase(email)) {
-                String hashedInput = hashPassword(password);// Hashes the input password string
-                return user.getPassword().equals(hashedInput);
+                return user.getPassword().equals(password);
             }
         }
         return false; // No user found with the given username

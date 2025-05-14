@@ -52,7 +52,7 @@ public class AuthManager {
 
     //login
     public boolean login(String email, String password) {
-        boolean isValid = userDAO.validateCredentials(email, password);
+        boolean isValid = userDAO.validateCredentials(email, hashPassword(password));
         if(isValid){
             currentUser = userDAO.getUserByEmail(email);
         };
