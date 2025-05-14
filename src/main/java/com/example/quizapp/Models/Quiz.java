@@ -47,7 +47,7 @@ public class Quiz {
 
     @Override
     public String toString() {
-        return String.format("Quiz{id=%d, subject='%s', name='%s', topic='%s', mode='%s', difficulty='%s', year='%s', country='%s', creatorID=%d}",
+        return String.format("Quiz{id=%d, name='%s', subject='%s', topic='%s',  mode='%s', difficulty='%s', year='%s', country='%s', creatorID=%d}",
                 id, quizName, subject, quizTopic, quizMode, difficulty, yearLevel, country, creatorID);
     }
 

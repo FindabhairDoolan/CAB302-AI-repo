@@ -74,7 +74,7 @@ public class DatabaseSeeder {
 
             Quiz quiz3 = quizDAO.getQuizByName("World War II");
             if (quiz3 == null) {
-                quizDAO.addQuiz(new Quiz("World War II", "History","Wars", "Online", "Easy", "Year 10", "Australia", aliceID));
+                quizDAO.addQuiz(new Quiz("World War II", "History","Wars", "Practice", "Easy", "Year 10", "Australia", aliceID));
                 quiz3 = quizDAO.getQuizByName("World War II");
                 for (int i = 1; i <= 5; i++) {
                     int quiz3ID = quiz3.getQuizID();

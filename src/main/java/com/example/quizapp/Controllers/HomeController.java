@@ -79,7 +79,7 @@ public class HomeController extends MenuBarController  {
                 //Ignores filter if selection is null or empty (or other cases) otherwise checks for match
                 .filter(q -> difficulty == null || difficulty.isEmpty() ||  "Any".equals(difficulty) || "Select option...".equals(difficulty)  || q.getDifficulty().equalsIgnoreCase(difficulty))
                 .filter(q -> year == null || year.isEmpty() ||  "Select option...".equals(year) ||q.getYearLevel().equalsIgnoreCase(year))
-                .filter(q -> subject == null || subject.isEmpty() ||  "Select option...".equals(subject) || q.getQuizTopic().equalsIgnoreCase(subject))
+                .filter(q -> subject == null || subject.isEmpty() ||  "Select option...".equals(subject) || q.getSubject().equalsIgnoreCase(subject))
                 .filter(q -> country == null || country.isEmpty() ||  "Select option...".equals(country) || q.getCountry().equalsIgnoreCase(country))
 
                 .toList();
