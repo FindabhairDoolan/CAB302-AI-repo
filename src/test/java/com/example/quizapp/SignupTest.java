@@ -1,3 +1,5 @@
+package com.example.quizapp;
+
 import com.example.quizapp.Models.AuthManager;
 import com.example.quizapp.Models.IUserDAO;
 import com.example.quizapp.Models.MockUserDAO;

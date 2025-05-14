@@ -8,6 +8,7 @@
 
     <!-- Main Page -->
     <BorderPane>
+        <padding><Insets bottom="30"/></padding>
 
         <!-- Insert Nav/Menu/Tool Bar -->
         <top>
@@ -16,11 +17,10 @@
 
         <!-- Quiz Content -->
         <center>
-            <VBox spacing="30" alignment="TOP_CENTER" VBox.vgrow="ALWAYS" >
+            <VBox spacing="30" alignment="CENTER">
+                <padding><Insets top="50"/></padding>
+
                 <!-- Page-specific content -->
-                <padding>
-                    <Insets top="50"/>
-                </padding>
                 <Label text="Welcome to the Home Page!" />
 
                 <!-- HBox 1: Search & Filter -->
@@ -28,25 +28,28 @@
                     <TextField fx:id="searchField" promptText="Search..." />
                     <Button text="Search" onAction="#handleSearch" />
                     <Button text="Filter By" onAction="#toggleFilter"/>
-
                 </HBox>
 
 
-                <!-- HBox 2: Display Quiz & Sort Results -->
-                <HBox spacing="10" alignment="CENTER" >
-                    <ListView fx:id="quizResults" prefHeight="200" prefWidth="550" />
+                <!-- HBox 2: Display Quizzes in List View -->
+                <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
+                    <ListView fx:id="quizResults" prefHeight="200" prefWidth="550"/>
                 </HBox>
-
             </VBox>
+
+
         </center>
 
         <bottom>
-            <Label text="Bottom border" />
+            <!-- HBox 3: Display Quizzes in Thumbnail View -->
+            <FlowPane fx:id="quizResultsWindow" alignment="CENTER">
+            </FlowPane>
         </bottom>
+
     </BorderPane>
 
     <!-- Filter Overlay (Triggered to display) -->
-    <AnchorPane fx:id="filterOverlay" visible="false" style="-fx-background-color: rgba(0, 0, 0, 0.6);">
+    <AnchorPane fx:id="filterOverlay" visible="false" style="-fx-background-color: rgba(0, 0, 0, 0.6);" >
         <VBox alignment="CENTER" spacing="15"
               style="-fx-background-color: white; -fx-padding: 20; -fx-border-radius: 5;">
             <Label text="Filter Quizzes"/>
