@@ -21,14 +21,21 @@ public class CreateQuizController {
     public Button backButton;
     @FXML
     public Button createButton;
+
+    @FXML
+    private ComboBox<String> subjectComboBox;
     @FXML
     private ComboBox<String> yearLevelComboBox;
     @FXML
     private VBox numQuestionsContainer;
+
     @FXML
     private ToggleGroup difficultyGroup;
     @FXML
     private ToggleGroup modeToggleGroup;
+    @FXML
+    private TextArea topicTextArea;
+
     private SqliteUserDAO userDAO;
 
     public CreateQuizController() {
@@ -50,14 +57,13 @@ public class CreateQuizController {
     @FXML
     public void onCreate() throws IOException {
 
-        //If the user hasn't selected a quiz mode they may not create the quiz
-        if (modeToggleGroup.getSelectedToggle() == null) {
+        // Check if a subject has been selected
+        if (subjectComboBox.getValue() == null) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("No selected mode");
+            alert.setTitle("No selected subject");
             alert.setHeaderText(null);
-            alert.setContentText("You must select a quiz mode.");
+            alert.setContentText("You must select a subject.");
             alert.showAndWait();
-
             return;
         }
 
@@ -71,6 +77,7 @@ public class CreateQuizController {
             return;
         }
 
+
         // Check if a difficulty level has been selected
         if (difficultyGroup.getSelectedToggle() == null) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -81,12 +88,24 @@ public class CreateQuizController {
             return;
         }
 
+        //If the user hasn't selected a quiz mode they may not create the quiz
+        if (modeToggleGroup.getSelectedToggle() == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("No selected mode");
+            alert.setHeaderText(null);
+            alert.setContentText("You must select a quiz mode.");
+            alert.showAndWait();
+
+            return;
+        }
+
         //Get inputted customisation inputs and send to AI
         ComboBox<Integer> questionDropdown = (ComboBox<Integer>) numQuestionsContainer.getChildren().get(0);
         Integer selectedQuestions = questionDropdown.getValue();
         ToggleButton selectedDifficultyButton = (ToggleButton) difficultyGroup.getSelectedToggle();
         String selectedDifficulty = selectedDifficultyButton.getText();
         String selectedYearLevel = yearLevelComboBox.getValue();
+        String selectedSubject    = subjectComboBox.getValue();
 
         // Send user to Quiz page
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/com/example/quizapp/Quiz.fxml"));
@@ -97,6 +116,7 @@ public class CreateQuizController {
         quizController.setTotalQuestions(selectedQuestions);
         quizController.setDifficulty(selectedDifficulty);
         quizController.setYearLevel(selectedYearLevel);
+        quizController.setSubject(selectedSubject);
 
         Stage stage = (Stage) createButton.getScene().getWindow();
         stage.setScene(scene);

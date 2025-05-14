@@ -1,141 +1,163 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
-<?import javafx.collections.FXCollections?>
 
-
-<!--Using BorderPane to dynamically sort title and contents of page regardless of
-    window size-->
+<?import java.lang.String?>
 <BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.quizapp.Controllers.CreateQuizController"
->
+            fx:controller="com.example.quizapp.Controllers.CreateQuizController">
 
     <fx:define>
-        <ToggleGroup fx:id="modeToggleGroup" />
-        <ToggleGroup fx:id="difficultyGroup" />
+        <ToggleGroup fx:id="modeToggleGroup"/>
+        <ToggleGroup fx:id="difficultyGroup"/>
     </fx:define>
 
-    <!--Where the title and back button is located-->
+    <!-- Top bar -->
     <top>
         <BorderPane>
-
             <padding>
-                <Insets topRightBottomLeft="10"></Insets>
+                <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
-
             <left>
-                <!--The back button-->
-                <Button fx:id="backButton" text="&lt;" onAction="#onBack"></Button>
+                <Button fx:id="backButton"
+                        text="&lt;"
+                        onAction="#onBack"
+                        prefWidth="30"
+                        prefHeight="30"/>
             </left>
-
             <center>
-                <!--The title-->
-                <Label text="Create a quiz" style="-fx-font-size: 20px; -fx-padding: 0 40 0 0;"></Label>
+                <Label text="Create a Quiz"
+                       style="-fx-font-size: 20px;"/>
             </center>
-
         </BorderPane>
     </top>
 
-    <!--Where the main contents used to create the quiz is located-->
+    <!-- Main content -->
     <center>
-        <HBox>
+        <VBox spacing="15">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
 
-            <!--Contains the topic input and quiz create button-->
-            <VBox alignment="TOP_LEFT" spacing="10" HBox.hgrow="ALWAYS">
-
-                <padding>
-                    <Insets topRightBottomLeft="10"/>
-                </padding>
-
-                <!--Label that indicates what should be input into the text area below-->
-                <Label text="Topic"/>
-
-                <!--If text reaches border of text area, it will continue on a new line
-                the text area will also dynamically grow if the page size is increased-->
-                <TextArea fx:id="topicTextArea" VBox.vgrow="ALWAYS" wrapText="true"/>
-
-                <!--Button that creates a quiz based on user input-->
-                <Button fx:id="createButton" text="Create" maxWidth="Infinity" prefHeight="50"  style="-fx-font-size: 15px;" onAction="#onCreate" />
-
-            </VBox>
-
-            <!--Adds space between the two sections that dynamically grows if page
-            size is increased-->
-            <Region HBox.hgrow="ALWAYS"/>
-
-            <VBox alignment="TOP_CENTER" spacing="10" HBox.hgrow="ALWAYS">
-
-                <padding>
-                    <Insets topRightBottomLeft="10"/>
-                </padding>
-
-                <VBox spacing="10" alignment="TOP_LEFT">
-                    <Label text="Year Level"  />
-                    <ComboBox fx:id="yearLevelComboBox" prefWidth="90.0">
+            <!-- Row 1: Subject + Year Level -->
+            <HBox spacing="20">
+                <VBox spacing="5">
+                    <Label text="Subject"/>
+                    <ComboBox fx:id="subjectComboBox" prefWidth="180">
                         <items>
                             <FXCollections fx:factory="observableArrayList">
-                                <String fx:value="Year 1" />
-                                <String fx:value="Year 2" />
-                                <String fx:value="Year 3" />
-                                <String fx:value="Year 4" />
-                                <String fx:value="Year 5" />
-                                <String fx:value="Year 6" />
-                                <String fx:value="Year 7" />
-                                <String fx:value="Year 8" />
-                                <String fx:value="Year 9" />
-                                <String fx:value="Year 10" />
-                                <String fx:value="Year 11" />
-                                <String fx:value="Year 12" />
+                                <String fx:value="Mathematics"/>
+                                <String fx:value="English"/>
+                                <String fx:value="History"/>
+                                <String fx:value="Science"/>
+                                <String fx:value="Information Technology"/>
                             </FXCollections>
                         </items>
                     </ComboBox>
                 </VBox>
+                <VBox spacing="5">
+                    <Label text="Year Level"/>
+                    <ComboBox fx:id="yearLevelComboBox" prefWidth="120">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="Year 1"/>
+                                <String fx:value="Year 2"/>
+                                <String fx:value="Year 3"/>
+                                <String fx:value="Year 4"/>
+                                <String fx:value="Year 5"/>
+                                <String fx:value="Year 6"/>
+                                <String fx:value="Year 7"/>
+                                <String fx:value="Year 8"/>
+                                <String fx:value="Year 9"/>
+                                <String fx:value="Year 10"/>
+                                <String fx:value="Year 11"/>
+                                <String fx:value="Year 12"/>
+                            </FXCollections>
+                        </items>
+                    </ComboBox>
+                </VBox>
+            </HBox>
 
-                <VBox spacing="10" alignment="TOP_LEFT">
-                    <Label text="Difficulty"  />
-                    <HBox alignment="CENTER_LEFT" spacing="5" >
-                        <ToggleButton text="Easy" toggleGroup="$difficultyGroup" styleClass="difficulty-toggle" />
-                        <ToggleButton text="Medium" toggleGroup="$difficultyGroup" styleClass="difficulty-toggle" />
-                        <ToggleButton text="Hard" toggleGroup="$difficultyGroup" styleClass="difficulty-toggle" />
-                        <ToggleButton text="Random" toggleGroup="$difficultyGroup" styleClass="difficulty-toggle" />
-                    </HBox>
+            <!-- Row 2: Topic + Controls -->
+            <HBox spacing="20">
+                <!-- Topic box (fixed height) -->
+                <VBox spacing="5">
+                    <Label text="Topic"/>
+                    <TextArea fx:id="topicTextArea"
+                              wrapText="true"
+                              prefHeight="300"/>
                 </VBox>
 
-                <HBox alignment="CENTER_LEFT" spacing="10">
+                <!-- Right‐side controls -->
+                <VBox spacing="10">
 
-                    <Label text="Number of Questions:" />
-                    <VBox fx:id="numQuestionsContainer" alignment="CENTER_LEFT" />
+                    <!-- Number of Questions -->
+                    <HBox spacing="5" alignment="CENTER_LEFT">
+                        <Label text="Number of Questions:"/>
+                        <VBox fx:id="numQuestionsContainer"/>
+                    </HBox>
 
-                </HBox>
+                    <!-- Spacing -->
+                    <Region prefHeight="20"/>
 
-                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <!-- Difficulty label -->
+                    <Label text="Difficulty"/>
 
-                    <!--Quiz mode toggle label-->
-                    <Label text="Quiz mode"/>
+                    <!-- Difficulty buttons -->
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <ToggleButton text="Easy"
+                                      toggleGroup="$difficultyGroup"
+                                      styleClass="difficulty-toggle"/>
+                        <ToggleButton text="Medium"
+                                      toggleGroup="$difficultyGroup"
+                                      styleClass="difficulty-toggle"/>
+                        <ToggleButton text="Hard"
+                                      toggleGroup="$difficultyGroup"
+                                      styleClass="difficulty-toggle"/>
+                        <ToggleButton text="Random"
+                                      toggleGroup="$difficultyGroup"
+                                      styleClass="difficulty-toggle"/>
+                    </HBox>
 
-                    <!-- Practice Mode: Selected and enabled -->
-                    <ToggleButton fx:id="practiceToggleButton"
-                                  text="Practice"
-                                  selected="true"
-                                  toggleGroup="$modeToggleGroup" />
+                    <!-- Spacing -->
+                    <Region prefHeight="20"/>
 
-                    <!-- Exam Mode: Disabled and unselectable -->
-                    <ToggleButton fx:id="examToggleButton"
-                                  text="Exam"
-                                  disable="true"
-                                  toggleGroup="$modeToggleGroup" />
+                    <!-- Quiz Mode -->
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Quiz Mode"/>
+                        <!-- Practice Mode: Selected and enabled -->
+                        <ToggleButton fx:id="practiceToggleButton"
+                                      text="Practice"
+                                      selected="true"
+                                      toggleGroup="$modeToggleGroup"/>
+                        <!-- Exam Mode: Disabled and unselectable -->
+                        <ToggleButton fx:id="examToggleButton"
+                                      text="Exam"
+                                      disable="true"
+                                      toggleGroup="$modeToggleGroup"/>
+                    </HBox>
 
-                </HBox>
+                </VBox>
+            </HBox>
 
-                <!--Insert year level, country, difficulty,
-                quiz mode switch and time limit here -->
 
-            </VBox>
-        </HBox>
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <!-- Create Quiz button-->
+            <HBox alignment="CENTER">
+                <padding>
+                    <Insets top="0" right="10" bottom="10" left="10"/>
+                </padding>
+                <Button fx:id="createButton"
+                        text="Create Quiz"
+                        prefWidth="300"
+                        prefHeight="40"
+                        style="-fx-font-size: 16px;"
+                        onAction="#onCreate"/>
+            </HBox>
+
+        </VBox>
     </center>
 </BorderPane>

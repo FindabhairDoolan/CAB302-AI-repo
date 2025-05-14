@@ -50,9 +50,9 @@ public class QuizHistoryController {
         ObservableList<Quiz> quizzes = FXCollections.observableArrayList();
 
         // Add some mock quizzes to the list
-        quizzes.add(new Quiz("Math Quiz", "Mathematics", "Online", "Medium", "High School", "USA", 101));
-        quizzes.add(new Quiz("Science Quiz", "Science", "In-Person", "Hard", "College", "UK", 102));
-        quizzes.add(new Quiz("History Quiz", "History", "Online", "Easy", "High School", "Australia", 103));
+        quizzes.add(new Quiz("Math Quiz", "Mathematics", "Fractions", "Online", "Medium", "High School", "USA", 101));
+        quizzes.add(new Quiz("Science Quiz", "Science","Chemistry", "In-Person", "Hard", "College", "UK", 102));
+        quizzes.add(new Quiz("History Quiz", "History", "The Industrial Revolution","Online", "Easy", "High School", "Australia", 103));
 
         return quizzes;
     }
