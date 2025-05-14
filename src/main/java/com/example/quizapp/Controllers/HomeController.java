@@ -100,7 +100,7 @@ public class HomeController extends MenuBarController  {
     private AnchorPane createQuizCard(Quiz quiz) {
         AnchorPane card = new AnchorPane();
         card.setPrefSize(150, 100);
-        card.setStyle("-fx-background-color: #f4f4f4; -fx-border-color: #ccc; -fx-border-radius: 5; -fx-padding: 10;");
+        card.setStyle("-fx-border-color: #ccc; -fx-border-radius: 5; -fx-padding: 10;");
 
         Label name = new Label(quiz.getQuizName());
         name.setLayoutX(10);
@@ -155,6 +155,7 @@ public class HomeController extends MenuBarController  {
         subjectSetting.setValue("Select option...");
         difficultySetting.setValue("Select option...");
         yearSetting.setValue("Select option...");
+
 
     }
 
