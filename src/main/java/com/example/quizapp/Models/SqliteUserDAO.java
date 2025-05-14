@@ -7,25 +7,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SqliteUserDAO implements IUserDAO {
 
 
     private Connection connection;
-    private ComboBox<Integer> questionDropdown;
 
 
     public SqliteUserDAO() {
         connection = SqliteConnection.getInstance();
         createTable();
-        initializeQuestionDropdown();
         //insertSampleData(); //for testing, to be removed later
     }
-
 
     private void createTable() {
         // Create table if not exists
@@ -41,19 +34,6 @@ public class SqliteUserDAO implements IUserDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-
-    private void initializeQuestionDropdown() {
-        questionDropdown = new ComboBox<>(); // Initialize the ComboBox
-        // Add number of questions options
-        questionDropdown.getItems().addAll(5, 10, 15, 20, 25);
-        // Set default value to 5 questions
-        questionDropdown.setValue(5);
-    }
-
-    public ComboBox<Integer> getQuestionDropdown() {
-        return questionDropdown; // Return the ComboBox
     }
 
     private void insertSampleData() {

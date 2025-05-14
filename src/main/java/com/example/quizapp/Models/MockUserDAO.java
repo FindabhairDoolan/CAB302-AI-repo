@@ -14,9 +14,9 @@ public class MockUserDAO implements IUserDAO{
 
     public MockUserDAO() {
         // Add some initial users to the mock database
-        User user1 = new User("admin", "admin@example.com", "admin123");
-        User user2 = new User("user1", "user1@example.com", "password1");
-        User user3 = new User("user2", "user2@example.com", "password2");
+        User user1 = new User("admin", "admin@example.com", hashPassword("admin123"));
+        User user2 = new User("user1", "user1@example.com", hashPassword("password1"));
+        User user3 = new User("user2", "user2@example.com", hashPassword("password2"));
         user1.setUserID(1);
         user2.setUserID(2);
         user3.setUserID(3);
@@ -33,8 +33,6 @@ public class MockUserDAO implements IUserDAO{
         }
 
         user.setUserID(autoIncrementedId++);
-        // Hash password before storing
-        user.setPassword(hashPassword(user.getPassword()));
         users.add(user);
     }
 
@@ -57,12 +55,13 @@ public class MockUserDAO implements IUserDAO{
     public void deleteUser(User user) {
         users.remove(user);
     }
+
     @Override
     public boolean validateCredentials(String email, String password) {
         for (User user : users) {
             if (user.getEmail().equalsIgnoreCase(email)) {
                 String hashedInput = hashPassword(password);// Hashes the input password string
-                return Objects.equals(user.getPassword(), hashedInput);
+                return user.getPassword().equals(hashedInput);
             }
         }
         return false; // No user found with the given username

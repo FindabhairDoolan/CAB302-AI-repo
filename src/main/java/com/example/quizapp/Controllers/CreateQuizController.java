@@ -49,7 +49,7 @@ public class CreateQuizController {
     @FXML
     public void initialize() {
         // Add the question dropdown from SqliteUser DAO to the numQuestionsContainer
-        ComboBox<Integer> questionDropdown = userDAO.getQuestionDropdown();
+        ComboBox<Integer> questionDropdown = quizDAO.getQuestionDropdown();
         numQuestionsContainer.getChildren().add(questionDropdown);
     }
 

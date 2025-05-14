@@ -1,5 +1,7 @@
 package com.example.quizapp.Models;
 
+import javafx.scene.control.ComboBox;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,11 +12,25 @@ import java.util.List;
 public class SqliteQuizDAO implements IQuizDAO {
 
     private Connection connection;
+    private ComboBox<Integer> questionDropdown;
 
     public SqliteQuizDAO() {
         connection = SqliteConnection.getInstance();
         createTable();
+        initializeQuestionDropdown();
         //insertSampleData(); //for testing, to be removed later
+    }
+
+    private void initializeQuestionDropdown() {
+        questionDropdown = new ComboBox<>(); // Initialize the ComboBox
+        // Add number of questions options
+        questionDropdown.getItems().addAll(5, 10, 15, 20, 25);
+        // Set default value to 5 questions
+        questionDropdown.setValue(5);
+    }
+
+    public ComboBox<Integer> getQuestionDropdown() {
+        return questionDropdown; // Return the ComboBox
     }
 
 
