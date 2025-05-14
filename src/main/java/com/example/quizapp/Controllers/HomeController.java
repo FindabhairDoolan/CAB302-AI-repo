@@ -5,6 +5,7 @@ import com.example.quizapp.Models.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
 
 import java.util.List;
 
@@ -15,6 +16,8 @@ public class HomeController extends MenuBarController  {
     private TextField searchField;
     @FXML
     private ListView<Quiz> quizResults;
+    @FXML
+    private FlowPane quizResultsWindow;
     @FXML
     public ComboBox<String> difficultySetting;
     @FXML
@@ -31,10 +34,16 @@ public class HomeController extends MenuBarController  {
     //Quiz Display: Search results
     @FXML
     private void handleSearch() {
+        //Clear quizzes displayed
         quizResults.getItems().clear();
+        //Get input
         String search = searchField.getText();
+        //Search database for quizzes matching input
         List<Quiz> quizzes = quizDAO.searchQuiz(search);
-        quizResults.getItems().addAll(quizzes);
+        //Display results
+        quizResults.getItems().addAll(quizzes); //List View
+        displayQuizzes(quizzes); //Thumbnail View
+
         //debug
         System.out.println("Searching for: " + search);
         System.out.println("Results found: " + quizzes.size());
@@ -75,9 +84,54 @@ public class HomeController extends MenuBarController  {
 
                 .toList();
         //return filter
-        quizResults.getItems().setAll(filtered);
+        quizResults.getItems().setAll(filtered); //List View
+        displayQuizzes(filtered); //Thumbnail
         filterOverlay.setVisible(false); // Hide overlay after applying
     }
+
+    private void displayQuizzes(List<Quiz> quizzes) {
+        quizResultsWindow.getChildren().clear();
+        for (Quiz quiz : quizzes) {
+            AnchorPane card = createQuizCard(quiz);
+            quizResultsWindow.getChildren().add(card);
+        }
+    }
+
+    private AnchorPane createQuizCard(Quiz quiz) {
+        AnchorPane card = new AnchorPane();
+        card.setPrefSize(150, 100);
+        card.setStyle("-fx-background-color: #f4f4f4; -fx-border-color: #ccc; -fx-border-radius: 5; -fx-padding: 10;");
+
+        Label name = new Label(quiz.getQuizName());
+        name.setLayoutX(10);
+        name.setLayoutY(10);
+
+        Label topic = new Label("Subject: " + quiz.getQuizTopic());
+        topic.setLayoutX(10);
+        topic.setLayoutY(25);
+
+        Label year = new Label(quiz.getYearLevel());
+        year.setLayoutX(10);
+        year.setLayoutY(55);
+
+        Label difficulty = new Label("Difficulty: " + quiz.getDifficulty());
+        difficulty.setLayoutX(10);
+        difficulty.setLayoutY(40);
+
+
+
+        card.getChildren().addAll(name, difficulty, year, topic);
+
+        //When card is clicked go to quiz
+        card.setOnMouseClicked(event -> {
+            System.out.println("Clicked quiz: " + quiz.getQuizName());
+            // navigate to quiz view
+        });
+
+        return card;
+    }
+
+
 
     //Initialise in window
     @FXML
@@ -85,6 +139,9 @@ public class HomeController extends MenuBarController  {
         //Loads all available quizzes, at first
         List<Quiz> quizzes = quizDAO.getAllQuizzes();
         quizResults.getItems().setAll(quizzes);
+
+        //Creating quiz window
+        displayQuizzes(quizzes);
 
         // Setup filter values
         difficultySetting.getItems().addAll("Easy", "Medium", "Hard", "Any");
