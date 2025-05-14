@@ -126,6 +126,7 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
                 if (!quizMap.containsKey(quizID)) {
                     Quiz quiz = new Quiz(
                             rs.getString("quizName"),
+                            rs.getString("subject"),
                             rs.getString("quizTopic"),
                             rs.getString("quizMode"),
                             rs.getString("difficulty"),

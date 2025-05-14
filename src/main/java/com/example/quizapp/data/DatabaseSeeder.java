@@ -50,9 +50,9 @@ public class DatabaseSeeder {
             int aliceID = alice.getUserID();
             int bobID = bob.getUserID();
 
-            Quiz quiz1 = new Quiz("Algebra Basics", "Mathematics", "Online", "Easy", "Year 10", "Australia", aliceID);
-            Quiz quiz2 = new Quiz("Photosynthesis", "Biology", "Online", "Medium", "Year 11", "Australia", bobID);
-            Quiz quiz3 = new Quiz("World War II", "History", "Online", "Easy", "Year 10", "Australia", aliceID);
+            Quiz quiz1 = new Quiz("Algebra Basics", "Mathematics", "Algebra","Online", "Easy", "Year 10", "Australia", aliceID);
+            Quiz quiz2 = new Quiz("Photosynthesis", "Biology", "Photosynthesis", "Online", "Medium", "Year 11", "Australia", bobID);
+            Quiz quiz3 = new Quiz("World War II", "History", "World War II", "Online", "Easy", "Year 10", "Australia", aliceID);
             quizDAO.addQuiz(quiz1);
             quizDAO.addQuiz(quiz2);
             quizDAO.addQuiz(quiz3);

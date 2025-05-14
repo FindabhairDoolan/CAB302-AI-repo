@@ -18,6 +18,7 @@ public class SqliteQuizDAO implements IQuizDAO {
     }
 
 
+
     private void createTable() {
         // Create table if not exists
         try {
@@ -25,6 +26,7 @@ public class SqliteQuizDAO implements IQuizDAO {
             String query = "CREATE TABLE IF NOT EXISTS quizzes ("
                     + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + "quizName VARCHAR NOT NULL,"
+                    + "subject    VARCHAR NOT NULL,"
                     + "quizTopic VARCHAR NOT NULL,"
                     + "quizMode VARCHAR NOT NULL,"
                     + "difficulty VARCHAR NOT NULL," //is "not null" necessary?
@@ -61,15 +63,16 @@ public class SqliteQuizDAO implements IQuizDAO {
     @Override
     public void addQuiz(Quiz quiz) {
         try {
-            String query = "INSERT INTO quizzes (quizName, quizTopic, quizMode, difficulty, yearLevel, country, creatorID) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO quizzes (quizName, subject, quizTopic, quizMode, difficulty, yearLevel, country, creatorID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, quiz.getQuizName());
-            statement.setString(2, quiz.getQuizTopic());
-            statement.setString(3, quiz.getQuizMode());
-            statement.setString(4, quiz.getDifficulty());
-            statement.setString(5, quiz.getYearLevel());
-            statement.setString(6, quiz.getCountry());
-            statement.setInt(7, quiz.getCreatorID());
+            statement.setString(2, quiz.getSubject());
+            statement.setString(3, quiz.getQuizTopic());
+            statement.setString(4, quiz.getQuizMode());
+            statement.setString(5, quiz.getDifficulty());
+            statement.setString(6, quiz.getYearLevel());
+            statement.setString(7, quiz.getCountry());
+            statement.setInt(8, quiz.getCreatorID());
             statement.executeUpdate();
         }
         catch (Exception e) {
@@ -80,15 +83,16 @@ public class SqliteQuizDAO implements IQuizDAO {
     @Override
     public void updateQuizInfo(Quiz quiz) {
         try {
-            String query = "UPDATE quizzes SET quizName = ?, quizTopic = ?, quizMode = ?, difficulty = ?, yearLevel = ?, country = ?, creatorID = ? WHERE id = ?";
+            String query = "UPDATE quizzes SET quizName = ?, subject = ?, quizTopic = ?, quizMode = ?, difficulty = ?, yearLevel = ?, country = ?, creatorID = ? WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, quiz.getQuizName());
-            statement.setString(2, quiz.getQuizTopic());
-            statement.setString(3, quiz.getQuizMode());
-            statement.setString(4, quiz.getDifficulty());
-            statement.setString(5, quiz.getYearLevel());
-            statement.setString(6, quiz.getCountry());
-            statement.setInt(7, quiz.getCreatorID());
+            statement.setString(2, quiz.getSubject());
+            statement.setString(3, quiz.getQuizTopic());
+            statement.setString(4, quiz.getQuizMode());
+            statement.setString(5, quiz.getDifficulty());
+            statement.setString(6, quiz.getYearLevel());
+            statement.setString(7, quiz.getCountry());
+            statement.setInt(8, quiz.getCreatorID());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -125,6 +129,7 @@ public class SqliteQuizDAO implements IQuizDAO {
                 //might be some problems with the question id and quizID?
                 Quiz quiz = new Quiz(
                         rs.getString("quizName"),
+                        rs.getString("subject"),
                         rs.getString("quizTopic"),
                         rs.getString("quizMode"),
                         rs.getString("difficulty"),
@@ -151,6 +156,7 @@ public class SqliteQuizDAO implements IQuizDAO {
             while (rs.next()) {
                 Quiz quiz = new Quiz(
                         rs.getString("quizName"),
+                        rs.getString("subject"),
                         rs.getString("quizTopic"),
                         rs.getString("quizMode"),
                         rs.getString("difficulty"),
@@ -179,6 +185,7 @@ public class SqliteQuizDAO implements IQuizDAO {
                 //might be some problems with the question id and quizID?
                 quiz = new Quiz(
                         rs.getString("quizName"),
+                        rs.getString("subject"),
                         rs.getString("quizTopic"),
                         rs.getString("quizMode"),
                         rs.getString("difficulty"),
@@ -206,6 +213,7 @@ public class SqliteQuizDAO implements IQuizDAO {
                 //might be some problems with the question id and quizID?
                 Quiz quiz = new Quiz(
                         rs.getString("quizName"),
+                        rs.getString("subject"),
                         rs.getString("quizTopic"),
                         rs.getString("quizMode"),
                         rs.getString("difficulty"),
