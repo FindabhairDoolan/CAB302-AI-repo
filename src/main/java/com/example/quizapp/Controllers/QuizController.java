@@ -1,8 +1,7 @@
 package com.example.quizapp.Controllers;
 
-import com.example.quizapp.Models.Question;
-import com.example.quizapp.Models.Quiz;
-import com.example.quizapp.Models.SqliteQuestionDAO;
+import com.example.quizapp.Models.*;
+import com.example.quizapp.utils.AlertManager;
 import com.example.quizapp.utils.SceneManager;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -46,7 +45,7 @@ public class QuizController {
     private int totalQuestions;
     private List<Question> questionList;
     SqliteQuestionDAO questionDAO = new SqliteQuestionDAO();
-    private Quiz quiz =  null;
+    private Quiz quiz = QuizManager.getInstance().getCurrentQuiz();
 
     private int correctAnswers = 0;
     private String difficulty;
@@ -105,6 +104,10 @@ public class QuizController {
         loadQuiz();
     }
 
+    /**
+     * Loads the quiz by getting quiz questions from database
+     * Also sets progress label data
+     */
     private void loadQuiz() {
 
         // If quizID is null, use default (1)
@@ -113,8 +116,9 @@ public class QuizController {
 
         if (questionList.isEmpty()) {
             //System.err.println("No questions found for quiz ID " + idToLoad);
-            // Optionally show an alert dialog to the user
-            return;
+            //Show an alert dialog to the user
+            AlertManager.alertError("Quiz has no questions", "No questions found for this quiz, " +
+                    "please return to the home page and add questions to this quiz in the quiz editor.");
         }
 
         loadQuestion(questionList.get(questionIndex - 1));

@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class LoginTest {
 
     private AuthManager authManager;
-    private IUserDAO UserDAO;
+    private MockUserDAO mockUserDAO;
 
     @BeforeEach
     public void setUp() {
@@ -24,32 +24,27 @@ public class LoginTest {
 
     }
 
-    private static final String userName = "alice";
-    private static final String email = "alice@example.com";
-    private static final String password = "password123";
-
-    private static final String userName_2 = "bob";
-    private static final String email_2 = "bob@example.com";
-    private static final String password_2 = "secure456";
+    private static final String userName = "admin";
+    private static final String email = "admin@example.com";
+    private static final String password = "admin123";
 
     private User user;
 
-    @Disabled("Temporarily disabled until fixed")
     @Test
     public void testLoginWithCorrectCredentials() {
-        boolean successfulLogin = authManager.login("admin@example.com", "admin123");
+        boolean successfulLogin = authManager.login(email, password);
         assertTrue(successfulLogin);
     }
 
     @Test
     public void testIncorrectPassword() {
-        boolean successfulLogin = authManager.login("admin@example.com", "admin12345");
+        boolean successfulLogin = authManager.login(email, "admin1234");
         assertFalse(successfulLogin);
     }
 
     @Test
     public void testIncorrectEmail() {
-        boolean successfulLogin = authManager.login("admin@example.con", "admin123");
+        boolean successfulLogin = authManager.login("admin@example.con", password);
         assertFalse(successfulLogin);
     }
 }

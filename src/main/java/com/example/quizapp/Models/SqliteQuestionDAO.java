@@ -1,8 +1,13 @@
 package com.example.quizapp.Models;
 
+import io.github.ollama4j.exceptions.OllamaBaseException;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
 
 public class SqliteQuestionDAO implements IQuestionDAO {
 
@@ -11,7 +16,7 @@ public class SqliteQuestionDAO implements IQuestionDAO {
     public SqliteQuestionDAO() {
         connection = SqliteConnection.getInstance();
         createTable();
-        insertSampleData(); //for testing, to be removed later
+        //insertSampleData(); //for testing, to be removed later
     }
 
 
@@ -82,8 +87,25 @@ public class SqliteQuestionDAO implements IQuestionDAO {
         return questions;
     }
 
+    public void addAIQuestions(String JSONResponse, int quizID) throws SQLException, OllamaBaseException, IOException, InterruptedException {
 
-        @Override
+        JSONObject json = new JSONObject(JSONResponse);
+        JSONArray quizArray = json.getJSONArray("Quiz");
+        for (int i = 0; i < quizArray.length(); i++) {
+            JSONObject questionObj = quizArray.getJSONObject(i);
+
+            String questionText = questionObj.getString("question");
+            String correctAnswer = questionObj.getString("correctAnswer");
+            String incorrectAnswer1 = questionObj.getString("incorrectAnswer1");
+            String incorrectAnswer2 = questionObj.getString("incorrectAnswer2");
+            String incorrectAnswer3 = questionObj.getString("incorrectAnswer3");
+            Question question = new Question(quizID, questionText, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3);
+            addQuestion(question);
+        }
+
+    }
+
+    @Override
     public void addQuestion(Question question) {
         try {
             String query = "INSERT INTO questions (quizID, questionText, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3) VALUES (?, ?, ?, ?, ?, ?)";
