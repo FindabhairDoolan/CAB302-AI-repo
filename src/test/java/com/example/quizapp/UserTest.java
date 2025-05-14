@@ -1,3 +1,5 @@
+package com.example.quizapp;
+
 import com.example.quizapp.Models.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
