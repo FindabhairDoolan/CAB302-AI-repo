@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import com.example.quizapp.Models.SqliteUserDAO;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -36,18 +37,16 @@ public class CreateQuizController {
     @FXML
     private TextArea topicTextArea;
 
-    private SqliteUserDAO userDAO;
+    private ComboBox<Integer> questionDropdown;
+    private static final List<Integer> QUESTION_COUNT_OPTIONS = List.of(5, 10, 15, 20, 25);
 
-    public CreateQuizController() {
-        userDAO = new SqliteUserDAO();
-    }
-
-    @FXML
-    public void initialize() {
-        // Add the question dropdown from SqliteUser DAO to the numQuestionsContainer
-        ComboBox<Integer> questionDropdown = userDAO.getQuestionDropdown();
-        numQuestionsContainer.getChildren().add(questionDropdown);
-    }
+        @FXML
+        public void initialize () {
+            ComboBox<Integer> questionDropdown = new ComboBox<>();
+            questionDropdown.getItems().addAll(QUESTION_COUNT_OPTIONS);
+            questionDropdown.setValue(QUESTION_COUNT_OPTIONS.get(0));
+            numQuestionsContainer.getChildren().add(questionDropdown);
+        }
 
     /**
      *Compiles user customisations choices to generate a personalised quiz, sends
