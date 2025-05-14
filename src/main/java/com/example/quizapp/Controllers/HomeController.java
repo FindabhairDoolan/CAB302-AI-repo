@@ -28,7 +28,7 @@ public class HomeController extends MenuBarController  {
 
 
 
-
+    //Quiz Display: Search results
     @FXML
     private void handleSearch() {
         quizResults.getItems().clear();
@@ -44,36 +44,9 @@ public class HomeController extends MenuBarController  {
 
     }
 
-    @FXML
-    public void initialize() {
-        //Loads all available quizzes, at first
-        List<Quiz> quizzes = quizDAO.getAllQuizzes();
-        quizResults.getItems().setAll(quizzes);
-
-        // Setup filter values
-        difficultySetting.getItems().addAll("Easy", "Medium", "Hard", "Any");
-        yearSetting.getItems().addAll("Year 1", "Year 2", "Year 3", "Year 4", "Year 5", "Year 6",
-                "Year 7","Year 8","Year 9","Year 10","Year 11","Year 12");
-        subjectSetting.getItems().addAll("English", "Mathematics","Social Science","Science","IT");
-        countrySetting.getItems().addAll("Australia");
-
-        //Set default entries for combobox
-        countrySetting.setValue("Australia");  // Sets "Australia" as default selected
-        subjectSetting.setValue("Select option...");
-        difficultySetting.setValue("Select option...");
-        yearSetting.setValue("Select option...");
-
-    }
-
-//    public void start(Stage primaryStage) throws Exception {
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/quizapp/home.fxml"));
-//        Scene scene = new Scene(loader.load());
-//        primaryStage.setTitle("Home");
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
-//    }
 
 
+    //Quiz Display: Filtering Popup
     public void toggleFilter() {
         filterOverlay.setVisible(!filterOverlay.isVisible());
     }
@@ -101,9 +74,31 @@ public class HomeController extends MenuBarController  {
                 .filter(q -> country == null || country.isEmpty() ||  "Select option...".equals(country) || q.getCountry().equalsIgnoreCase(country))
 
                 .toList();
-        //return filter strings
+        //return filter
         quizResults.getItems().setAll(filtered);
         filterOverlay.setVisible(false); // Hide overlay after applying
+    }
+
+    //Initialise in window
+    @FXML
+    public void initialize() {
+        //Loads all available quizzes, at first
+        List<Quiz> quizzes = quizDAO.getAllQuizzes();
+        quizResults.getItems().setAll(quizzes);
+
+        // Setup filter values
+        difficultySetting.getItems().addAll("Easy", "Medium", "Hard", "Any");
+        yearSetting.getItems().addAll("Year 1", "Year 2", "Year 3", "Year 4", "Year 5", "Year 6",
+                "Year 7","Year 8","Year 9","Year 10","Year 11","Year 12");
+        subjectSetting.getItems().addAll("English", "Mathematics","Social Science","Science","IT");
+        countrySetting.getItems().addAll("Australia");
+
+        //Set default entries for filter comboboxes
+        countrySetting.setValue("Australia");  // Sets "Australia" as default selected
+        subjectSetting.setValue("Select option...");
+        difficultySetting.setValue("Select option...");
+        yearSetting.setValue("Select option...");
 
     }
+
 }
