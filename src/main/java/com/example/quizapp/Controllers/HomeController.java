@@ -42,14 +42,11 @@ public class HomeController extends MenuBarController  {
     //Quiz Display: Search results
     @FXML
     private void handleSearch() {
-        //Clear quizzes displayed
-        quizResults.getItems().clear();
         //Get input
         String search = searchField.getText();
         //Search database for quizzes matching input
         List<Quiz> quizzes = quizDAO.searchQuiz(search);
         //Display results
-        quizResults.getItems().addAll(quizzes); //List View
         displayQuizzes(quizzes); //Thumbnail View
 
         //debug
@@ -92,7 +89,6 @@ public class HomeController extends MenuBarController  {
 
                 .toList();
         //return filter
-        quizResults.getItems().setAll(filtered); //List View
         displayQuizzes(filtered); //Thumbnail
         filterOverlay.setVisible(false); // Hide overlay after applying
     }
@@ -119,6 +115,7 @@ public class HomeController extends MenuBarController  {
         }
     }
 
+
     private Alert createQuizPrompt(Quiz quiz) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Start Quiz");
@@ -131,6 +128,25 @@ public class HomeController extends MenuBarController  {
         alert.getButtonTypes().setAll(yes, no);
 
         return alert;
+    }
+
+    private void startQuiz(Quiz quiz, String mode) {
+        try {
+            Stage stage = (Stage) quizResultsWindow.getScene().getWindow();
+            QuizController controller = SceneManager.switchSceneWithController("/com/example/quizapp/quiz.fxml", "Quiz", stage);
+
+            // Now inject values
+            QuizManager.getInstance().setCurrentQuiz(quiz);
+            controller.setDifficulty(quiz.getDifficulty());
+            controller.setYearLevel(quiz.getYearLevel());
+            controller.setSubject(quiz.getSubject());
+            controller.setMode(mode);
+            controller.setQuiz(quiz);
+
+
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private String formatQuizInfo(Quiz quiz) {
@@ -221,24 +237,7 @@ public class HomeController extends MenuBarController  {
         return card;
     }
 
-    private void startQuiz(Quiz quiz, String mode) {
-        try {
-            Stage stage = (Stage) quizResultsWindow.getScene().getWindow();
-            QuizController controller = SceneManager.switchSceneWithController("/com/example/quizapp/quiz.fxml", "Quiz", stage);
 
-            // Now inject values
-            QuizManager.getInstance().setCurrentQuiz(quiz);
-            controller.setDifficulty(quiz.getDifficulty());
-            controller.setYearLevel(quiz.getYearLevel());
-            controller.setSubject(quiz.getSubject());
-            controller.setMode(mode);
-            controller.setQuiz(quiz);
-
-
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
 
 
@@ -249,7 +248,6 @@ public class HomeController extends MenuBarController  {
     public void initialize() {
         //Loads all available quizzes, at first
         List<Quiz> quizzes = quizDAO.getAllQuizzes();
-        quizResults.getItems().setAll(quizzes);
 
         //Creating quiz window
         displayQuizzes(quizzes);

@@ -35,17 +35,19 @@
 
                 <!-- HBox 2: Display Quizzes in List View -->
                 <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
-                    <ListView fx:id="quizResults" prefHeight="200" prefWidth="550"/>
                 </HBox>
+
+                <!-- HBox 3: Display Quizzes in Thumbnail View -->
+                <FlowPane fx:id="quizResultsWindow" alignment="CENTER">
+                </FlowPane>
+
             </VBox>
 
 
         </center>
 
         <bottom>
-            <!-- HBox 3: Display Quizzes in Thumbnail View -->
-            <FlowPane fx:id="quizResultsWindow" alignment="CENTER">
-            </FlowPane>
+
         </bottom>
 
     </BorderPane>
