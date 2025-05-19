@@ -1,12 +1,19 @@
 package com.example.quizapp.Controllers;
-
 import com.example.quizapp.Models.*;
+import com.example.quizapp.utils.SceneManager;
+
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import javafx.geometry.Insets;
+import javafx.stage.Stage;
 
 
 public class HomeController extends MenuBarController  {
@@ -107,7 +114,7 @@ public class HomeController extends MenuBarController  {
 
             selectedMode.ifPresent(mode -> {
                 showStartQuizConfirmation(quiz, mode);
-                // Optionally: startQuiz(quiz, mode);
+                startQuiz(quiz, mode);
             });
         }
     }
@@ -212,6 +219,25 @@ public class HomeController extends MenuBarController  {
         });
 
         return card;
+    }
+
+    private void startQuiz(Quiz quiz, String mode) {
+        try {
+            Stage stage = (Stage) quizResultsWindow.getScene().getWindow();
+            QuizController controller = SceneManager.switchSceneWithController("/com/example/quizapp/quiz.fxml", "Quiz", stage);
+
+            // Now inject values
+            QuizManager.getInstance().setCurrentQuiz(quiz);
+            controller.setDifficulty(quiz.getDifficulty());
+            controller.setYearLevel(quiz.getYearLevel());
+            controller.setSubject(quiz.getSubject());
+            controller.setMode(mode);
+            controller.setQuiz(quiz);
+
+
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
