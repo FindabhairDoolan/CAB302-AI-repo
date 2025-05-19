@@ -81,10 +81,10 @@ public class SqliteQuizDAO implements IQuizDAO {
         try {
             String query = "INSERT INTO quizzes (quizName, subject, quizTopic, quizMode, difficulty, yearLevel, country, creatorID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, quiz.getQuizName());
+            statement.setString(1, quiz.getName());
             statement.setString(2, quiz.getSubject());
-            statement.setString(3, quiz.getQuizTopic());
-            statement.setString(4, quiz.getQuizMode());
+            statement.setString(3, quiz.getTopic());
+            statement.setString(4, quiz.getMode());
             statement.setString(5, quiz.getDifficulty());
             statement.setString(6, quiz.getYearLevel());
             statement.setString(7, quiz.getCountry());
@@ -101,10 +101,10 @@ public class SqliteQuizDAO implements IQuizDAO {
         try {
             String query = "UPDATE quizzes SET quizName = ?, subject = ?, quizTopic = ?, quizMode = ?, difficulty = ?, yearLevel = ?, country = ?, creatorID = ? WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, quiz.getQuizName());
+            statement.setString(1, quiz.getName());
             statement.setString(2, quiz.getSubject());
-            statement.setString(3, quiz.getQuizTopic());
-            statement.setString(4, quiz.getQuizMode());
+            statement.setString(3, quiz.getTopic());
+            statement.setString(4, quiz.getMode());
             statement.setString(5, quiz.getDifficulty());
             statement.setString(6, quiz.getYearLevel());
             statement.setString(7, quiz.getCountry());

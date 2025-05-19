@@ -1,13 +1,13 @@
 package com.example.quizapp.Controllers;
 
-import com.example.quizapp.Main;
 import com.example.quizapp.Models.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.FlowPane;
-
+import javafx.scene.layout.*;
 import java.util.List;
+import java.util.Optional;
+import javafx.geometry.Insets;
+
 
 public class HomeController extends MenuBarController  {
     @FXML
@@ -31,6 +31,7 @@ public class HomeController extends MenuBarController  {
 
 
 
+
     //Quiz Display: Search results
     @FXML
     private void handleSearch() {
@@ -48,14 +49,14 @@ public class HomeController extends MenuBarController  {
         System.out.println("Searching for: " + search);
         System.out.println("Results found: " + quizzes.size());
         for (Quiz q : quizzes) {
-            System.out.println("Quiz in DB: " + q.getQuizTopic());
+            System.out.println("Quiz in DB: " + q.getTopic());
         }
 
     }
 
 
 
-    //Quiz Display: Filtering Popup
+    //Quiz Display: Filter Popup
     public void toggleFilter() {
         filterOverlay.setVisible(!filterOverlay.isVisible());
     }
@@ -97,39 +98,123 @@ public class HomeController extends MenuBarController  {
         }
     }
 
+    public void openQuiz(Quiz quiz) {
+        Alert quizPrompt = createQuizPrompt(quiz);
+        Optional<ButtonType> result = quizPrompt.showAndWait();
+
+        if (result.isPresent() && result.get().getText().equals("Yes")) {
+            Optional<String> selectedMode = showModeSelection();
+
+            selectedMode.ifPresent(mode -> {
+                showStartQuizConfirmation(quiz, mode);
+                // Optionally: startQuiz(quiz, mode);
+            });
+        }
+    }
+
+    private Alert createQuizPrompt(Quiz quiz) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Start Quiz");
+        alert.setHeaderText("Would you like to take " + quiz.getName() + " for "
+                + quiz.getYearLevel() + " " + quiz.getSubject() + " now?");
+        alert.setContentText(formatQuizInfo(quiz));
+
+        ButtonType yes = new ButtonType("Yes");
+        ButtonType no = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(yes, no);
+
+        return alert;
+    }
+
+    private String formatQuizInfo(Quiz quiz) {
+        return String.format(
+                "Quiz Name: %s%nTopic: %s%nSubject: %s%nLevel: %s%nDifficulty: %s",
+                quiz.getName(),
+                quiz.getTopic(),
+                quiz.getSubject(),
+                quiz.getYearLevel(),
+                quiz.getDifficulty()
+        );
+    }
+
+    private Optional<String> showModeSelection() {
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Select Quiz Mode");
+        dialog.setHeaderText("Choose how you want to take the quiz:");
+
+        ButtonType startButton = new ButtonType("Start", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(startButton, ButtonType.CANCEL);
+
+        RadioButton practice = new RadioButton("Practice Mode");
+        RadioButton exam = new RadioButton("Exam Mode");
+
+        ToggleGroup modeGroup = new ToggleGroup();
+        practice.setToggleGroup(modeGroup);
+        exam.setToggleGroup(modeGroup);
+        practice.setSelected(true); // default
+
+        VBox content = new VBox(10, practice, exam);
+        content.setPadding(new Insets(10));
+        dialog.getDialogPane().setContent(content);
+
+        dialog.setResultConverter(button -> {
+            if (button == startButton) {
+                return practice.isSelected() ? "Practice" : "Exam";
+            }
+            return null;
+        });
+
+        return dialog.showAndWait();
+    }
+
+    private void showStartQuizConfirmation(Quiz quiz, String mode) {
+        Alert startAlert = new Alert(Alert.AlertType.INFORMATION);
+        startAlert.setTitle("Quiz Starting");
+        startAlert.setHeaderText(null);
+        startAlert.setContentText("Starting \"" + quiz.getName() + "\" in " + mode + " mode.");
+        startAlert.showAndWait();
+    }
+
+
     private AnchorPane createQuizCard(Quiz quiz) {
         AnchorPane card = new AnchorPane();
         card.setPrefSize(150, 100);
         card.setStyle("-fx-border-color: #ccc; -fx-border-radius: 5; -fx-padding: 10;");
 
-        Label name = new Label(quiz.getQuizName());
+        Label name = new Label(quiz.getName());
         name.setLayoutX(10);
         name.setLayoutY(10);
 
-        Label topic = new Label("Subject: " + quiz.getQuizTopic());
+        Label subject = new Label("Subject: " + quiz.getSubject());
+        subject.setLayoutX(10);
+        subject.setLayoutY(55);
+
+        Label topic = new Label("Topic: " + quiz.getTopic());
         topic.setLayoutX(10);
-        topic.setLayoutY(25);
+        topic.setLayoutY(40);
 
         Label year = new Label(quiz.getYearLevel());
         year.setLayoutX(10);
-        year.setLayoutY(55);
+        year.setLayoutY(25);
 
         Label difficulty = new Label("Difficulty: " + quiz.getDifficulty());
         difficulty.setLayoutX(10);
-        difficulty.setLayoutY(40);
+        difficulty.setLayoutY(70);
 
-
-
-        card.getChildren().addAll(name, difficulty, year, topic);
+        card.getChildren().addAll(name, difficulty, year, topic, subject);
 
         //When card is clicked go to quiz
         card.setOnMouseClicked(event -> {
-            System.out.println("Clicked quiz: " + quiz.getQuizName());
+            System.out.println("Clicked quiz: " + quiz.getName());
             // navigate to quiz view
+            openQuiz(quiz);
+
         });
 
         return card;
     }
+
+
 
 
 

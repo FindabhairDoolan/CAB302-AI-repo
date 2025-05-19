@@ -8,7 +8,7 @@ public class MockQuizDAO {
 
     public Quiz getQuizByName(String name) {
         for (Quiz quiz : quizzes) {
-            if (quiz.getQuizName().equals(name)) {
+            if (quiz.getName().equals(name)) {
                 return quiz;
             }
         }
