@@ -2,56 +2,64 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
+<?import java.net.URL?>
+
+
 <BorderPane xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.quizapp.Controllers.SignupController">
+            fx:controller="com.example.quizapp.Controllers.SignupController"
+            styleClass="root-pane">
+
+    <stylesheets>
+        <URL value="@../UI-design.css"/>
+    </stylesheets>
 
     <!-- Top: Back button -->
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="10">
+        <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="10">
             <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/>
+                <Insets top="12" left="12"/>
             </padding>
-            <Button fx:id="backButton" text="← Back" onAction="#handleBackButton">
+            <Button fx:id="backButton"  text="←" onAction="#handleBackButton" styleClass="link-button">
                 <font>
-                    <Font name="Arial" size="14"/>
+                    <Font name="Avenir Roman" size="14"/>
                 </font>
             </Button>
         </HBox>
     </top>
 
-    <!-- Center: Form -->
     <center>
-        <VBox spacing="25" alignment="CENTER">
+        <StackPane>
+
+        <Region styleClass="card-background"/>
+
+        <VBox spacing="16" alignment="CENTER" styleClass="form-container">
             <padding>
-                <Insets top="20" right="20" bottom="20" left="20"/>
+                <Insets top="24" right="24" bottom="24" left="24"/>
             </padding>
 
-            <Label text="Create New Account" textAlignment="CENTER">
-                <font>
-                    <Font name="Arial" size="30"/>
-                </font>
-                <padding>
-                    <Insets top="50" bottom="50"/>
-                </padding>
+            <!-- Headings -->
+            <Label text="Create my account" styleClass="heading" style="-fx-translate-y:-20;">
+                <font><Font name="Avenir Roman" size="20"/></font>
             </Label>
 
             <VBox spacing="5" alignment="CENTER">
-                <Label text="Username:"/>
-                <TextField fx:id="usernameField" promptText="Choose a username" maxWidth="400"/>
+                <Label text="Username:"  styleClass="field-label"/>
+                <TextField fx:id="usernameField" promptText="Choose a username" maxWidth="400" styleClass="field"/>
             </VBox>
 
             <VBox spacing="5" alignment="CENTER">
-                <Label text="Email:"/>
-                <TextField fx:id="emailField" promptText="Enter your email" maxWidth="400"/>
+                <Label text="Email:"  styleClass="field-label"/>
+                <TextField fx:id="emailField" promptText="Enter your email" maxWidth="400" styleClass="field"/>
             </VBox>
 
             <VBox spacing="5" alignment="CENTER">
-                <Label text="Password:"/>
-                <PasswordField fx:id="passwordField" promptText="Create a password" maxWidth="400"/>
+                <Label text="Password:" styleClass="field-label"/>
+                <PasswordField fx:id="passwordField" promptText="Create a password" maxWidth="400" styleClass="input-label"/>
                 <Label fx:id="passwordHintLabel"
                        text="Password must have letters and numbers and be at least 8 characters long."
                        textFill="red"
@@ -59,12 +67,9 @@
                        maxWidth="400"/>
             </VBox>
 
-            <VBox alignment="CENTER">
-                <padding>
-                    <Insets top="50" right="0" bottom="0" left="0"/>
-                </padding>
-                <Button fx:id="signupButton" text="Sign Up" maxWidth="400" onAction="#handleSignup"/>
+
+                <Button fx:id="signupButton" text="Sign Up" maxWidth="400" onAction="#handleSignup" styleClass="primary-button"/>
             </VBox>
-        </VBox>
+        </StackPane>
     </center>
 </BorderPane>
