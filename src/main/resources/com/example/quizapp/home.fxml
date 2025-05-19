@@ -31,15 +31,16 @@
                     <Button text="Search" onAction="#handleSearch" />
                     <Button text="Filter By" onAction="#toggleFilter"/>
                 </HBox>
+                <ScrollPane fitToWidth="true" fitToHeight="true">
 
+                    <!-- HBox 2: Display Quizzes in List View -->
+                    <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
+                    </HBox>
 
-                <!-- HBox 2: Display Quizzes in List View -->
-                <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
-                </HBox>
-
-                <!-- HBox 3: Display Quizzes in Thumbnail View -->
-                <FlowPane fx:id="quizResultsWindow" alignment="CENTER">
-                </FlowPane>
+                    <!-- HBox 3: Display Quizzes in Thumbnail View -->
+                    <FlowPane fx:id="quizResultsWindow" alignment="CENTER">
+                    </FlowPane>
+                </ScrollPane>
 
             </VBox>
 

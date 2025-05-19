@@ -198,33 +198,42 @@ public class HomeController extends MenuBarController  {
         startAlert.showAndWait();
     }
 
-
+    //Create a thumbnail on home page for each quiz in database
     private AnchorPane createQuizCard(Quiz quiz) {
         AnchorPane card = new AnchorPane();
-        card.setPrefSize(150, 100);
+        int cardWidth = 200;
+        int cardHeight = 90;
+
+
+        card.setPrefSize(cardWidth, cardHeight);
         card.setStyle("-fx-border-color: #ccc; -fx-border-radius: 5; -fx-padding: 10;");
 
+        VBox content = new VBox(5); // spacing between elements
+        content.setPadding(new Insets(10));
+        content.setMaxWidth(150);  // Ensure VBox doesn't stretch beyond the card size
+
+        // Labels for name, year, subject, topic, and difficulty
         Label name = new Label(quiz.getName());
-        name.setLayoutX(10);
-        name.setLayoutY(10);
+        name.setWrapText(true);
+        name.setMaxWidth(130); // Limit label width
+        name.setMinHeight(20); // Minimum height to avoid too small labels
 
+        Label year = new Label("Year: " + quiz.getYearLevel());
         Label subject = new Label("Subject: " + quiz.getSubject());
-        subject.setLayoutX(10);
-        subject.setLayoutY(55);
-
         Label topic = new Label("Topic: " + quiz.getTopic());
-        topic.setLayoutX(10);
-        topic.setLayoutY(40);
-
-        Label year = new Label(quiz.getYearLevel());
-        year.setLayoutX(10);
-        year.setLayoutY(25);
-
         Label difficulty = new Label("Difficulty: " + quiz.getDifficulty());
-        difficulty.setLayoutX(10);
-        difficulty.setLayoutY(70);
 
-        card.getChildren().addAll(name, difficulty, year, topic, subject);
+        // Set wrap text and max width for each label
+        for (Label lbl : List.of(name, year, subject, topic, difficulty)) {
+            lbl.setWrapText(true);
+            lbl.setMaxWidth(130);
+            lbl.setMinHeight(20);  // Set a minimum height for each label
+        }
+
+        // Adding labels to the VBox
+        content.getChildren().addAll(name, year, subject, topic, difficulty);
+        card.getChildren().add(content);
+
 
         //When card is clicked go to quiz
         card.setOnMouseClicked(event -> {
@@ -248,6 +257,10 @@ public class HomeController extends MenuBarController  {
     public void initialize() {
         //Loads all available quizzes, at first
         List<Quiz> quizzes = quizDAO.getAllQuizzes();
+
+        // quizResultsWindow is FlowPane
+        quizResultsWindow.setHgap(10);  // Horizontal gap between cards
+        quizResultsWindow.setVgap(10);  // Vertical gap between cards
 
         //Creating quiz window
         displayQuizzes(quizzes);
