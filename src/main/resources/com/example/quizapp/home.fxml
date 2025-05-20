@@ -23,9 +23,9 @@
                 <padding><Insets top="50"/></padding>
 
                 <!-- Page-specific content -->
-                <Label text="Welcome to the Home Page!" />
+                <Label fx:id="welcomeLabel" text="WELCOME TO QUIZ MASTER!" wrapText="true"/>
 
-                <!-- HBox 1: Search & Filter -->
+                <!-- Search & Filter -->
                 <HBox spacing="10" alignment="CENTER">
                     <TextField fx:id="searchField" promptText="Search..." />
                     <Button text="Search" onAction="#handleSearch" />
