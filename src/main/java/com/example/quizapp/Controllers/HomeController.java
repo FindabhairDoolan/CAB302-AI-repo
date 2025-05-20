@@ -18,6 +18,8 @@ import javafx.stage.Stage;
 
 public class HomeController extends MenuBarController  {
     @FXML
+    public Label welcomeLabel;
+    @FXML
     public AnchorPane filterOverlay;
     @FXML
     private TextField searchField;
@@ -255,14 +257,17 @@ public class HomeController extends MenuBarController  {
     //Initialise in window
     @FXML
     public void initialize() {
-        //Loads all available quizzes, at first
+        User user = AuthManager.getInstance().getCurrentUser();
+        String username = user.getUserName(); // You can fetch this from session/auth logic
+        welcomeLabel.setText("Hi, " + username + "! WELCOME TO QUIZ MASTER!");
+
+        //Loads all available quizzes
         List<Quiz> quizzes = quizDAO.getAllQuizzes();
 
-        // quizResultsWindow is FlowPane
+        //Set FlowPlane (spacing between quiz thumbnails)
         quizResultsWindow.setHgap(10);  // Horizontal gap between cards
         quizResultsWindow.setVgap(10);  // Vertical gap between cards
-
-        //Creating quiz window
+        //Filling FlowPane with quizzes
         displayQuizzes(quizzes);
 
         // Setup filter values
