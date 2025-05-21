@@ -31,9 +31,9 @@ public class MyQuizController extends MenuBarController {
     @FXML
     public void initialize() {
         // 1) Bind data columns
-        nameCol   .setCellValueFactory(new PropertyValueFactory<>("quizName"));
+        nameCol   .setCellValueFactory(new PropertyValueFactory<>("Name"));
         subjectCol.setCellValueFactory(new PropertyValueFactory<>("subject"));
-        topicCol  .setCellValueFactory(new PropertyValueFactory<>("quizTopic"));
+        topicCol  .setCellValueFactory(new PropertyValueFactory<>("Topic"));
 
         // 2) Placeholder when there are no quizzes
         Label noDataLabel = new Label("You haven't created any quizzes yet.");
