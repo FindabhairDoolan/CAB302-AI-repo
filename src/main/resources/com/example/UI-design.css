@@ -75,6 +75,15 @@
   -fx-opacity: 0.9;
 }
 
+.secondary-button {
+  -fx-background-color: #2D2A43;  /* dark blue-purple */
+  -fx-text-fill: #FFFFFF;
+  -fx-font-family: "Avenir Heavy", sans-serif;
+  -fx-font-size: 12px;
+  -fx-background-radius: 10;
+  -fx-padding: 10 0;
+}
+
 .trophy-icon {
   -fx-fill: #FFD700;    /* gold */
 }
