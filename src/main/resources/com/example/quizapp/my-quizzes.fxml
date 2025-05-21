@@ -1,11 +1,43 @@
-<?import javafx.scene.layout.*?>
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
 
+<BorderPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.quizapp.Controllers.MyQuizController"
+            stylesheets="@../UI-design.css"
+            styleClass="root-pane">
 
-<BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.quizapp.Controllers.MyQuizzes">
-
+    <!-- include your menu bar -->
     <top>
         <fx:include source="menu.fxml"/>
     </top>
 
+    <!-- center: card wrapper for the table -->
+    <center>
+        <VBox alignment="CENTER" spacing="10" styleClass="card-background" VBox.vgrow="ALWAYS">
+
+            <!-- TableView of quizzes -->
+            <TableView fx:id="quizTable"
+                       prefWidth="800" prefHeight="400"
+                       styleClass="table-view">
+                <columns>
+                    <!-- Wider Name column -->
+                    <TableColumn fx:id="nameCol"
+                                 text="Quiz Name" prefWidth="300"/>
+                    <TableColumn fx:id="subjectCol"
+                                 text="Subject"    prefWidth="150"/>
+                    <TableColumn fx:id="topicCol"
+                                 text="Topic"      prefWidth="150"/>
+                    <TableColumn fx:id="actionCol"
+                                 text="Actions"    prefWidth="200"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
 </BorderPane>

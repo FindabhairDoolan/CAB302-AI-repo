@@ -1,15 +1,24 @@
 package com.example.quizapp.Controllers;
-
-import com.example.quizapp.Main;
 import com.example.quizapp.Models.*;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.FlowPane;
+import com.example.quizapp.utils.SceneManager;
 
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
+import javafx.geometry.Insets;
+import javafx.stage.Stage;
+
 
 public class HomeController extends MenuBarController  {
+    @FXML
+    public Label welcomeLabel;
     @FXML
     public AnchorPane filterOverlay;
     @FXML
@@ -31,31 +40,29 @@ public class HomeController extends MenuBarController  {
 
 
 
+
     //Quiz Display: Search results
     @FXML
     private void handleSearch() {
-        //Clear quizzes displayed
-        quizResults.getItems().clear();
         //Get input
         String search = searchField.getText();
         //Search database for quizzes matching input
         List<Quiz> quizzes = quizDAO.searchQuiz(search);
         //Display results
-        quizResults.getItems().addAll(quizzes); //List View
         displayQuizzes(quizzes); //Thumbnail View
 
         //debug
         System.out.println("Searching for: " + search);
         System.out.println("Results found: " + quizzes.size());
         for (Quiz q : quizzes) {
-            System.out.println("Quiz in DB: " + q.getQuizTopic());
+            System.out.println("Quiz in DB: " + q.getTopic());
         }
 
     }
 
 
 
-    //Quiz Display: Filtering Popup
+    //Quiz Display: Filter Popup
     public void toggleFilter() {
         filterOverlay.setVisible(!filterOverlay.isVisible());
     }
@@ -84,7 +91,6 @@ public class HomeController extends MenuBarController  {
 
                 .toList();
         //return filter
-        quizResults.getItems().setAll(filtered); //List View
         displayQuizzes(filtered); //Thumbnail
         filterOverlay.setVisible(false); // Hide overlay after applying
     }
@@ -97,35 +103,142 @@ public class HomeController extends MenuBarController  {
         }
     }
 
+    public void openQuiz(Quiz quiz) {
+        Alert quizPrompt = createQuizPrompt(quiz);
+        Optional<ButtonType> result = quizPrompt.showAndWait();
+
+        if (result.isPresent() && result.get().getText().equals("Yes")) {
+            Optional<String> selectedMode = showModeSelection();
+
+            selectedMode.ifPresent(mode -> {
+                showStartQuizConfirmation(quiz, mode);
+                startQuiz(quiz, mode);
+            });
+        }
+    }
+
+
+    private Alert createQuizPrompt(Quiz quiz) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Start Quiz");
+        alert.setHeaderText("Would you like to take " + quiz.getName() + " for "
+                + quiz.getYearLevel() + " " + quiz.getSubject() + " now?");
+        alert.setContentText(formatQuizInfo(quiz));
+
+        ButtonType yes = new ButtonType("Yes");
+        ButtonType no = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(yes, no);
+
+        return alert;
+    }
+
+    private void startQuiz(Quiz quiz, String mode) {
+        try {
+            Stage stage = (Stage) quizResultsWindow.getScene().getWindow();
+            QuizController controller = SceneManager.switchSceneWithController("/com/example/quizapp/quiz.fxml", "Quiz", stage);
+
+            // Now inject values
+            QuizManager.getInstance().setCurrentQuiz(quiz);
+            controller.setQuiz(quiz);
+
+
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String formatQuizInfo(Quiz quiz) {
+        return String.format(
+                "Quiz Name: %s%nTopic: %s%nSubject: %s%nLevel: %s%nDifficulty: %s",
+                quiz.getName(),
+                quiz.getTopic(),
+                quiz.getSubject(),
+                quiz.getYearLevel(),
+                quiz.getDifficulty()
+        );
+    }
+
+    private Optional<String> showModeSelection() {
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Select Quiz Mode");
+        dialog.setHeaderText("Choose how you want to take the quiz:");
+
+        ButtonType startButton = new ButtonType("Start", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(startButton, ButtonType.CANCEL);
+
+        RadioButton practice = new RadioButton("Practice Mode");
+        RadioButton exam = new RadioButton("Exam Mode");
+
+        ToggleGroup modeGroup = new ToggleGroup();
+        practice.setToggleGroup(modeGroup);
+        exam.setToggleGroup(modeGroup);
+        practice.setSelected(true); // default
+
+        VBox content = new VBox(10, practice, exam);
+        content.setPadding(new Insets(10));
+        dialog.getDialogPane().setContent(content);
+
+        dialog.setResultConverter(button -> {
+            if (button == startButton) {
+                return practice.isSelected() ? "Practice" : "Exam";
+            }
+            return null;
+        });
+
+        return dialog.showAndWait();
+    }
+
+    private void showStartQuizConfirmation(Quiz quiz, String mode) {
+        Alert startAlert = new Alert(Alert.AlertType.INFORMATION);
+        startAlert.setTitle("Quiz Starting");
+        startAlert.setHeaderText(null);
+        startAlert.setContentText("Starting \"" + quiz.getName() + "\" in " + mode + " mode.");
+        startAlert.showAndWait();
+    }
+
+    //Create a thumbnail on home page for each quiz in database
     private AnchorPane createQuizCard(Quiz quiz) {
         AnchorPane card = new AnchorPane();
-        card.setPrefSize(150, 100);
+        int cardWidth = 200;
+        int cardHeight = 90;
+
+
+        card.setPrefSize(cardWidth, cardHeight);
         card.setStyle("-fx-border-color: #ccc; -fx-border-radius: 5; -fx-padding: 10;");
 
-        Label name = new Label(quiz.getQuizName());
-        name.setLayoutX(10);
-        name.setLayoutY(10);
+        VBox content = new VBox(5); // spacing between elements
+        content.setPadding(new Insets(10));
+        content.setMaxWidth(150);  // Ensure VBox doesn't stretch beyond the card size
 
-        Label topic = new Label("Subject: " + quiz.getQuizTopic());
-        topic.setLayoutX(10);
-        topic.setLayoutY(25);
+        // Labels for name, year, subject, topic, and difficulty
+        Label name = new Label(quiz.getName());
+        name.setWrapText(true);
+        name.setMaxWidth(130); // Limit label width
+        name.setMinHeight(20); // Minimum height to avoid too small labels
 
-        Label year = new Label(quiz.getYearLevel());
-        year.setLayoutX(10);
-        year.setLayoutY(55);
-
+        Label year = new Label("Year: " + quiz.getYearLevel());
+        Label subject = new Label("Subject: " + quiz.getSubject());
+        Label topic = new Label("Topic: " + quiz.getTopic());
         Label difficulty = new Label("Difficulty: " + quiz.getDifficulty());
-        difficulty.setLayoutX(10);
-        difficulty.setLayoutY(40);
 
+        // Set wrap text and max width for each label
+        for (Label lbl : List.of(name, year, subject, topic, difficulty)) {
+            lbl.setWrapText(true);
+            lbl.setMaxWidth(130);
+            lbl.setMinHeight(20);  // Set a minimum height for each label
+        }
 
+        // Adding labels to the VBox
+        content.getChildren().addAll(name, year, subject, topic, difficulty);
+        card.getChildren().add(content);
 
-        card.getChildren().addAll(name, difficulty, year, topic);
 
         //When card is clicked go to quiz
         card.setOnMouseClicked(event -> {
-            System.out.println("Clicked quiz: " + quiz.getQuizName());
+            System.out.println("Clicked quiz: " + quiz.getName());
             // navigate to quiz view
+            openQuiz(quiz);
+
         });
 
         return card;
@@ -133,14 +246,24 @@ public class HomeController extends MenuBarController  {
 
 
 
+
+
+
+
     //Initialise in window
     @FXML
     public void initialize() {
-        //Loads all available quizzes, at first
-        List<Quiz> quizzes = quizDAO.getAllQuizzes();
-        quizResults.getItems().setAll(quizzes);
+        User user = AuthManager.getInstance().getCurrentUser();
+        String username = user.getUserName(); // You can fetch this from session/auth logic
+        welcomeLabel.setText("Hi, " + username + "! WELCOME TO QUIZ MASTER!");
 
-        //Creating quiz window
+        //Loads all available quizzes
+        List<Quiz> quizzes = quizDAO.getAllQuizzes();
+
+        //Set FlowPlane (spacing between quiz thumbnails)
+        quizResultsWindow.setHgap(10);  // Horizontal gap between cards
+        quizResultsWindow.setVgap(10);  // Vertical gap between cards
+        //Filling FlowPane with quizzes
         displayQuizzes(quizzes);
 
         // Setup filter values

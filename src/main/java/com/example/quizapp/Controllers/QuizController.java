@@ -102,6 +102,11 @@ public class QuizController {
     public void setQuiz(Quiz quiz) {
         this.quiz = quiz;
         loadQuiz();
+
+        setDifficulty(quiz.getDifficulty());
+        setYearLevel(quiz.getYearLevel());
+        setSubject(quiz.getSubject());
+        setMode(quiz.getMode());
     }
 
     /**
@@ -120,6 +125,9 @@ public class QuizController {
             AlertManager.alertError("Quiz has no questions", "No questions found for this quiz, " +
                     "please return to the home page and add questions to this quiz in the quiz editor.");
         }
+
+        //preload all questions if coming from another controller
+        totalQuestions = questionList.size();
 
         loadQuestion(questionList.get(questionIndex - 1));
         updateProgressLabel(); // Update the progress label on initialization
@@ -233,6 +241,9 @@ public class QuizController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setMode(String mode) {
     }
 }
 

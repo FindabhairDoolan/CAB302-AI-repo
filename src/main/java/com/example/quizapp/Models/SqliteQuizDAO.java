@@ -2,10 +2,7 @@ package com.example.quizapp.Models;
 
 import javafx.scene.control.ComboBox;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,10 +78,10 @@ public class SqliteQuizDAO implements IQuizDAO {
         try {
             String query = "INSERT INTO quizzes (quizName, subject, quizTopic, quizMode, difficulty, yearLevel, country, creatorID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, quiz.getQuizName());
+            statement.setString(1, quiz.getName());
             statement.setString(2, quiz.getSubject());
-            statement.setString(3, quiz.getQuizTopic());
-            statement.setString(4, quiz.getQuizMode());
+            statement.setString(3, quiz.getTopic());
+            statement.setString(4, quiz.getMode());
             statement.setString(5, quiz.getDifficulty());
             statement.setString(6, quiz.getYearLevel());
             statement.setString(7, quiz.getCountry());
@@ -101,10 +98,10 @@ public class SqliteQuizDAO implements IQuizDAO {
         try {
             String query = "UPDATE quizzes SET quizName = ?, subject = ?, quizTopic = ?, quizMode = ?, difficulty = ?, yearLevel = ?, country = ?, creatorID = ? WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, quiz.getQuizName());
+            statement.setString(1, quiz.getName());
             statement.setString(2, quiz.getSubject());
-            statement.setString(3, quiz.getQuizTopic());
-            statement.setString(4, quiz.getQuizMode());
+            statement.setString(3, quiz.getTopic());
+            statement.setString(4, quiz.getMode());
             statement.setString(5, quiz.getDifficulty());
             statement.setString(6, quiz.getYearLevel());
             statement.setString(7, quiz.getCountry());
@@ -220,27 +217,29 @@ public class SqliteQuizDAO implements IQuizDAO {
     @Override
     public List<Quiz> getQuizzesByCreator(int creatorID) {
         List<Quiz> quizzes = new ArrayList<>();
-        try {
-            String query = "SELECT * FROM quizzes where creatorID = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
+        String sql = "SELECT * FROM quizzes WHERE creatorID = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            // bind the creatorID
             statement.setInt(1, creatorID);
-            ResultSet rs = statement.executeQuery(query);
-            while (rs.next()) {
-                //might be some problems with the question id and quizID?
-                Quiz quiz = new Quiz(
-                        rs.getString("quizName"),
-                        rs.getString("subject"),
-                        rs.getString("quizTopic"),
-                        rs.getString("quizMode"),
-                        rs.getString("difficulty"),
-                        rs.getString("yearLevel"),
-                        rs.getString("country"),
-                        creatorID
-                );
-                quiz.setQuizID(rs.getInt("id"));
-                quizzes.add(quiz);
+
+            // execute the query
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    Quiz quiz = new Quiz(
+                            rs.getString("quizName"),
+                            rs.getString("subject"),
+                            rs.getString("quizTopic"),
+                            rs.getString("quizMode"),
+                            rs.getString("difficulty"),
+                            rs.getString("yearLevel"),
+                            rs.getString("country"),
+                            rs.getInt("creatorID")
+                    );
+                    quiz.setQuizID(rs.getInt("id"));
+                    quizzes.add(quiz);
+                }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return quizzes;

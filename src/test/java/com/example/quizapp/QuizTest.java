@@ -39,14 +39,14 @@ public class QuizTest {
     }
 
     @Test
-    public void testGetQuizName() {
-        assertEquals(quizName, quiz.getQuizName());
+    public void testGetName() {
+        assertEquals(quizName, quiz.getName());
     }
 
     @Test
-    public void testSetQuizName() {
-        quiz.setQuizName(quizName_2);
-        assertEquals(quizName_2, quiz.getQuizName());
+    public void testSetName() {
+        quiz.setName(quizName_2);
+        assertEquals(quizName_2, quiz.getName());
     }
 
     @Test
@@ -61,25 +61,25 @@ public class QuizTest {
     }
 
     @Test
-    public void testGetQuizTopic() {
-        assertEquals(quizTopic, quiz.getQuizTopic());
+    public void testGetTopic() {
+        assertEquals(quizTopic, quiz.getTopic());
     }
 
     @Test
-    public void testSetQuizTopic() {
-        quiz.setQuizTopic(quizTopic_2);
-        assertEquals(quizTopic_2, quiz.getQuizTopic());
+    public void testSetTopic() {
+        quiz.setTopic(quizTopic_2);
+        assertEquals(quizTopic_2, quiz.getTopic());
     }
 
     @Test
-    public void testGetQuizMode() {
-        assertEquals(quizMode, quiz.getQuizMode());
+    public void testGetMode() {
+        assertEquals(quizMode, quiz.getMode());
     }
 
     @Test
-    public void testSetQuizMode() {
-        quiz.setQuizMode(quizMode_2);
-        assertEquals(quizMode_2, quiz.getQuizMode());
+    public void testSetMode() {
+        quiz.setMode(quizMode_2);
+        assertEquals(quizMode_2, quiz.getMode());
     }
 
     @Test

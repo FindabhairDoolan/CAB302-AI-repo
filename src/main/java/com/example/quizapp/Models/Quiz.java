@@ -1,7 +1,5 @@
 package com.example.quizapp.Models;
 
-import java.util.List;
-
 public class Quiz {
 
     private int id, creatorID;
@@ -21,17 +19,17 @@ public class Quiz {
     public int getQuizID() { return id; }
     public void setQuizID(int quizID) { this.id = quizID; }
 
-    public String getQuizName() { return quizName; }
-    public void setQuizName(String quizName) { this.quizName = quizName; }
+    public String getName() { return quizName; }
+    public void setName(String quizName) { this.quizName = quizName; }
 
     public String getSubject() { return subject; }
     public void setSubject(String subject) { this.subject = subject; }
 
-    public String getQuizTopic() { return quizTopic; }
-    public void setQuizTopic(String quizTopic) { this.quizTopic = quizTopic; }
+    public String getTopic() { return quizTopic; }
+    public void setTopic(String quizTopic) { this.quizTopic = quizTopic; }
 
-    public String getQuizMode() { return quizMode; }
-    public void setQuizMode(String quizMode) { this.quizMode = quizMode; }
+    public String getMode() { return quizMode; }
+    public void setMode(String quizMode) { this.quizMode = quizMode; }
 
     public String getDifficulty() { return difficulty; }
     public void setDifficulty(String difficulty) { this.difficulty = difficulty; }

@@ -10,6 +10,8 @@
     <BorderPane>
         <padding><Insets bottom="30"/></padding>
 
+
+
         <!-- Insert Nav/Menu/Tool Bar -->
         <top>
             <fx:include source="menu.fxml"/>
@@ -21,29 +23,29 @@
                 <padding><Insets top="50"/></padding>
 
                 <!-- Page-specific content -->
-                <Label text="Welcome to the Home Page!" />
+                <Label fx:id="welcomeLabel" text="WELCOME TO QUIZ MASTER!" wrapText="true"/>
 
-                <!-- HBox 1: Search & Filter -->
+                <!-- Search & Filter -->
                 <HBox spacing="10" alignment="CENTER">
                     <TextField fx:id="searchField" promptText="Search..." />
                     <Button text="Search" onAction="#handleSearch" />
                     <Button text="Filter By" onAction="#toggleFilter"/>
                 </HBox>
 
+<!--            Scroll added to keep toolbar fixed; vertical instead of horizontal for ease of browsing-->
+                <ScrollPane fitToWidth="true" fitToHeight="true">
+                    <!-- Display Quizzes in Thumbnail View -->
+                    <FlowPane fx:id="quizResultsWindow" alignment="CENTER">
+                    </FlowPane>
+                </ScrollPane>
 
-                <!-- HBox 2: Display Quizzes in List View -->
-                <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
-                    <ListView fx:id="quizResults" prefHeight="200" prefWidth="550"/>
-                </HBox>
             </VBox>
 
 
         </center>
 
         <bottom>
-            <!-- HBox 3: Display Quizzes in Thumbnail View -->
-            <FlowPane fx:id="quizResultsWindow" alignment="CENTER">
-            </FlowPane>
+
         </bottom>
 
     </BorderPane>

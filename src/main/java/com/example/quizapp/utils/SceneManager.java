@@ -16,6 +16,7 @@ public class SceneManager {
     //  Stage stage = (Stage) InsertNameOfObject.getScene().getWindow();
     //  SceneManager.switchScene("/com/example/quizapp/InsertFXML_Name.fxml", "InsertWindowTitle", stage);
     //  Example of this available in MenuBar & Quiz Controllers
+    // Make sure to import import com.example.quizapp.utils.SceneManager;
 
     public static void switchScene(String fxmlPath, String title, Stage stage) {
         try {
@@ -25,6 +26,22 @@ public class SceneManager {
             stage.setScene(newScene);
             stage.setTitle(title);
             stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Could not load FXML file: " + fxmlPath);
+        }
+    }
+
+    public static <T> T switchSceneWithController(String fxmlPath, String title, Stage stage) {
+        try {
+            FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(fxmlPath));
+            Scene newScene = new Scene(loader.load(), WIDTH, HEIGHT);
+            stage.setScene(newScene);
+            stage.setTitle(title);
+            stage.show();
+
+            return loader.getController();
 
         } catch (IOException e) {
             e.printStackTrace();

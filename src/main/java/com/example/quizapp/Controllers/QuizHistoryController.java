@@ -1,6 +1,5 @@
 package com.example.quizapp.Controllers;
 
-import com.example.quizapp.utils.SceneManager;
 import com.example.quizapp.Models.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -81,8 +80,8 @@ public class QuizHistoryController {
                 } else {
                     VBox box = new VBox(5);
 
-                    String quizName = item.getQuiz().getQuizName();
-                    String topic = item.getQuiz().getQuizTopic();
+                    String quizName = item.getQuiz().getName();
+                    String topic = item.getQuiz().getTopic();
                     List<Integer> scores = item.getScores();
 
                     Label title = new Label(quizName + " - " + topic);
