@@ -103,6 +103,10 @@ public class QuizController {
         this.quiz = quiz;
         loadQuiz();
 
+        setDifficulty(quiz.getDifficulty());
+        setYearLevel(quiz.getYearLevel());
+        setSubject(quiz.getSubject());
+        setMode(quiz.getMode());
     }
 
     /**

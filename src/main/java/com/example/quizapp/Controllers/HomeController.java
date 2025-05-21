@@ -139,10 +139,6 @@ public class HomeController extends MenuBarController  {
 
             // Now inject values
             QuizManager.getInstance().setCurrentQuiz(quiz);
-            controller.setDifficulty(quiz.getDifficulty());
-            controller.setYearLevel(quiz.getYearLevel());
-            controller.setSubject(quiz.getSubject());
-            controller.setMode(mode);
             controller.setQuiz(quiz);
 
 
