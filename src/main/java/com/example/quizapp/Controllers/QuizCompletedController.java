@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.time.Duration;
 
 public class QuizCompletedController {
 
@@ -87,7 +88,9 @@ public class QuizCompletedController {
         double percentage = ((double) correctAnswers / totalQuestions) * 100;
 
         finalScoreLabel.setText(String.format("%.2f%%", percentage));
-        questionCountLabel.setText(String.format("Final Score: %d/%d", correctAnswers, totalQuestions));
-        difficultyYearLabel.setText(String.format("Year: %s, Difficulty: %s", yearLevel, difficulty));
+        questionCountLabel.setText(String.format("✔ Final Score: %d/%d", correctAnswers, totalQuestions));
+        difficultyYearLabel.setText(String.format("🎓 %s%n🛠  ️Difficulty: %s", yearLevel, difficulty));
+        //timeLabel.setText("⏱️  " + String.format("%02d:%02d", mins, secs));
     }
+
 }

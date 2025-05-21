@@ -50,7 +50,7 @@
                             <FXCollections fx:factory="observableArrayList">
                                 <String fx:value="Mathematics"/>
                                 <String fx:value="English"/>
-                                <String fx:value="History"/>
+                                <String fx:value="Social Science"/>
                                 <String fx:value="Science"/>
                                 <String fx:value="Information Technology"/>
                             </FXCollections>
