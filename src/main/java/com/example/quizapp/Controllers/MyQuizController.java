@@ -80,7 +80,7 @@ public class MyQuizController extends MenuBarController {
                             Quiz q = getTableView().getItems().get(getIndex());
                             Alert confirm = new Alert(
                                     Alert.AlertType.CONFIRMATION,
-                                    "Delete \"" + q.getQuizName() + "\"? This cannot be undone.",
+                                    "Delete \"" + q.getName() + "\"? This cannot be undone.",
                                     ButtonType.YES, ButtonType.NO
                             );
                             confirm.setTitle("Confirm Deletion");
