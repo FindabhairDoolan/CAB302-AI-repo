@@ -5,10 +5,10 @@ import java.util.List;
 
 public class QuizWithScore {
     private Quiz quiz;
-    private int scores;
+    private  List<Integer> scores;
     private Timestamp time;
 
-    public QuizWithScore(Quiz quiz, int scores) {
+    public QuizWithScore(Quiz quiz, List<Integer> scores) {
         this.quiz = quiz;
         this.scores = scores;
     }
@@ -17,7 +17,7 @@ public class QuizWithScore {
         return quiz;
     }
 
-    public int getScores() {
+    public List<Integer> getScores() {
         return scores;
     }
 
