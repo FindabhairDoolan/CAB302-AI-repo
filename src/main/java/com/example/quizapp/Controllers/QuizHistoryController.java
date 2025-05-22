@@ -67,7 +67,7 @@ public class QuizHistoryController {
                             handleRetakeQuiz(item.getQuiz());
                         });
 
-                        retakeBtn.setOnAction(event -> {
+                        viewBtn.setOnAction(event -> {
                             //to do
                         });
                     }
@@ -99,6 +99,7 @@ public class QuizHistoryController {
     }
 
     private void handleRetakeQuiz(Quiz quiz) {
+        System.out.println("Getting here...");
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/quizapp/quiz.fxml"));
             Parent root = loader.load();
