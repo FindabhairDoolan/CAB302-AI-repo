@@ -32,22 +32,13 @@ public class QuizHistoryController {
         displayQuizzes();
     }
 
-    //return to home
-    @FXML
-    public void onBack() {
-        Stage stage = (Stage) backButton.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/home.fxml"));
-        try {
-            Scene scene = new Scene(fxmlLoader.load(), 800, 550);
-            stage.setScene(scene);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     //create a list of mock quizzes for testing
     public ObservableList<Quiz> createMockQuizzes() {
         ObservableList<Quiz> quizzes = FXCollections.observableArrayList();
+
+        //The below will need to be moved to Database Seeder (located under java/data/) and reformatted
+        //to match current database tables
 
         // Add some mock quizzes to the list
         //quizzes.add(new Quiz("Math Quiz", "Mathematics", "Online", "Medium", "High School", "USA", 101));
