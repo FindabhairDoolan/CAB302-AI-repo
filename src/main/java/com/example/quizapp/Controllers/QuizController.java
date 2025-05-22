@@ -2,6 +2,7 @@ package com.example.quizapp.Controllers;
 
 import com.example.quizapp.Models.*;
 import com.example.quizapp.utils.AlertManager;
+import com.example.quizapp.utils.QuizManager;
 import com.example.quizapp.utils.SceneManager;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -86,7 +87,7 @@ public class QuizController {
         if (result.isPresent() && result.get() == yesButton) {
             // User chose Yes – go to dashboard
             Stage stage = (Stage) exitButton.getScene().getWindow();
-            SceneManager.switchScene("/com/example/quizapp/home.fxml", "Dashboard", stage);
+            SceneManager.switchScene("/com/example/quizapp/home.fxml", "Dashboard");
         }
         // If No is selected, do nothing
     }

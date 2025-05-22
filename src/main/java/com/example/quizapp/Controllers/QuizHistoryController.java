@@ -1,6 +1,7 @@
 package com.example.quizapp.Controllers;
 
 import com.example.quizapp.Models.*;
+import com.example.quizapp.utils.AuthManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;

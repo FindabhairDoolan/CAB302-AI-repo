@@ -3,6 +3,8 @@ package com.example.quizapp.Controllers;
 import com.example.quizapp.Main;
 import com.example.quizapp.Models.*;
 import com.example.quizapp.utils.AlertManager;
+import com.example.quizapp.utils.AuthManager;
+import com.example.quizapp.utils.QuizManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

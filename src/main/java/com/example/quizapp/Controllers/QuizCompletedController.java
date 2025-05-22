@@ -50,7 +50,7 @@ public class QuizCompletedController {
         Stage stage = (Stage) finishButton.getScene().getWindow();
 
         // Load the WelcomePage when finish button is clicked
-        SceneManager.switchScene("/com/example/quizapp/home.fxml", "Home", stage);
+        SceneManager.switchScene("/com/example/quizapp/home.fxml", "Home");
     }
 
     @FXML

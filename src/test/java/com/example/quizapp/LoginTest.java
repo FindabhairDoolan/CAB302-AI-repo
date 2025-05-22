@@ -1,11 +1,9 @@
 package com.example.quizapp;
 
-import com.example.quizapp.Models.IUserDAO;
-import com.example.quizapp.Models.AuthManager;
+import com.example.quizapp.utils.AuthManager;
 import com.example.quizapp.Models.MockUserDAO;
 import com.example.quizapp.Models.User;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

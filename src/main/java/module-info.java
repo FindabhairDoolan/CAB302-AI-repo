@@ -16,4 +16,6 @@ module com.example.cab302assessment1project {
     exports com.example.quizapp.Controllers;
     exports com.example.quizapp.Models;
     opens com.example.quizapp.Models to javafx.fxml;
+    exports com.example.quizapp.utils;
+    opens com.example.quizapp.utils to javafx.fxml;
 }
