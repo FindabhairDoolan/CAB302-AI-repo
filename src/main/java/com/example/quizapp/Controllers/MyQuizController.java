@@ -57,6 +57,9 @@ public class MyQuizController extends MenuBarController {
         }
         quizTable.setItems(data);
 
+        QuizManager qm = QuizManager.getInstance();
+
+
         // 4) Add Take/Edit/Delete buttons
         actionCol.setCellFactory(new Callback<>() {
             @Override
@@ -66,12 +69,13 @@ public class MyQuizController extends MenuBarController {
                     private final Button editBtn   = new Button("Edit");
                     private final Button deleteBtn = new Button("Delete");
                     //Toggle switch and knob
-                    private final ToggleButton visTog = new ToggleButton("Public");
+                    private final ToggleButton visTog = new ToggleButton();
                     private final Region thumb = new Region();
 
-                    private final HBox box         = new HBox(12, takeBtn, editBtn, deleteBtn, visTog);
+                    private final HBox box = new HBox(12, takeBtn, editBtn, deleteBtn, visTog);
 
                     {
+                        // Set up the ToggleButton's appearance
                         visTog.getStyleClass().add("switch-toggle");
                         visTog.setFocusTraversable(false);
                         thumb.getStyleClass().add("graphic"); // .graphic targets the knob in CSS
@@ -79,20 +83,9 @@ public class MyQuizController extends MenuBarController {
                         visTog.setContentDisplay(ContentDisplay.LEFT);
 
 
-                        visTog.selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
-                            visTog.setText(isNowSelected ? "Private" : "Public");
-                            // Optionally update the model or save change:
-                            Quiz quiz = getTableView().getItems().get(getIndex());
-                            quiz.setVisibility(isNowSelected ? "Private" : "Public");
-                            quizDAO.updateQuiz(quiz); // update DB if needed
-                        });
-
                         takeBtn.setOnMouseClicked(e -> {
                             //Stash Quiz in Quiz manager when button is clicked
                             Quiz quiz = getTableView().getItems().get(getIndex());
-                            //get instance of Quiz Manager
-                            QuizManager qm = QuizManager.getInstance();
-                            //Get instance of homeController to use dynamic method
                             qm.setCurrentQuiz(quiz);
                             //Open quiz
                             qm.openQuiz(quiz);
@@ -100,8 +93,6 @@ public class MyQuizController extends MenuBarController {
                         editBtn.setOnAction(e -> {
                             SceneManager.switchScene("/com/example/quizapp/quiz-editor.fxml", "Edit Quiz");
                         });
-                        visTog.setOnAction(e -> {
-                                                    });
                         deleteBtn.setOnAction(e -> {
                             Quiz q = getTableView().getItems().get(getIndex());
                             Alert confirm = new Alert(
@@ -124,6 +115,60 @@ public class MyQuizController extends MenuBarController {
                     protected void updateItem(Void item, boolean empty) {
                         super.updateItem(item, empty);
                         setGraphic(empty ? null : box);
+
+                        //Toggle
+                        if (!empty) {
+                            Quiz quiz = getTableView().getItems().get(getIndex());
+
+                            // Set the visibility of the ToggleButton based on the quiz's current visibility
+                            if ("Public".equals(quiz.getVisibility())) {
+                                visTog.setSelected(false);  // Toggle is "on/selected" for Public
+                                visTog.setText("Public");  // If selected, label it "Public"
+
+                            } else {
+                                visTog.setSelected(true); // Toggle is "off" for Private
+                                visTog.setText("Private"); // If not selected, label it "Private"
+
+                            }
+
+
+                            // Add listener to handle toggle state changes
+                            visTog.selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
+                                if (isNowSelected) {
+                                    visTog.setText("Public");  // If selected, label it "Public"
+                                } else {
+                                    visTog.setText("Private"); // If not selected, label it "Private"
+                                }
+
+                                // Update the label (text) of the ToggleButton when clicked
+                                visTog.setText(visTog.isSelected() ?  "Private" :"Public" );
+                                quiz.setVisibility(visTog.isSelected() ?  "Private" :"Public");
+                                quizDAO.updateQuiz(quiz); // Update the database
+
+                                //Notify user that their change has been noted
+                                String message;
+                                if (quiz.getVisibility() == "Public"){
+                                     message = "Everyone can see and take your quiz.";
+                                }
+                                else{
+                                     message = "Only you can see and take your quiz.";
+                                }
+                                Alert confirmation = new Alert(
+                                        Alert.AlertType.CONFIRMATION,
+                                        "'" + quiz.getName() + "'" + " has been set to " + quiz.getVisibility() +"."
+                                        + message,
+                                        ButtonType.OK
+                                );
+                                confirmation.setTitle("Visibility Changed");
+                                confirmation.setHeaderText(null);
+                                confirmation.showAndWait();
+
+
+                            });
+
+
+                                setGraphic(box);
+                        }
                     }
                 };
             }
