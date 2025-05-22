@@ -94,9 +94,14 @@ public class HomeController extends MenuBarController  {
 
     private void displayQuizzes(List<Quiz> quizzes) {
         quizResultsWindow.getChildren().clear();
+        User user = AuthManager.getInstance().getCurrentUser();
         for (Quiz quiz : quizzes) {
-            AnchorPane card = createQuizCard(quiz);
-            quizResultsWindow.getChildren().add(card);
+            if ((quiz.getVisibility().equals("Public")) || (quiz.getCreatorID() == user.getUserID())){
+                AnchorPane card = createQuizCard(quiz);
+                quizResultsWindow.getChildren().add(card);
+
+            }
+
         }
     }
 

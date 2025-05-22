@@ -116,6 +116,8 @@
 .table-view {
   -fx-background-color: transparent;
 }
+
+
 .table-view .column-header-background {
   -fx-background-color: #F7F7F7;
 }
@@ -136,6 +138,11 @@
 }
 .table-cell {
   -fx-padding: 8 10;
+}
+
+.table-cell .text{
+    -fx-wrapping-width: 200;
+
 }
 
 /* Action buttons in table */
