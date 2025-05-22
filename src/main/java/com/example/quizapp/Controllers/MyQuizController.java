@@ -26,6 +26,7 @@ public class MyQuizController extends MenuBarController {
     @FXML private TableColumn<Quiz, Void> actionCol;
 
     private final IQuizDAO quizDAO = new SqliteQuizDAO();
+    QuizManager qm = QuizManager.getInstance();
 
     @FXML
     public void initialize() {
@@ -69,14 +70,11 @@ public class MyQuizController extends MenuBarController {
 
                     {
                         takeBtn.setOnMouseClicked(e -> {
-                            // TODO: implement take-quiz logic
                             //Stash Quiz in Quiz manager when button is clicked
                             Quiz quiz = getTableView().getItems().get(getIndex());
-                            //get instance of Quiz Manager
-                            QuizManager qm = QuizManager.getInstance();
-                            //Get instance of homeController to use dynamic method
+                            //set quiz of corresponding button
                             qm.setCurrentQuiz(quiz);
-                            //Open quiz
+                            //Pass quiz into function to be open
                             qm.openQuiz(quiz);
                         });
                         editBtn.setOnAction(e -> {
