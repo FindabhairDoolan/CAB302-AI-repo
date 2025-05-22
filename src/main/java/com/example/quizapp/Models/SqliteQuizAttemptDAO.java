@@ -112,7 +112,8 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
     public List<QuizWithScore> getQuizzesAttemptedByUser(int userID) {
         List<QuizWithScore> attempts = new ArrayList<>();
         Map<Integer, Quiz> quizMap = new HashMap<>();
-git
+        Map<Integer, List<Integer>> scoreMap = new HashMap<>();
+
         try {
             String query = " SELECT q.*, qa.score FROM quizAttempts qa JOIN quizzes q ON qa.quizID = q.id WHERE qa.userID = ? ORDER BY qa.attemptTime DESC ";
             PreparedStatement statement = connection.prepareStatement(query);
