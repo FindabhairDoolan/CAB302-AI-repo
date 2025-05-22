@@ -156,7 +156,7 @@ public class MyQuizController extends MenuBarController {
                                 }
                                 Alert confirmation = new Alert(
                                         Alert.AlertType.CONFIRMATION,
-                                        "'" + quiz.getName() + "'" + " has been set to " + quiz.getVisibility() +"."
+                                        "'" + quiz.getName() + "'" + " has been set to " + quiz.getVisibility() +". "
                                         + message,
                                         ButtonType.OK
                                 );
