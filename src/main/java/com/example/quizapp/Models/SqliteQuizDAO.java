@@ -94,7 +94,7 @@ public class SqliteQuizDAO implements IQuizDAO {
     }
 
     @Override
-    public void updateQuizInfo(Quiz quiz) {
+    public void updateQuiz(Quiz quiz) {
         try {
             String query = "UPDATE quizzes SET quizName = ?, subject = ?, quizTopic = ?, quizMode = ?, difficulty = ?, yearLevel = ?, country = ?, creatorID = ? WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(query);
@@ -141,13 +141,14 @@ public class SqliteQuizDAO implements IQuizDAO {
             while (rs.next()) {
                 //might be some problems with the question id and quizID?
                 Quiz quiz = new Quiz(
-                        rs.getString("quizName"),
+                        rs.getString("Name"),
                         rs.getString("subject"),
-                        rs.getString("quizTopic"),
-                        rs.getString("quizMode"),
+                        rs.getString("Topic"),
+                        rs.getString("Mode"),
                         rs.getString("difficulty"),
                         rs.getString("yearLevel"),
                         rs.getString("country"),
+                        rs.getString("visibility"),
                         rs.getInt("creatorID")
                 );
                 quiz.setQuizID(rs.getInt("id"));
@@ -175,6 +176,7 @@ public class SqliteQuizDAO implements IQuizDAO {
                         rs.getString("difficulty"),
                         rs.getString("yearLevel"),
                         rs.getString("country"),
+                        rs.getString("visibility"),
                         rs.getInt("creatorID")
                 );
                 quiz.setQuizID(rs.getInt("id"));
@@ -204,6 +206,7 @@ public class SqliteQuizDAO implements IQuizDAO {
                         rs.getString("difficulty"),
                         rs.getString("yearLevel"),
                         rs.getString("country"),
+                        rs.getString("visibility"),
                         rs.getInt("creatorID")
                 );
                 quiz.setQuizID(rs.getInt("id"));
@@ -233,6 +236,7 @@ public class SqliteQuizDAO implements IQuizDAO {
                             rs.getString("difficulty"),
                             rs.getString("yearLevel"),
                             rs.getString("country"),
+                            rs.getString("visibility"),
                             rs.getInt("creatorID")
                     );
                     quiz.setQuizID(rs.getInt("id"));

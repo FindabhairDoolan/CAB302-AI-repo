@@ -132,6 +132,7 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
                             rs.getString("difficulty"),
                             rs.getString("yearLevel"),
                             rs.getString("country"),
+                            rs.getString("visibility"),
                             rs.getInt("creatorID")
                     );
                     quiz.setQuizID(quizID);

@@ -29,13 +29,13 @@
                 <columns>
                     <!-- Wider Name column -->
                     <TableColumn fx:id="nameCol"
-                                 text="Quiz Name" prefWidth="300"/>
+                                 text="Quiz Name" prefWidth="250"/>
                     <TableColumn fx:id="subjectCol"
-                                 text="Subject"    prefWidth="150"/>
+                                 text="Subject"    prefWidth="100"/>
                     <TableColumn fx:id="topicCol"
                                  text="Topic"      prefWidth="150"/>
                     <TableColumn fx:id="actionCol"
-                                 text="Actions"    prefWidth="200"/>
+                                 text="Actions"    prefWidth="250"/>
                 </columns>
             </TableView>
         </VBox>

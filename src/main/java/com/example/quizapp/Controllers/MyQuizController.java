@@ -11,6 +11,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -38,7 +39,6 @@ public class MyQuizController extends MenuBarController {
         Label noDataLabel = new Label("You haven't created any quizzes yet.");
         Button createBtn   = new Button("Create Quiz");
         createBtn.setOnAction(e -> {
-            Stage stage = (Stage) quizTable.getScene().getWindow();
             SceneManager.switchScene(
                     "/com/example/quizapp/create-quiz-view.fxml",
                     "Create Quiz"
@@ -65,11 +65,29 @@ public class MyQuizController extends MenuBarController {
                     private final Button takeBtn   = new Button("Take");
                     private final Button editBtn   = new Button("Edit");
                     private final Button deleteBtn = new Button("Delete");
-                    private final HBox box         = new HBox(8, takeBtn, editBtn, deleteBtn);
+                    //Toggle switch and knob
+                    private final ToggleButton visTog = new ToggleButton("Public");
+                    private final Region thumb = new Region();
+
+                    private final HBox box         = new HBox(12, takeBtn, editBtn, deleteBtn, visTog);
 
                     {
+                        visTog.getStyleClass().add("switch-toggle");
+                        visTog.setFocusTraversable(false);
+                        thumb.getStyleClass().add("graphic"); // .graphic targets the knob in CSS
+                        visTog.setGraphic(thumb);
+                        visTog.setContentDisplay(ContentDisplay.LEFT);
+
+
+                        visTog.selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
+                            visTog.setText(isNowSelected ? "Private" : "Public");
+                            // Optionally update the model or save change:
+                            Quiz quiz = getTableView().getItems().get(getIndex());
+                            quiz.setVisibility(isNowSelected ? "Private" : "Public");
+                            quizDAO.updateQuiz(quiz); // update DB if needed
+                        });
+
                         takeBtn.setOnMouseClicked(e -> {
-                            // TODO: implement take-quiz logic
                             //Stash Quiz in Quiz manager when button is clicked
                             Quiz quiz = getTableView().getItems().get(getIndex());
                             //get instance of Quiz Manager
@@ -80,8 +98,10 @@ public class MyQuizController extends MenuBarController {
                             qm.openQuiz(quiz);
                         });
                         editBtn.setOnAction(e -> {
-                            // TODO: implement edit-quiz logic
+                            SceneManager.switchScene("/com/example/quizapp/quiz-editor.fxml", "Edit Quiz");
                         });
+                        visTog.setOnAction(e -> {
+                                                    });
                         deleteBtn.setOnAction(e -> {
                             Quiz q = getTableView().getItems().get(getIndex());
                             Alert confirm = new Alert(

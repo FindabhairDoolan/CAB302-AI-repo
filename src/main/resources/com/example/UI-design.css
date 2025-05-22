@@ -121,6 +121,7 @@
   -fx-text-fill: white;
 }
 
+
 /* Placeholder in table */
 .table-view .placeholder {
   -fx-background-color: transparent;
@@ -141,6 +142,50 @@
   -fx-text-fill: #FFFFFF;
   -fx-background-radius: 6;
 }
+
+/* ToggleButton styled to look like a switch */
+.table-view .switch-toggle {
+    -fx-background-color: #4caf50;
+    -fx-background-radius: 15;
+    -fx-min-width: 60px;
+    -fx-min-height: 25px;
+    -fx-max-height: 25px;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+    -fx-alignment: center-right;
+    -fx-content-display: graphic-only;
+    -fx-border-color: transparent;
+    -fx-border-radius: 15;
+    -fx-text-fill: white;
+    -fx-content-display: RIGHT;
+}
+
+/* Knob (circle) that moves inside the switch */
+.table-view .switch-toggle > .graphic {
+    -fx-background-color: white;
+    -fx-background-radius: 50%;
+    -fx-min-width: 20px;
+    -fx-min-height: 20px;
+    -fx-max-width: 20px;
+    -fx-max-height: 20px;
+    -fx-padding: 2;
+    -fx-translate-x: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 1, 0, 0, 1);
+
+
+}
+
+/* When selected, background color changes and alignment flips */
+.table-view .switch-toggle:selected {
+    -fx-background-color: #ccc;
+    -fx-alignment: center-left;
+    -fx-text-fill: black;
+    -fx-content-display: left;
+
+
+
+}
+
 
 /* Style the Create Quiz button in the placeholder */
 .table-view .placeholder > .vbox > Button {

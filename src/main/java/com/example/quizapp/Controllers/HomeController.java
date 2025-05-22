@@ -1,8 +1,6 @@
 package com.example.quizapp.Controllers;
 import com.example.quizapp.Models.*;
-import com.example.quizapp.utils.AuthManager;
-import com.example.quizapp.utils.QuizManager;
-import com.example.quizapp.utils.SceneManager;
+import com.example.quizapp.utils.*;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -144,7 +142,7 @@ public class HomeController extends MenuBarController  {
         //When card is clicked go to quiz
         card.setOnMouseClicked(event -> {
             System.out.println("Clicked quiz: " + quiz.getName());
-            // navigate to quiz view
+            // navigate to quiz view -> moved all logic to QuizManager
             QuizManager qm = QuizManager.getInstance();
             qm.openQuiz(quiz);
 
