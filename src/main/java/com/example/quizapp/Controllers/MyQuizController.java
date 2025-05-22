@@ -86,8 +86,9 @@ public class MyQuizController extends MenuBarController {
                         takeBtn.setOnMouseClicked(e -> {
                             //Stash Quiz in Quiz manager when button is clicked
                             Quiz quiz = getTableView().getItems().get(getIndex());
+                            //set quiz of corresponding button
                             qm.setCurrentQuiz(quiz);
-                            //Open quiz
+                            //Pass quiz into function to be open
                             qm.openQuiz(quiz);
                         });
                         editBtn.setOnAction(e -> {
@@ -155,7 +156,7 @@ public class MyQuizController extends MenuBarController {
                                 }
                                 Alert confirmation = new Alert(
                                         Alert.AlertType.CONFIRMATION,
-                                        "'" + quiz.getName() + "'" + " has been set to " + quiz.getVisibility() +"."
+                                        "'" + quiz.getName() + "'" + " has been set to " + quiz.getVisibility() +". "
                                         + message,
                                         ButtonType.OK
                                 );
