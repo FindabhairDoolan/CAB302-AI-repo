@@ -120,10 +120,10 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
             Quiz quiz = null;
             while (rs.next()) {
                 quiz = new Quiz(
-                        rs.getString("quizName"),
+                        rs.getString("name"),
                         rs.getString("subject"),
-                        rs.getString("quizTopic"),
-                        rs.getString("quizMode"),
+                        rs.getString("topic"),
+                        rs.getString("mode"),
                         rs.getString("difficulty"),
                         rs.getString("yearLevel"),
                         rs.getString("country"),
