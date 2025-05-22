@@ -143,7 +143,7 @@ public class CreateQuizController {
             //Get current user to make them the quiz creator
             User user = AuthManager.getInstance().getCurrentUser();
             //Add generated quiz to database
-            Quiz quiz = new Quiz(titleResponse, selectedSubject, userTopic, selectedMode, selectedDifficulty, selectedYearLevel, selectedCountry, user.getUserID());
+            Quiz quiz = new Quiz(titleResponse, selectedSubject, userTopic, selectedMode, selectedDifficulty, selectedYearLevel, selectedCountry, "Public", user.getUserID());
             quizDAO.addQuiz(quiz);
 
             //Set the current quiz now that ID has been auto incremented in database

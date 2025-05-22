@@ -119,6 +119,7 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
             ResultSet rs = statement.executeQuery();
             Quiz quiz = null;
             while (rs.next()) {
+<<<<<<< HEAD
                 quiz = new Quiz(
                         rs.getString("quizName"),
                         rs.getString("subject"),
@@ -130,6 +131,28 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
                         rs.getInt("creatorID")
                 );
                 quiz.setQuizID(rs.getInt("id"));
+=======
+                int quizID = rs.getInt("id");
+
+                // Store quiz object once
+                if (!quizMap.containsKey(quizID)) {
+                    Quiz quiz = new Quiz(
+                            rs.getString("quizName"),
+                            rs.getString("subject"),
+                            rs.getString("quizTopic"),
+                            rs.getString("quizMode"),
+                            rs.getString("difficulty"),
+                            rs.getString("yearLevel"),
+                            rs.getString("country"),
+                            rs.getString("visibility"),
+                            rs.getInt("creatorID")
+                    );
+                    quiz.setQuizID(quizID);
+                    quizMap.put(quizID, quiz);
+                }
+
+                //Timestamp time = rs.getTimestamp("attemptTime"); <- not working, maybe try later again
+>>>>>>> my-quizzes
                 int score = rs.getInt("score");
                 attempts.add(new QuizWithScore(quiz, score));
             }

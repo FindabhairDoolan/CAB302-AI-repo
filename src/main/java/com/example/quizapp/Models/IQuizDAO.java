@@ -5,7 +5,7 @@ import java.util.List;
 public interface IQuizDAO {
 
     public void addQuiz(Quiz quiz);
-    public void updateQuizInfo(Quiz quiz);
+    public void updateQuiz(Quiz quiz);
     public void deleteQuiz(Quiz quiz);
     public List<Quiz> searchQuiz(String phrase);
     public Quiz getQuizByName(String name);

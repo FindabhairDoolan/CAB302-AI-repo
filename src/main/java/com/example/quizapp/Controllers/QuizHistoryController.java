@@ -52,8 +52,36 @@ public class QuizHistoryController {
         scoreCol.setCellValueFactory(data -> javafx.beans.binding.Bindings.createStringBinding(
                 () -> String.valueOf(data.getValue().getScore())));
 
+<<<<<<< HEAD
         // Set up actions column
         actionCol.setCellFactory(new Callback<>() {
+=======
+    //create a list of mock quizzes for testing
+    public ObservableList<Quiz> createMockQuizzes() {
+        ObservableList<Quiz> quizzes = FXCollections.observableArrayList();
+
+        // Add some mock quizzes to the list
+        quizzes.add(new Quiz("Math Quiz", "Mathematics", "Fractions", "Online", "Medium", "High School", "USA", "Public",101));
+        quizzes.add(new Quiz("Science Quiz", "Science","Chemistry", "In-Person", "Hard", "College", "UK", "Public",102));
+        quizzes.add(new Quiz("History Quiz", "History", "The Industrial Revolution","Online", "Easy", "High School", "Australia", "Public", 103));
+
+        return quizzes;
+    }
+
+    //A function to retrieve quizzes from the database
+    public ObservableList<QuizWithScore> getQuizzes() {
+        User user = AuthManager.getInstance().getCurrentUser();
+        ObservableList<QuizWithScore> quizzes = FXCollections.observableArrayList(new SqliteQuizAttemptDAO().getQuizzesAttemptedByUser(user.getUserID()));
+        return quizzes;
+    }
+
+    //Display the quizzes
+    public void displayQuizzes() {
+        ObservableList<QuizWithScore> quizzes = getQuizzes();
+        quizListView.setItems(quizzes);
+
+        quizListView.setCellFactory(list -> new ListCell<>() {
+>>>>>>> my-quizzes
             @Override
             public TableCell<QuizWithScore, Void> call(final TableColumn<QuizWithScore, Void> param) {
                 return new TableCell<>() {
