@@ -110,7 +110,7 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
     //work in progress
     @Override
     public List<QuizWithScore> getQuizzesAttemptedByUser(int userID) {
-        List<QuizWithScore> attempts = new ArrayList<>();
+        List<QuizWithScore> groupedQuizzes = new ArrayList<>();
         Map<Integer, Quiz> quizMap = new HashMap<>();
         Map<Integer, List<Integer>> scoreMap = new HashMap<>();
 
@@ -119,21 +119,7 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, userID);
             ResultSet rs = statement.executeQuery();
-            Quiz quiz = null;
             while (rs.next()) {
-                quiz = new Quiz(
-                        rs.getString("name"),
-                        rs.getString("subject"),
-                        rs.getString("topic"),
-                        rs.getString("mode"),
-                        rs.getString("difficulty"),
-                        rs.getString("yearLevel"),
-                        rs.getString("country"),
-                        rs.getString("visibility"),
-                        rs.getInt("creatorID")
-                );
-                quiz.setQuizID(rs.getInt("id"));
-
                 int quizID = rs.getInt("id");
 
                 // Store quiz object once
@@ -152,7 +138,6 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
                     quiz.setQuizID(quizID);
                     quizMap.put(quizID, quiz);
                 }
-
 
                 //Timestamp time = rs.getTimestamp("attemptTime"); <- not working, maybe try later again
                 int score = rs.getInt("score");
@@ -173,10 +158,6 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
         }
         return groupedQuizzes;
     }
-
-
-}
-
 
 
 }
