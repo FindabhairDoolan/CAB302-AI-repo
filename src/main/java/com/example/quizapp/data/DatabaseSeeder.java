@@ -55,7 +55,7 @@ public class DatabaseSeeder {
             //If quiz does not exist in database yet, adds it
             Quiz quiz1 = quizDAO.getQuizByName("Algebra Basics");
             if (quiz1 == null) {
-                quizDAO.addQuiz(new Quiz("Algebra Basics", "Mathematics","Algebra", "Practice", "Easy", "Year 10", "Australia", aliceID));
+                quizDAO.addQuiz(new Quiz("Algebra Basics", "Mathematics","Algebra", "Practice", "Easy", "Year 10", "Australia", "Public", aliceID));
                 quiz1 = quizDAO.getQuizByName("Algebra Basics");
                 //Add same question 5 times
                 for (int i = 1; i <= 5; i++) {
@@ -66,7 +66,7 @@ public class DatabaseSeeder {
 
             Quiz quiz2 = quizDAO.getQuizByName("Photosynthesis");
             if (quiz2 == null) {
-                quizDAO.addQuiz(new Quiz("Photosynthesis", "Science","Biology", "Practice", "Medium", "Year 11", "Australia", bobID));
+                quizDAO.addQuiz(new Quiz("Photosynthesis", "Science","Biology", "Practice", "Medium", "Year 11", "Australia", "Public", bobID));
                 quiz2 = quizDAO.getQuizByName("Photosynthesis");
                 for (int i = 1; i <= 5; i++) {
                     int quiz2ID = quiz2.getQuizID();
@@ -76,7 +76,7 @@ public class DatabaseSeeder {
 
             Quiz quiz3 = quizDAO.getQuizByName("World War II");
             if (quiz3 == null) {
-                quizDAO.addQuiz(new Quiz("World War II", "History","Wars", "Practice", "Easy", "Year 10", "Australia", aliceID));
+                quizDAO.addQuiz(new Quiz("World War II", "History","Wars", "Practice", "Easy", "Year 10", "Australia", "Public", aliceID));
                 quiz3 = quizDAO.getQuizByName("World War II");
                 for (int i = 1; i <= 5; i++) {
                     int quiz3ID = quiz3.getQuizID();

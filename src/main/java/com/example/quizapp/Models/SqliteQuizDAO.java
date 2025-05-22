@@ -38,13 +38,14 @@ public class SqliteQuizDAO implements IQuizDAO {
             Statement statement = connection.createStatement();
             String query = "CREATE TABLE IF NOT EXISTS quizzes ("
                     + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                    + "quizName VARCHAR NOT NULL,"
+                    + "name VARCHAR NOT NULL,"
                     + "subject    VARCHAR NOT NULL,"
-                    + "quizTopic VARCHAR NOT NULL,"
-                    + "quizMode VARCHAR NOT NULL,"
+                    + "topic VARCHAR NOT NULL,"
+                    + "mode VARCHAR NOT NULL,"
                     + "difficulty VARCHAR NOT NULL," //is "not null" necessary?
                     + "yearLevel VARCHAR NOT NULL," //is "not null" necessary?
                     + "country VARCHAR NOT NULL," //is "not null" necessary?
+                    + "visibility VARCHAR,"
                     + "creatorID INTEGER NOT NULL,"
                     + "FOREIGN KEY (creatorID) REFERENCES users(id) ON DELETE SET NULL" //or on delete cascade?
                     + ")";
@@ -76,7 +77,7 @@ public class SqliteQuizDAO implements IQuizDAO {
     @Override
     public void addQuiz(Quiz quiz) {
         try {
-            String query = "INSERT INTO quizzes (quizName, subject, quizTopic, quizMode, difficulty, yearLevel, country, creatorID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO quizzes (name, subject, topic, mode, difficulty, yearLevel, country, visibility, creatorID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, quiz.getName());
             statement.setString(2, quiz.getSubject());
@@ -85,7 +86,8 @@ public class SqliteQuizDAO implements IQuizDAO {
             statement.setString(5, quiz.getDifficulty());
             statement.setString(6, quiz.getYearLevel());
             statement.setString(7, quiz.getCountry());
-            statement.setInt(8, quiz.getCreatorID());
+            statement.setString(8, "Public");
+            statement.setInt(9, quiz.getCreatorID());
             statement.executeUpdate();
         }
         catch (Exception e) {
@@ -94,9 +96,9 @@ public class SqliteQuizDAO implements IQuizDAO {
     }
 
     @Override
-    public void updateQuizInfo(Quiz quiz) {
+    public void updateQuiz(Quiz quiz) {
         try {
-            String query = "UPDATE quizzes SET quizName = ?, subject = ?, quizTopic = ?, quizMode = ?, difficulty = ?, yearLevel = ?, country = ?, creatorID = ? WHERE id = ?";
+            String query = "UPDATE quizzes SET name = ?, subject = ?, topic = ?, mode = ?, difficulty = ?, yearLevel = ?, country = ?, visibility = ?, creatorID = ? WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, quiz.getName());
             statement.setString(2, quiz.getSubject());
@@ -105,7 +107,14 @@ public class SqliteQuizDAO implements IQuizDAO {
             statement.setString(5, quiz.getDifficulty());
             statement.setString(6, quiz.getYearLevel());
             statement.setString(7, quiz.getCountry());
-            statement.setInt(8, quiz.getCreatorID());
+            statement.setString(8, quiz.getVisibility());
+            statement.setInt(9, quiz.getCreatorID());
+            statement.setInt(10, quiz.getQuizID()); // Ensure the WHERE clause works
+
+            // 🔥 Actually execute the update
+            statement.executeUpdate();
+
+            System.out.println("Quiz DAO: visibility updated to " + quiz.getVisibility());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -130,7 +139,7 @@ public class SqliteQuizDAO implements IQuizDAO {
         try {
             //query and database are changed to lowercase and, and search is
             // for both topic and name to ensure more reliable and better matching
-            String query = "SELECT * FROM quizzes WHERE LOWER(quizTopic) LIKE ? OR LOWER(quizName) LIKE ?";
+            String query = "SELECT * FROM quizzes WHERE LOWER(topic) LIKE ? OR LOWER(name) LIKE ?";
 
             PreparedStatement statement = connection.prepareStatement(query);
             var phrase = "%" + topic.toLowerCase().trim() + "%";
@@ -141,13 +150,14 @@ public class SqliteQuizDAO implements IQuizDAO {
             while (rs.next()) {
                 //might be some problems with the question id and quizID?
                 Quiz quiz = new Quiz(
-                        rs.getString("quizName"),
+                        rs.getString("Name"),
                         rs.getString("subject"),
-                        rs.getString("quizTopic"),
-                        rs.getString("quizMode"),
+                        rs.getString("Topic"),
+                        rs.getString("Mode"),
                         rs.getString("difficulty"),
                         rs.getString("yearLevel"),
                         rs.getString("country"),
+                        rs.getString("visibility"),
                         rs.getInt("creatorID")
                 );
                 quiz.setQuizID(rs.getInt("id"));
@@ -168,13 +178,14 @@ public class SqliteQuizDAO implements IQuizDAO {
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 Quiz quiz = new Quiz(
-                        rs.getString("quizName"),
+                        rs.getString("name"),
                         rs.getString("subject"),
-                        rs.getString("quizTopic"),
-                        rs.getString("quizMode"),
+                        rs.getString("topic"),
+                        rs.getString("mode"),
                         rs.getString("difficulty"),
                         rs.getString("yearLevel"),
                         rs.getString("country"),
+                        rs.getString("visibility"),
                         rs.getInt("creatorID")
                 );
                 quiz.setQuizID(rs.getInt("id"));
@@ -190,20 +201,21 @@ public class SqliteQuizDAO implements IQuizDAO {
     public Quiz getQuizByName(String name) {
         Quiz quiz = null;
         try {
-            String query = "SELECT * FROM quizzes where quizName = ?";
+            String query = "SELECT * FROM quizzes where name = ?";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, name);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 //might be some problems with the question id and quizID?
                 quiz = new Quiz(
-                        rs.getString("quizName"),
+                        rs.getString("name"),
                         rs.getString("subject"),
-                        rs.getString("quizTopic"),
-                        rs.getString("quizMode"),
+                        rs.getString("topic"),
+                        rs.getString("mode"),
                         rs.getString("difficulty"),
                         rs.getString("yearLevel"),
                         rs.getString("country"),
+                        rs.getString("visibility"),
                         rs.getInt("creatorID")
                 );
                 quiz.setQuizID(rs.getInt("id"));
@@ -226,13 +238,14 @@ public class SqliteQuizDAO implements IQuizDAO {
             try (ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
                     Quiz quiz = new Quiz(
-                            rs.getString("quizName"),
+                            rs.getString("name"),
                             rs.getString("subject"),
-                            rs.getString("quizTopic"),
-                            rs.getString("quizMode"),
+                            rs.getString("topic"),
+                            rs.getString("mode"),
                             rs.getString("difficulty"),
                             rs.getString("yearLevel"),
                             rs.getString("country"),
+                            rs.getString("visibility"),
                             rs.getInt("creatorID")
                     );
                     quiz.setQuizID(rs.getInt("id"));
