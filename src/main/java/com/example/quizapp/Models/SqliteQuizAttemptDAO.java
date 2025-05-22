@@ -110,52 +110,35 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
     //work in progress
     @Override
     public List<QuizWithScore> getQuizzesAttemptedByUser(int userID) {
-        List<QuizWithScore> groupedQuizzes = new ArrayList<>();
-        Map<Integer, Quiz> quizMap = new HashMap<>();
-        Map<Integer, List<Integer>> scoreMap = new HashMap<>();
+        List<QuizWithScore> attempts = new ArrayList<>();
 
         try {
             String query = " SELECT q.*, qa.score FROM quizAttempts qa JOIN quizzes q ON qa.quizID = q.id WHERE qa.userID = ? ORDER BY qa.attemptTime DESC ";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, userID);
             ResultSet rs = statement.executeQuery();
+            Quiz quiz = null;
             while (rs.next()) {
-                int quizID = rs.getInt("id");
-
-                // Store quiz object once
-                if (!quizMap.containsKey(quizID)) {
-                    Quiz quiz = new Quiz(
-                            rs.getString("quizName"),
-                            rs.getString("subject"),
-                            rs.getString("quizTopic"),
-                            rs.getString("quizMode"),
-                            rs.getString("difficulty"),
-                            rs.getString("yearLevel"),
-                            rs.getString("country"),
-                            rs.getInt("creatorID")
-                    );
-                    quiz.setQuizID(quizID);
-                    quizMap.put(quizID, quiz);
-                }
-
-                //Timestamp time = rs.getTimestamp("attemptTime"); <- not working, maybe try later again
+                quiz = new Quiz(
+                        rs.getString("quizName"),
+                        rs.getString("subject"),
+                        rs.getString("quizTopic"),
+                        rs.getString("quizMode"),
+                        rs.getString("difficulty"),
+                        rs.getString("yearLevel"),
+                        rs.getString("country"),
+                        rs.getInt("creatorID")
+                );
+                quiz.setQuizID(rs.getInt("id"));
                 int score = rs.getInt("score");
-                scoreMap.computeIfAbsent(quizID, k -> new ArrayList<>()).add(score);
-                }
-
-                for (Map.Entry<Integer, Quiz> entry : quizMap.entrySet()) {
-                    int quizIDforMapping = entry.getKey();
-                    Quiz quiz = entry.getValue();
-                    List<Integer> scores = scoreMap.getOrDefault(quizIDforMapping, List.of());
-                    groupedQuizzes.add(new QuizWithScore(quiz, scores));
-
+                attempts.add(new QuizWithScore(quiz, score));
             }
-
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return groupedQuizzes;
+        //return groupedQuizzes;
+        return attempts;
     }
 
 

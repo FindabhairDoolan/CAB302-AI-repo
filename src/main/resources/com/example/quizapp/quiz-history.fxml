@@ -8,28 +8,40 @@
 <?import javafx.geometry.Insets?>
 
 
-<BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.quizapp.Controllers.QuizHistoryController">
+<BorderPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.quizapp.Controllers.QuizHistoryController"
+            stylesheets="@../UI-design.css"
+            styleClass="root-pane">
 
+    <!-- include your menu bar -->
     <top>
-        <VBox>
-            <!-- Menu bar -->
-            <fx:include source="menu.fxml"/>
-
-            <!-- Title row with back button and heading -->
-            <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 10;">
-                <Button fx:id="backButton" text="&lt;" onAction="#onBack" />
-                <Label text="Quiz History" style="-fx-font-size: 20px;" />
-            </HBox>
-        </VBox>
+        <fx:include source="menu.fxml"/>
     </top>
 
+
+    <!-- center: card wrapper for the table -->
     <center>
-        <VBox spacing="10">
-            <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/>
-            </padding>
-            <ListView fx:id="quizListView" />
+        <VBox alignment="CENTER" spacing="10" styleClass="card-background" VBox.vgrow="ALWAYS">
+
+            <!-- TableView of quizzes -->
+            <TableView fx:id="quizTable"
+                       prefWidth="800" prefHeight="400"
+                       styleClass="table-view">
+                <columns>
+                    <!-- Wider Name column -->
+                    <TableColumn fx:id="nameCol"
+                                 text="Quiz Name" prefWidth="200"/>
+                    <TableColumn fx:id="subjectCol"
+                                 text="Subject"    prefWidth="150"/>
+                    <TableColumn fx:id="topicCol"
+                                 text="Topic"      prefWidth="150"/>
+                    <TableColumn fx:id="scoreCol"
+                                 text="Score"      prefWidth="100"/>
+                    <TableColumn fx:id="actionCol"
+                                 text="Actions"    prefWidth="150"/>
+                </columns>
+            </TableView>
         </VBox>
     </center>
 
