@@ -12,11 +12,26 @@
   -fx-padding: 20;
 }
 
+.thumbnail-background {
+  -fx-background-color: #FFFFFF;
+  -fx-font-family: "Avenir Roman", sans-serif;
+}
+.thumbnail-background:hover {
+  -fx-background-color: #E0F1EE;
+  -fx-opacity: 0.9;
+  -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
 /* Top “Back” link */
 .link-button {
   -fx-background-color: #2D2A43;
   -fx-text-fill: #FFFFFF;         /* dark blue-purple */
   -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+.link-button:hover {
+  -fx-opacity: 0.9;
+    -fx-cursor: hand;
 }
 
 /* Headings */
@@ -75,6 +90,7 @@
 }
 .primary-button:hover {
   -fx-opacity: 0.9;
+    -fx-cursor: hand;
 }
 
 .secondary-button {
@@ -82,8 +98,14 @@
   -fx-text-fill: #FFFFFF;
   -fx-font-family: "Avenir Heavy", sans-serif;
   -fx-font-size: 12px;
-  -fx-background-radius: 10;
-  -fx-padding: 10 0;
+  -fx-padding: 12 20;
+  -fx-min-width: 70px;
+  -fx-min-height: 32px;
+}
+
+.secondary-button:hover {
+  -fx-opacity: 0.9;
+    -fx-cursor: hand;
 }
 
 .trophy-icon {
@@ -128,6 +150,7 @@
 .button.action-button:hover {
   -fx-background-color: #2D2A43;
   -fx-text-fill: white;
+    -fx-cursor: hand;
 }
 
 /* Placeholder in table */
@@ -159,4 +182,25 @@
   -fx-font-size: 14px;
   -fx-background-radius: 6;
   -fx-padding: 8 20;
+}
+
+.icon-button {
+  -fx-background-color: #2D2A43;
+  -fx-background-radius: 50%;
+  -fx-min-width: 20px;
+  -fx-min-height: 20px;
+  -fx-max-width: 28px;
+  -fx-max-height: 28px;
+  -fx-padding: 0;
+  -fx-alignment: center;
+  -fx-cursor: hand;
+}
+.icon-button:hover {
+  -fx-background-color: #2D2A43;
+  -fx-text-fill: white;
+}
+
+.icon-button .text {
+  -fx-fill: #FFFFFF;
+  -fx-font-size: 16px;
 }

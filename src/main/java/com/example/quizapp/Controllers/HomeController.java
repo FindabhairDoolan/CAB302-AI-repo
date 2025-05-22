@@ -205,6 +205,7 @@ public class HomeController extends MenuBarController  {
 
         card.setPrefSize(cardWidth, cardHeight);
         card.setStyle("-fx-border-color: #ccc; -fx-border-radius: 5; -fx-padding: 10;");
+        card.getStyleClass().add("thumbnail-background");
 
         VBox content = new VBox(5); // spacing between elements
         content.setPadding(new Insets(10));
@@ -255,7 +256,7 @@ public class HomeController extends MenuBarController  {
     public void initialize() {
         User user = AuthManager.getInstance().getCurrentUser();
         String username = user.getUserName(); // You can fetch this from session/auth logic
-        welcomeLabel.setText("Hi, " + username + "! WELCOME TO QUIZ MASTER!");
+        welcomeLabel.setText("Hi, " + username + "!");
 
         //Loads all available quizzes
         List<Quiz> quizzes = quizDAO.getAllQuizzes();

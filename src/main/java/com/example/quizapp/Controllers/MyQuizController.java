@@ -65,8 +65,8 @@ public class MyQuizController extends MenuBarController {
             public TableCell<Quiz, Void> call(TableColumn<Quiz, Void> col) {
                 return new TableCell<>() {
                     private final Button takeBtn   = new Button("Take");
-                    private final Button editBtn   = new Button("Edit");
-                    private final Button deleteBtn = new Button("Delete");
+                    private final Button editBtn   = new Button("✎");
+                    private final Button deleteBtn = new Button("\uD83D\uDDD1");
                     private final HBox box         = new HBox(8, takeBtn, editBtn, deleteBtn);
 
                     {
