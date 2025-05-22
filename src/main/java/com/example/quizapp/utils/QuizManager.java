@@ -1,4 +1,6 @@
-package com.example.quizapp.Models;
+package com.example.quizapp.utils;
+
+import com.example.quizapp.Models.Quiz;
 
 public class QuizManager {
     private static QuizManager instance;

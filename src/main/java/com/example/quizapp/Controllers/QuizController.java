@@ -2,6 +2,7 @@ package com.example.quizapp.Controllers;
 
 import com.example.quizapp.Models.*;
 import com.example.quizapp.utils.AlertManager;
+import com.example.quizapp.utils.QuizManager;
 import com.example.quizapp.utils.SceneManager;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;

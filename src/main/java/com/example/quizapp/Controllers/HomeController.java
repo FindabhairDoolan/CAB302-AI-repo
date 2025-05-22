@@ -1,20 +1,16 @@
 package com.example.quizapp.Controllers;
 import com.example.quizapp.Models.*;
+import com.example.quizapp.utils.AuthManager;
+import com.example.quizapp.utils.QuizManager;
 import com.example.quizapp.utils.SceneManager;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import javafx.geometry.Insets;
-import javafx.stage.Stage;
 
 
 public class HomeController extends MenuBarController  {

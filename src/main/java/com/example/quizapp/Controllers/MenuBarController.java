@@ -1,6 +1,6 @@
 package com.example.quizapp.Controllers;
 
-import com.example.quizapp.Models.AuthManager;
+import com.example.quizapp.utils.AuthManager;
 import com.example.quizapp.utils.SceneManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;

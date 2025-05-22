@@ -1,6 +1,8 @@
 package com.example.quizapp.data;
 
 import com.example.quizapp.Models.*;
+import com.example.quizapp.utils.AuthManager;
+
 import java.sql.Connection;
 import java.sql.Statement;
 
