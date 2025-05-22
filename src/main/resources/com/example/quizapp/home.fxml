@@ -3,19 +3,36 @@
 <?import javafx.geometry.Insets?>
 
 
+<?import java.net.URL?>
 <StackPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.quizapp.Controllers.HomeController">
+           fx:controller="com.example.quizapp.Controllers.HomeController">
 
     <!-- Main Page -->
     <BorderPane>
         <padding><Insets bottom="30"/></padding>
 
+        <stylesheets>
+            <URL value="@../UI-design.css"/>
+        </stylesheets>
 
-
-        <!-- Insert Nav/Menu/Tool Bar -->
+        <!-- Top nav + filter together -->
         <top>
-            <fx:include source="menu.fxml"/>
+            <AnchorPane>
+                <Button fx:id="filterButton"
+                        text="⚙ Filter"
+                        onAction="#toggleFilter"
+                        styleClass="secondary-button"
+                            AnchorPane.leftAnchor="10"
+                            AnchorPane.topAnchor="10"
+                            AnchorPane.bottomAnchor="0"/>
+
+                <fx:include source="menu.fxml"
+                        AnchorPane.topAnchor="0"
+                        AnchorPane.rightAnchor="0"/>
+            </AnchorPane>
         </top>
+
+
 
         <!-- Quiz Content -->
         <center>
@@ -23,13 +40,16 @@
                 <padding><Insets top="50"/></padding>
 
                 <!-- Page-specific content -->
-                <Label fx:id="welcomeLabel" text="WELCOME TO QUIZ MASTER!" wrapText="true"/>
+
+                <Label fx:id="welcomeLabel"
+                       styleClass="heading"/>
+                <Label text="WELCOME TO QUIZ MASTER"
+                       styleClass="subheading"/>
 
                 <!-- Search & Filter -->
                 <HBox spacing="10" alignment="CENTER">
-                    <TextField fx:id="searchField" promptText="Search..." />
-                    <Button text="Search" onAction="#handleSearch" />
-                    <Button text="Filter By" onAction="#toggleFilter"/>
+                    <TextField fx:id="searchField" promptText="Search..." prefWidth="200"/>
+                    <Button text="🔎" onAction="#handleSearch" styleClass="icon-button"/>
                 </HBox>
 
 <!--            Scroll added to keep toolbar fixed; vertical instead of horizontal for ease of browsing-->
