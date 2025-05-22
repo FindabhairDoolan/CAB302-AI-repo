@@ -120,13 +120,14 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
             Quiz quiz = null;
             while (rs.next()) {
                 quiz = new Quiz(
-                        rs.getString("quizName"),
+                        rs.getString("name"),
                         rs.getString("subject"),
-                        rs.getString("quizTopic"),
-                        rs.getString("quizMode"),
+                        rs.getString("topic"),
+                        rs.getString("mode"),
                         rs.getString("difficulty"),
                         rs.getString("yearLevel"),
                         rs.getString("country"),
+                        rs.getString("visibility"),
                         rs.getInt("creatorID")
                 );
                 quiz.setQuizID(rs.getInt("id"));
@@ -136,10 +137,10 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
                 // Store quiz object once
                 if (!quizMap.containsKey(quizID)) {
                     Quiz quiz = new Quiz(
-                            rs.getString("quizName"),
+                            rs.getString("name"),
                             rs.getString("subject"),
-                            rs.getString("quizTopic"),
-                            rs.getString("quizMode"),
+                            rs.getString("topic"),
+                            rs.getString("mode"),
                             rs.getString("difficulty"),
                             rs.getString("yearLevel"),
                             rs.getString("country"),
