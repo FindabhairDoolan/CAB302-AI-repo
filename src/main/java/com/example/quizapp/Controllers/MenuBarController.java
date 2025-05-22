@@ -43,7 +43,7 @@ public class MenuBarController {
     protected void handleHome() {
         // Swap to home/dashboard
         Stage stage = (Stage) menuBar.getScene().getWindow();
-        SceneManager.switchScene("/com/example/quizapp/home.fxml", "Home", stage);
+        SceneManager.switchScene("/com/example/quizapp/home.fxml", "Home");
         System.out.println("Going to home page...");
     }
 
@@ -51,7 +51,7 @@ public class MenuBarController {
     protected void handleLogout() {
         //Swap to Welcome
         Stage stage = (Stage) menuBar.getScene().getWindow();
-        SceneManager.switchScene("/com/example/quizapp/WelcomePage.fxml", "Welcome", stage);
+        SceneManager.switchScene("/com/example/quizapp/WelcomePage.fxml", "Welcome");
         //End user session
         AuthManager.getInstance().logOut();
         //Terminal/System Notification
@@ -68,7 +68,7 @@ public class MenuBarController {
     @FXML
     protected void handleMyQuizzes() {
         Stage stage = (Stage) menuBar.getScene().getWindow();
-        SceneManager.switchScene("/com/example/quizapp/my-quizzes.fxml", "My Quizzes", stage);
+        SceneManager.switchScene("/com/example/quizapp/my-quizzes.fxml", "My Quizzes");
         System.out.println("Going to my quizzes...");
     }
 
@@ -77,7 +77,7 @@ public class MenuBarController {
     protected void handleCreateQuiz() {
         //Swap to Create Quiz
         Stage stage = (Stage) menuBar.getScene().getWindow();
-        SceneManager.switchScene("/com/example/quizapp/create-quiz-view.fxml", "Create Quiz", stage);
+        SceneManager.switchScene("/com/example/quizapp/create-quiz-view.fxml", "Create Quiz");
         System.out.println("Going to Quiz Creator...");
 
     }
@@ -85,7 +85,7 @@ public class MenuBarController {
     @FXML
     protected void handleQuizHistory() {
         Stage stage = (Stage) menuBar.getScene().getWindow();
-        SceneManager.switchScene("/com/example/quizapp/quiz-history.fxml", "Quiz History", stage);
+        SceneManager.switchScene("/com/example/quizapp/quiz-history.fxml", "Quiz History");
         System.out.println("Going to Quiz History...");
 
     }

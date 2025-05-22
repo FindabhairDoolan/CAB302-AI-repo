@@ -1,9 +1,6 @@
 package com.example.quizapp.Controllers;
 
-import com.example.quizapp.Models.AuthManager;
-import com.example.quizapp.Models.IQuizDAO;
-import com.example.quizapp.Models.Quiz;
-import com.example.quizapp.Models.SqliteQuizDAO;
+import com.example.quizapp.Models.*;
 import com.example.quizapp.utils.SceneManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -42,8 +39,7 @@ public class MyQuizController extends MenuBarController {
             Stage stage = (Stage) quizTable.getScene().getWindow();
             SceneManager.switchScene(
                     "/com/example/quizapp/create-quiz-view.fxml",
-                    "Create Quiz",
-                    stage
+                    "Create Quiz"
             );
         });
         VBox placeholder = new VBox(10, noDataLabel, createBtn);
@@ -70,8 +66,15 @@ public class MyQuizController extends MenuBarController {
                     private final HBox box         = new HBox(8, takeBtn, editBtn, deleteBtn);
 
                     {
-                        takeBtn.setOnAction(e -> {
+                        takeBtn.setOnMouseClicked(e -> {
                             // TODO: implement take-quiz logic
+                            //Stash Quiz in Quiz manager when button is clicked
+                            Quiz quiz = getTableView().getItems().get(getIndex());
+                            QuizManager.getInstance().setCurrentQuiz(quiz);
+                            //Get instance of homeController to use dynamic method
+                            HomeController home = new HomeController();
+                            //Open quiz
+                            home.openQuiz(quiz);
                         });
                         editBtn.setOnAction(e -> {
                             // TODO: implement edit-quiz logic

@@ -4,6 +4,7 @@ import com.example.quizapp.utils.SceneManager;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -134,8 +135,8 @@ public class HomeController extends MenuBarController  {
 
     private void startQuiz(Quiz quiz, String mode) {
         try {
-            Stage stage = (Stage) quizResultsWindow.getScene().getWindow();
-            QuizController controller = SceneManager.switchSceneWithController("/com/example/quizapp/quiz.fxml", "Quiz", stage);
+            //Open quiz/quiz controller from pop up
+            QuizController controller = SceneManager.switchSceneWithController("/com/example/quizapp/quiz.fxml", "Quiz");
 
             // Now inject values
             QuizManager.getInstance().setCurrentQuiz(quiz);

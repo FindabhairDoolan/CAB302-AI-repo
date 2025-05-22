@@ -86,7 +86,7 @@ public class QuizController {
         if (result.isPresent() && result.get() == yesButton) {
             // User chose Yes – go to dashboard
             Stage stage = (Stage) exitButton.getScene().getWindow();
-            SceneManager.switchScene("/com/example/quizapp/home.fxml", "Dashboard", stage);
+            SceneManager.switchScene("/com/example/quizapp/home.fxml", "Dashboard");
         }
         // If No is selected, do nothing
     }
