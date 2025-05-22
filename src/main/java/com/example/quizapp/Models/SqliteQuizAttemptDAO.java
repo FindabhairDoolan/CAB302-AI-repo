@@ -152,17 +152,30 @@ git
                     quizMap.put(quizID, quiz);
                 }
 
+
                 //Timestamp time = rs.getTimestamp("attemptTime"); <- not working, maybe try later again
                 int score = rs.getInt("score");
-                attempts.add(new QuizWithScore(quiz, score));
+                scoreMap.computeIfAbsent(quizID, k -> new ArrayList<>()).add(score);
             }
+
+            for (Map.Entry<Integer, Quiz> entry : quizMap.entrySet()) {
+                int quizIDforMapping = entry.getKey();
+                Quiz quiz = entry.getValue();
+                List<Integer> scores = scoreMap.getOrDefault(quizIDforMapping, List.of());
+                groupedQuizzes.add(new QuizWithScore(quiz, scores));
+
+            }
+
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //return groupedQuizzes;
-        return attempts;
+        return groupedQuizzes;
     }
+
+
+}
+
 
 
 }
