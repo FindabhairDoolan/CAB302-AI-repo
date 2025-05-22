@@ -72,11 +72,12 @@ public class MyQuizController extends MenuBarController {
                             // TODO: implement take-quiz logic
                             //Stash Quiz in Quiz manager when button is clicked
                             Quiz quiz = getTableView().getItems().get(getIndex());
-                            QuizManager.getInstance().setCurrentQuiz(quiz);
+                            //get instance of Quiz Manager
+                            QuizManager qm = QuizManager.getInstance();
                             //Get instance of homeController to use dynamic method
-                            HomeController home = new HomeController();
+                            qm.setCurrentQuiz(quiz);
                             //Open quiz
-                            home.openQuiz(quiz);
+                            qm.openQuiz(quiz);
                         });
                         editBtn.setOnAction(e -> {
                             // TODO: implement edit-quiz logic
