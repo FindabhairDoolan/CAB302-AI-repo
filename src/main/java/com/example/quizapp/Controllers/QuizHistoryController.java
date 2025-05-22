@@ -1,17 +1,19 @@
 package com.example.quizapp.Controllers;
 
+import com.example.quizapp.utils.*;
 import com.example.quizapp.Models.*;
-import com.example.quizapp.utils.AuthManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Parent;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
-import javafx.util.Callback;
+import javafx.scene.control.Button;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,100 +21,104 @@ import java.util.List;
 public class QuizHistoryController {
 
     @FXML
-    private TableView<QuizWithScore> quizTable;
+    public ListView<QuizWithScore> quizListView;
 
     @FXML
-    private TableColumn<QuizWithScore, String> nameCol;
+    private Button backButton;
 
-    @FXML
-    private TableColumn<QuizWithScore, String> subjectCol;
-
-    @FXML
-    private TableColumn<QuizWithScore, String> topicCol;
-
-    @FXML
-    private TableColumn<QuizWithScore, String> scoreCol;
-
-    @FXML
-    private TableColumn<QuizWithScore, Void> actionCol;
-
+    //populate the listview when the scene is loaded
     @FXML
     public void initialize() {
-        setupColumns();
-        loadQuizData();
+        displayQuizzes();
     }
 
-    private void setupColumns() {
-        nameCol.setCellValueFactory(data -> javafx.beans.binding.Bindings.createStringBinding(() ->
-                data.getValue().getQuiz().getName()));
-        subjectCol.setCellValueFactory(data -> javafx.beans.binding.Bindings.createStringBinding(() ->
-                data.getValue().getQuiz().getSubject()));
-        topicCol.setCellValueFactory(data -> javafx.beans.binding.Bindings.createStringBinding(() ->
-                data.getValue().getQuiz().getTopic()));
-        scoreCol.setCellValueFactory(data -> javafx.beans.binding.Bindings.createStringBinding(
-                () -> String.valueOf(data.getValue().getScore())));
-
-        // Set up actions column
-        actionCol.setCellFactory(new Callback<>() {
-            @Override
-            public TableCell<QuizWithScore, Void> call(final TableColumn<QuizWithScore, Void> param) {
-                return new TableCell<>() {
-                    private final Button retakeBtn = new Button("Retake");
-                    private final Button viewBtn = new Button("View");
-                    private final HBox box         = new HBox(8, retakeBtn, viewBtn);
-
-                    {
-                        retakeBtn.setOnAction(event -> {
-                            QuizWithScore item = getTableView().getItems().get(getIndex());
-                            handleRetakeQuiz(item.getQuiz());
-                        });
-
-                        viewBtn.setOnAction(event -> {
-                            //to do
-                        });
-                    }
-
-                    @Override
-                    public void updateItem(Void item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                        } else {
-                            setGraphic(box);
-                        }
-                    }
-                };
-            }
-        });
-    }
-
-    private void loadQuizData() {
-        ObservableList<QuizWithScore> quizData = getQuizzes();
-        quizTable.setItems(quizData);
-    }
-
-    private ObservableList<QuizWithScore> getQuizzes() {
-        User user = AuthManager.getInstance().getCurrentUser();
-        return FXCollections.observableArrayList(
-                new SqliteQuizAttemptDAO().getQuizzesAttemptedByUser(user.getUserID())
-        );
-    }
-
-    private void handleRetakeQuiz(Quiz quiz) {
-        System.out.println("Getting here...");
+    //return to home
+    @FXML
+    public void onBack() {
+        Stage stage = (Stage) backButton.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/home.fxml"));
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/quizapp/quiz.fxml"));
-            Parent root = loader.load();
-
-            QuizController quizController = loader.getController();
-            quizController.setQuiz(quiz);
-
-            Stage stage = (Stage) quizTable.getScene().getWindow();
-            stage.setScene(new Scene(root, 800, 550));
-            stage.setTitle("Take Quiz");
-            stage.show();
+            Scene scene = new Scene(fxmlLoader.load(), 800, 550);
+            stage.setScene(scene);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    //create a list of mock quizzes for testing
+    public ObservableList<Quiz> createMockQuizzes() {
+        ObservableList<Quiz> quizzes = FXCollections.observableArrayList();
+
+        // Add some mock quizzes to the list
+        //quizzes.add(new Quiz("Math Quiz", "Mathematics", "Online", "Medium", "High School", "USA", 101));
+        //quizzes.add(new Quiz("Science Quiz", "Science", "In-Person", "Hard", "College", "UK", 102));
+        //quizzes.add(new Quiz("History Quiz", "History", "Online", "Easy", "High School", "Australia", 103));
+
+        return quizzes;
+    }
+
+    //A function to retrieve quizzes from the database
+    public ObservableList<QuizWithScore> getQuizzes() {
+        User user = AuthManager.getInstance().getCurrentUser();
+        ObservableList<QuizWithScore> quizzes = FXCollections.observableArrayList(new SqliteQuizAttemptDAO().getQuizzesAttemptedByUser(user.getUserID()));
+        return quizzes;
+    }
+
+    //Display the quizzes
+    public void displayQuizzes() {
+        ObservableList<QuizWithScore> quizzes = getQuizzes();
+        quizListView.setItems(quizzes);
+
+        quizListView.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(QuizWithScore item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setGraphic(null);
+
+
+                    setText(null);
+                } else {
+                    VBox box = new VBox(5);
+
+                    String quizName = item.getQuiz().getName();
+                    String topic = item.getQuiz().getTopic();
+                    List<Integer> scores = item.getScores();
+
+                    Label title = new Label(quizName + " - " + topic);
+                    Label score = new Label("Scores: " + scores.toString());
+
+                    Button retakeButton = new Button("Retake Quiz");
+                    retakeButton.setOnAction(e -> handleRetakeQuiz(item.getQuiz()));
+
+                    box.getChildren().addAll(title, score, retakeButton);
+                    setGraphic(box);
+                }
+            }
+        });
+    }
+
+
+    private void handleRetakeQuiz(Quiz quiz) {
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/quizapp/quiz.fxml"));
+        Parent root = loader.load();
+
+        QuizController quizController = loader.getController();
+        quizController.setQuiz(quiz);
+
+        int numOfQs = new SqliteQuizDAO().getNumberOfQuestions(quiz);
+        quizController.setTotalQuestions(numOfQs);
+
+        Stage stage = (Stage) backButton.getScene().getWindow();
+        Scene scene = new Scene(root, 800, 550);
+        stage.setScene(scene);
+        stage.setTitle("Take quiz");
+        stage.show();
+
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    }
+
 }

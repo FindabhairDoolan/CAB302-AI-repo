@@ -5,20 +5,20 @@ import java.util.List;
 
 public class QuizWithScore {
     private Quiz quiz;
-    private int score;
+    private int scores;
     private Timestamp time;
 
-    public QuizWithScore(Quiz quiz, int score) {
+    public QuizWithScore(Quiz quiz, int scores) {
         this.quiz = quiz;
-        this.score = score;
+        this.scores = scores;
     }
 
     public Quiz getQuiz() {
         return quiz;
     }
 
-    public int getScore() {
-        return score;
+    public int getScores() {
+        return scores;
     }
 
 
