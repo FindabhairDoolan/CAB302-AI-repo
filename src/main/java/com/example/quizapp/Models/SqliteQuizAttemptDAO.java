@@ -125,11 +125,12 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
         List<QuizWithScore> attempts = new ArrayList<>();
 
         try {
-            String query = " SELECT q.*, qa.score FROM quizAttempts qa JOIN quizzes q ON qa.quizID = q.id WHERE qa.userID = ? ORDER BY qa.attemptTime DESC ";
+            String query = " SELECT q.*, qa.* FROM quizAttempts qa JOIN quizzes q ON qa.quizID = q.id WHERE qa.userID = ? ORDER BY qa.attemptTime DESC ";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, userID);
             ResultSet rs = statement.executeQuery();
             Quiz quiz = null;
+            QuizAttempt attempt = null;
             while (rs.next()) {
 
                 quiz = new Quiz(
@@ -144,13 +145,18 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
                         rs.getInt("creatorID")
                 );
 
+                List<String> answers = new ObjectMapper().readValue(rs.getString("answers"), new TypeReference<List<String>>() {});
+                attempt = new QuizAttempt(
+                        rs.getInt("quizID"),
+                        rs.getInt("userID"),
+                        rs.getDouble("score"),
+                        answers
+                );
+
                 quiz.setQuizID(rs.getInt("id"));
                 int score = rs.getInt("score");
-                attempts.add(new QuizWithScore(quiz, score));
+                attempts.add(new QuizWithScore(quiz, attempt));
             }
-
-
-
 
         } catch (Exception e) {
             e.printStackTrace();

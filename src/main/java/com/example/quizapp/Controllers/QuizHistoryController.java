@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
+import java.util.List;
 
 public class QuizHistoryController {
 
@@ -70,7 +71,7 @@ public class QuizHistoryController {
 
                         viewBtn.setOnAction(event -> {
                             QuizWithScore item = getTableView().getItems().get(getIndex());
-                            // TODO: Implement view logic
+                            handleViewQuiz(item.getAttempt(), item.getQuiz());
                         });
                     }
 
@@ -99,6 +100,26 @@ public class QuizHistoryController {
                 new SqliteQuizAttemptDAO().getQuizzesAttemptedByUser(user.getUserID())
         );
     }
+
+    private void handleViewQuiz(QuizAttempt attempts, Quiz quiz) {
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/quizapp/quiz.fxml"));
+            Parent root = loader.load();
+
+            QuizController controller = loader.getController();
+            controller.setViewMode(true, attempts);
+            controller.setQuiz(quiz);
+
+            Stage stage = (Stage) quizTable.getScene().getWindow();
+            stage.setTitle("View Quiz Attempt");
+            stage.setScene(new Scene(root, 800, 550));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void handleRetakeQuiz(Quiz quiz) {
         try {

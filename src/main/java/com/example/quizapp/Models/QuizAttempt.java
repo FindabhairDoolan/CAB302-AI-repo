@@ -12,7 +12,6 @@ public class QuizAttempt {
 
 
 
-
     public QuizAttempt(int quizID, int userID, double score, List<String> selectedAnswers) {
         this.quizID = quizID;
         this.userID = userID;

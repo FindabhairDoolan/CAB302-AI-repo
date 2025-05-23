@@ -61,7 +61,6 @@ public class QuizCompletedController {
             Parent root = loader.load();
 
             QuizController quizController = loader.getController();
-            if (quizController == null) {System.out.println("wtf)");};
             quizController.setQuiz(quizTaken);
 
             int numOfQs = new SqliteQuizDAO().getNumberOfQuestions(quizTaken);
