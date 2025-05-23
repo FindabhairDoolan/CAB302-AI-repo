@@ -71,7 +71,6 @@ public class QuizHistoryController {
                         viewBtn.setOnAction(event -> {
                             QuizWithScore item = getTableView().getItems().get(getIndex());
                             // TODO: Implement view logic
-                            System.out.println("View quiz: " + item.getQuiz().getName());
                         });
                     }
 
@@ -102,7 +101,6 @@ public class QuizHistoryController {
     }
 
     private void handleRetakeQuiz(Quiz quiz) {
-        System.out.println("Retaking quiz: " + quiz.getName());
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/quizapp/quiz.fxml"));
             Parent root = loader.load();

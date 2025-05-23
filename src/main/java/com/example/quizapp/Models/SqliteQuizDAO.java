@@ -77,7 +77,7 @@ public class SqliteQuizDAO implements IQuizDAO {
     @Override
     public void addQuiz(Quiz quiz) {
         try {
-            String query = "INSERT INTO quizzes (name, subject, topic, mode, difficulty, yearLevel, country, visibility, creatorID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO quizzes (name, subject, topic, mode, difficulty, yearLevel, country, visibility, creatorID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, quiz.getName());
             statement.setString(2, quiz.getSubject());

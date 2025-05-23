@@ -12,11 +12,11 @@ public class QuizAttemptTest {
 
     private static final int quizID = 101;
     private static final int userID = 202;
-    private static final int score = 85;
+    private static final double score = 85;
 
     private static final int quizID_2 = 103;
     private static final int userID_2 = 204;
-    private static final int score_2 = 92;
+    private static final double score_2 = 92;
 
     private QuizAttempt attempt;
 

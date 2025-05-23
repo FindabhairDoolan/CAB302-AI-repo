@@ -1,17 +1,32 @@
 package com.example.quizapp.Models;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 public class QuizAttempt {
-    private int id, quizID, userID, score;
+    private int id, quizID, userID;
+    private double score;
     private LocalDateTime attemptTime;
+    private List<String> selectedAnswers;
 
 
 
-    public QuizAttempt(int quizID, int userID, int score) {
+
+    public QuizAttempt(int quizID, int userID, double score, List<String> selectedAnswers) {
         this.quizID = quizID;
         this.userID = userID;
         this.score = score;
+        this.selectedAnswers = selectedAnswers;
+    }
+
+
+    public List<String> getAnswers() {
+        return this.selectedAnswers;
+    }
+
+    public void setAnswers(List<String> answers) {
+        this.selectedAnswers = answers;
     }
 
     public int getId() { return id; }
@@ -23,8 +38,8 @@ public class QuizAttempt {
     public int getUserID() { return userID; }
     public void setUserID(int userID) { this.userID = userID; }
 
-    public int getScore() { return score; }
-    public void setScore(int score) { this.score = score; }
+    public double getScore() { return score; }
+    public void setScore(double score) { this.score = score; }
 
     public LocalDateTime getAttemptTime() { return attemptTime; }
     public void setAttemptTime(LocalDateTime attemptTime) { this.attemptTime = attemptTime; }

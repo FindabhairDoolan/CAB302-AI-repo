@@ -2,6 +2,7 @@ package com.example.quizapp.Controllers;
 
 import com.example.quizapp.Models.*;
 import com.example.quizapp.utils.AlertManager;
+import com.example.quizapp.utils.AuthManager;
 import com.example.quizapp.utils.QuizManager;
 import com.example.quizapp.utils.SceneManager;
 import javafx.fxml.FXML;
@@ -12,8 +13,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class QuizController {
 
@@ -41,17 +41,21 @@ public class QuizController {
 
 
     //Declaration of further variables
+    User user = AuthManager.getInstance().getCurrentUser();
     private boolean showingFeedback = false;
     private int questionIndex = 1;
     private int totalQuestions;
     private List<Question> questionList;
     SqliteQuestionDAO questionDAO = new SqliteQuestionDAO();
+    SqliteQuizAttemptDAO quizAttemptDAO = new SqliteQuizAttemptDAO();
     private Quiz quiz = QuizManager.getInstance().getCurrentQuiz();
+    private List<String> selectedAnswers = new ArrayList<>();
 
     private int correctAnswers = 0;
     private String difficulty;
     private String yearLevel;
     private String subject;
+
 
     public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
@@ -96,18 +100,17 @@ public class QuizController {
      * Initialises the Quiz page
      */
     @FXML
-    public void initialize() {
-        loadQuiz();
-    }
+    public void initialize() {}
 
     public void setQuiz(Quiz quiz) {
         this.quiz = quiz;
-        loadQuiz();
 
         setDifficulty(quiz.getDifficulty());
         setYearLevel(quiz.getYearLevel());
         setSubject(quiz.getSubject());
         setMode(quiz.getMode());
+
+        loadQuiz();
     }
 
     /**
@@ -201,7 +204,9 @@ public class QuizController {
 
 
             String selectedText = selected.getText();
-            boolean isCorrect = selectedText.equals(questionList.get(questionIndex - 1).getCorrectAnswer());
+            Question currentQuestion = questionList.get(questionIndex - 1);
+            boolean isCorrect = selectedText.equals(currentQuestion.getCorrectAnswer());
+            selectedAnswers.add(selectedText);
 
             feedbackLabel.setText(isCorrect ? "Correct" : "Incorrect");
             feedbackLabel.setVisible(true);
@@ -216,9 +221,15 @@ public class QuizController {
                 questionIndex++;
                 loadQuestion(questionList.get(questionIndex - 1));
             } else {
+                saveQuizAttemptToDatabase();
                 showQuizCompletedScreen();
             }
         }
+    }
+
+    private void saveQuizAttemptToDatabase() {
+        QuizAttempt attempt = new QuizAttempt(quiz.getQuizID(), user.getUserID(), (correctAnswers * 100.0) / totalQuestions, selectedAnswers);
+        quizAttemptDAO.addQuizAttempt(attempt);
     }
 
     /**
