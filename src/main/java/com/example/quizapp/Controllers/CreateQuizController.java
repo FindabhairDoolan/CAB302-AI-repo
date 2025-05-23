@@ -142,30 +142,22 @@ public class CreateQuizController {
 
             //Get current user to make them the quiz creator
             User user = AuthManager.getInstance().getCurrentUser();
+
             //Add generated quiz to database
             Quiz quiz = new Quiz(titleResponse, selectedSubject, userTopic, selectedMode, selectedDifficulty, selectedYearLevel, selectedCountry, "Public", user.getUserID());
             quizDAO.addQuiz(quiz);
 
-            //Set the current quiz now that ID has been auto incremented in database
+            //Get the current quiz now that ID has been auto incremented in database
             quiz = quizDAO.getQuizByName(titleResponse);
-            QuizManager.getInstance().setCurrentQuiz(quiz);
             int quizID = quizDAO.getQuizByName(titleResponse).getQuizID();
+
             //Add the generated questions to the database
             questionDAO.addAIQuestions(JSONResponse, quizID);
 
-            // Send user to Quiz page
-            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/com/example/quizapp/Quiz.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), Main.WIDTH, Main.HEIGHT);
+            //Navigate to the quiz page
+            QuizManager quizManager = QuizManager.getInstance();
+            quizManager.openQuiz(quiz);
 
-            // Get the controller and set the total questions
-            QuizController quizController = fxmlLoader.getController();
-            quizController.setTotalQuestions(selectedQuestions);
-            quizController.setDifficulty(selectedDifficulty);
-            quizController.setYearLevel(selectedYearLevel);
-            quizController.setSubject(selectedSubject);
-
-            Stage stage = (Stage) createButton.getScene().getWindow();
-            stage.setScene(scene);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -253,12 +245,15 @@ public class CreateQuizController {
     private String generateUniqueQuizTitle (String title){
         User user = AuthManager.getInstance().getCurrentUser();
         Quiz existingQuiz = quizDAO.getQuizByName(title);
+
+        //If there is a duplicate quiz, and its by the same user
         if (existingQuiz != null && existingQuiz.getCreatorID() == user.getUserID()) {
             int duplicateNum = 1;
-            String titleDuplicate = title + duplicateNum;
+            String titleDuplicate = title + "(" + duplicateNum + ")";
+            //While there is still a duplicate
             while (quizDAO.getQuizByName(titleDuplicate) != null) {
                 duplicateNum++;
-                titleDuplicate = title + duplicateNum;
+                titleDuplicate = title + "(" + duplicateNum + ")";
             }
             title = titleDuplicate;
         }
