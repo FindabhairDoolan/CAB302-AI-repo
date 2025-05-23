@@ -32,6 +32,18 @@ public class QuizHistoryController {
         displayQuizzes();
     }
 
+    //return to home
+    @FXML
+    public void onBack() {
+        Stage stage = (Stage) backButton.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/home.fxml"));
+        try {
+            Scene scene = new Scene(fxmlLoader.load(), 800, 550);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     //create a list of mock quizzes for testing
     public ObservableList<Quiz> createMockQuizzes() {
