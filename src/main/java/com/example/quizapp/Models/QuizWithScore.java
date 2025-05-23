@@ -1,7 +1,6 @@
 package com.example.quizapp.Models;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 public class QuizWithScore {
     private Quiz quiz;

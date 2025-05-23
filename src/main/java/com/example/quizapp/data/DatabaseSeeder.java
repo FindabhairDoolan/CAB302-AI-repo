@@ -2,14 +2,11 @@ package com.example.quizapp.data;
 
 import com.example.quizapp.Models.*;
 import com.example.quizapp.utils.AuthManager;
-import com.google.gson.Gson;
 
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /*
 This class is for initializing the database. It adds two initial users, alice and bob, but does not
@@ -94,7 +91,6 @@ public class DatabaseSeeder {
             int quiz2ID = quizDAO.getQuizByName("Photosynthesis").getQuizID();
             int quiz3ID = quizDAO.getQuizByName("World War II").getQuizID();
 
-            Gson gson = new Gson();
             List<String> AlgebraAnswers = Arrays.asList("3", "4", "5", "6", "7");
 
             List<String> HistoryAnswers =  Arrays.asList("Hitler", "Hitler", "Hitler", "Hitler", "Hitler");

@@ -5,7 +5,6 @@ module com.example.cab302assessment1project {
     requires ollama4j;
     requires org.apache.commons.lang3;
     requires org.json;
-    requires com.google.gson;
     requires com.fasterxml.jackson.databind;
     requires java.sql;
 

@@ -6,14 +6,10 @@ import java.util.*;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Type;
 
 public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
 
     private Connection connection;
-    Gson gson = new Gson();
 
     public SqliteQuizAttemptDAO() {
         connection = SqliteConnection.getInstance();
@@ -154,7 +150,6 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
                 );
 
                 quiz.setQuizID(rs.getInt("id"));
-                int score = rs.getInt("score");
                 attempts.add(new QuizWithScore(quiz, attempt));
             }
 
