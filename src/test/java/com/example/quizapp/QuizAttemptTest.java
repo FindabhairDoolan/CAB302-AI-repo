@@ -5,6 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -17,12 +20,13 @@ public class QuizAttemptTest {
     private static final int quizID_2 = 103;
     private static final int userID_2 = 204;
     private static final double score_2 = 92;
+    private static final List<String> answers = Arrays.asList("1", "2", "3", "4", "5");
 
     private QuizAttempt attempt;
 
     @BeforeEach
     public void setUp() {
-        attempt = new QuizAttempt(quizID, userID, score);
+        attempt = new QuizAttempt(quizID, userID, score, answers);
     }
 
     @Test
