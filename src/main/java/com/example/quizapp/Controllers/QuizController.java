@@ -2,6 +2,7 @@ package com.example.quizapp.Controllers;
 
 import com.example.quizapp.Models.*;
 import com.example.quizapp.utils.AlertManager;
+import com.example.quizapp.utils.AuthManager;
 import com.example.quizapp.utils.QuizManager;
 import com.example.quizapp.utils.SceneManager;
 import javafx.fxml.FXML;
@@ -12,8 +13,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class QuizController {
 
@@ -41,17 +41,25 @@ public class QuizController {
 
 
     //Declaration of further variables
+    User user = AuthManager.getInstance().getCurrentUser();
     private boolean showingFeedback = false;
     private int questionIndex = 1;
     private int totalQuestions;
     private List<Question> questionList;
     SqliteQuestionDAO questionDAO = new SqliteQuestionDAO();
+    SqliteQuizAttemptDAO quizAttemptDAO = new SqliteQuizAttemptDAO();
     private Quiz quiz = QuizManager.getInstance().getCurrentQuiz();
+    private List<String> selectedAnswers = new ArrayList<>();
 
     private int correctAnswers = 0;
     private String difficulty;
     private String yearLevel;
     private String subject;
+
+    private boolean isViewMode = false;
+    private List<String> previousAnswers = new ArrayList<>();
+    private QuizAttempt attempt;
+
 
     public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
@@ -65,6 +73,11 @@ public class QuizController {
         this.subject = subject;
     }
 
+    public void setViewMode(boolean viewMode, QuizAttempt attempt) {
+        this.isViewMode = viewMode;
+        this.previousAnswers = attempt.getAnswers();
+        this.attempt = attempt;
+    }
     /**
      * Exits the quiz and returns to home page
      */
@@ -96,18 +109,17 @@ public class QuizController {
      * Initialises the Quiz page
      */
     @FXML
-    public void initialize() {
-        loadQuiz();
-    }
+    public void initialize() {}
 
     public void setQuiz(Quiz quiz) {
         this.quiz = quiz;
-        loadQuiz();
 
         setDifficulty(quiz.getDifficulty());
         setYearLevel(quiz.getYearLevel());
         setSubject(quiz.getSubject());
         setMode(quiz.getMode());
+
+        loadQuiz();
     }
 
     /**
@@ -129,6 +141,7 @@ public class QuizController {
 
         //preload all questions if coming from another controller
         totalQuestions = questionList.size();
+        if (isViewMode) this.correctAnswers = (int) (attempt.getScore() * totalQuestions / 100.0);
 
         loadQuestion(questionList.get(questionIndex - 1));
         updateProgressLabel(); // Update the progress label on initialization
@@ -155,10 +168,10 @@ public class QuizController {
         showingFeedback = false;
 
         //Enable changing answer before submitting answer
-        option1.setDisable(false);
-        option2.setDisable(false);
-        option3.setDisable(false);
-        option4.setDisable(false);
+        option1.setDisable(isViewMode);
+        option2.setDisable(isViewMode);
+        option3.setDisable(isViewMode);
+        option4.setDisable(isViewMode);
 
         //Display question and answers
         questionsLabel.setText(question.getQuestionText());
@@ -170,6 +183,33 @@ public class QuizController {
 
         updateProgressLabel(); // Updating the progress heading as each question is done
         nextButton.setVisible(true);
+        if (isViewMode && previousAnswers.size() >= questionIndex) {
+            showingFeedback = true;
+            String selectedAnswer = previousAnswers.get(questionIndex - 1);
+            String correctAnswer = question.getCorrectAnswer();
+            for (Toggle toggle : answerToggleGroup.getToggles()) {
+                RadioButton rb = (RadioButton) toggle;
+                String text = rb.getText();
+                rb.setStyle("");  // reset style first
+
+                boolean isCorrect = text.equals(correctAnswer);
+                boolean isSelected = text.equals(selectedAnswer);
+
+                if (isSelected) {
+                    answerToggleGroup.selectToggle(rb);
+                    if (isCorrect) {
+                        rb.setStyle("-fx-font-weight: bold; -fx-text-fill: green;");
+                        feedbackLabel.setText("Correct");
+                    } else {
+                        feedbackLabel.setText("Incorrect");
+                    }
+                    feedbackLabel.setVisible(true);
+                } else if (isCorrect) {
+                    rb.setStyle("-fx-font-weight: bold; -fx-text-fill: green;");
+                }
+            }
+        }
+        updateProgressLabel();
     }
 
     /**
@@ -201,11 +241,13 @@ public class QuizController {
 
 
             String selectedText = selected.getText();
-            boolean isCorrect = selectedText.equals(questionList.get(questionIndex - 1).getCorrectAnswer());
-
+            Question currentQuestion = questionList.get(questionIndex - 1);
+            boolean isCorrect = selectedText.equals(currentQuestion.getCorrectAnswer());
+            selectedAnswers.add(selectedText);
+            showingFeedback = true;
             feedbackLabel.setText(isCorrect ? "Correct" : "Incorrect");
             feedbackLabel.setVisible(true);
-            showingFeedback = true;
+
             // Increment correctAnswers if the answer is correct
             if (isCorrect) {
                 correctAnswers++;
@@ -216,9 +258,15 @@ public class QuizController {
                 questionIndex++;
                 loadQuestion(questionList.get(questionIndex - 1));
             } else {
+                if (!isViewMode) saveQuizAttemptToDatabase();
                 showQuizCompletedScreen();
             }
         }
+    }
+
+    private void saveQuizAttemptToDatabase() {
+        QuizAttempt attempt = new QuizAttempt(quiz.getQuizID(), user.getUserID(), (correctAnswers * 100.0) / totalQuestions, selectedAnswers);
+        quizAttemptDAO.addQuizAttempt(attempt);
     }
 
     /**

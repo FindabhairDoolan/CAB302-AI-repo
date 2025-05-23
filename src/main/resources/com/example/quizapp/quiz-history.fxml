@@ -37,7 +37,7 @@
                     <TableColumn fx:id="topicCol"
                                  text="Topic"      prefWidth="150"/>
                     <TableColumn fx:id="scoreCol"
-                                 text="Score"      prefWidth="100"/>
+                                 text="Score (%)"      prefWidth="100"/>
                     <TableColumn fx:id="actionCol"
                                  text="Actions"    prefWidth="150"/>
                 </columns>

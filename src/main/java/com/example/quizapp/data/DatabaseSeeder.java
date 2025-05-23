@@ -2,9 +2,14 @@ package com.example.quizapp.data;
 
 import com.example.quizapp.Models.*;
 import com.example.quizapp.utils.AuthManager;
+import com.google.gson.Gson;
 
 import java.sql.Connection;
 import java.sql.Statement;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /*
 This class is for initializing the database. It adds two initial users, alice and bob, but does not
@@ -89,15 +94,22 @@ public class DatabaseSeeder {
             int quiz2ID = quizDAO.getQuizByName("Photosynthesis").getQuizID();
             int quiz3ID = quizDAO.getQuizByName("World War II").getQuizID();
 
-            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz1ID, aliceID, 4));
-            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz2ID, aliceID, 3));
-            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz3ID, aliceID, 5));
-            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz1ID, aliceID, 4));
+            Gson gson = new Gson();
+            List<String> AlgebraAnswers = Arrays.asList("3", "4", "5", "6", "7");
 
-            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz1ID, bobID, 3));
-            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz2ID, bobID, 5));
-            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz3ID, bobID, 2));
-            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz3ID, bobID, 4));
+            List<String> HistoryAnswers =  Arrays.asList("Hitler", "Hitler", "Hitler", "Hitler", "Hitler");
+
+            List<String> BiologyAnswers = Arrays.asList("Water", "Water", "Water", "Water", "Water");
+
+            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz1ID, aliceID, 100, AlgebraAnswers));
+            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz2ID, aliceID, 20, BiologyAnswers));
+            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz3ID, aliceID, 20, HistoryAnswers));
+            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz1ID, aliceID, 100, AlgebraAnswers));
+
+            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz1ID, bobID, 100, AlgebraAnswers));
+            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz2ID, bobID, 20, BiologyAnswers));
+            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz3ID, bobID, 20,HistoryAnswers));
+            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz3ID, bobID, 20, HistoryAnswers));
 
             stmt.close();
         } catch (Exception e) {
