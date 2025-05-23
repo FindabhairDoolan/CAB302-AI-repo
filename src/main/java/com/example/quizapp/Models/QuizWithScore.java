@@ -5,19 +5,19 @@ import java.util.List;
 
 public class QuizWithScore {
     private Quiz quiz;
-    private  List<Integer> score;
+    private  int score;
     private Timestamp time;
 
-    public QuizWithScore(Quiz quiz, List<Integer> scores) {
+    public QuizWithScore(Quiz quiz, int score) {
         this.quiz = quiz;
-        this.score = scores;
+        this.score = score;
     }
 
     public Quiz getQuiz() {
         return quiz;
     }
 
-    public List<Integer> getScore() {
+    public int getScore() {
         return score;
     }
 
