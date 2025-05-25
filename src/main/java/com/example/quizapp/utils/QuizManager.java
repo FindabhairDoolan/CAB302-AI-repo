@@ -73,7 +73,7 @@ public class QuizManager {
 
             // Now inject values
             QuizManager.getInstance().setCurrentQuiz(quiz);
-            controller.setQuiz(quiz);
+            controller.setQuiz(quiz, mode);
 
 
         } catch (RuntimeException e) {

@@ -145,7 +145,7 @@ public class CreateQuizController {
                     "\n" +
                     "            Only return valid JSON without additional commentary.\n", selectedYearLevel, JSONResponse);
             OllamaResponse generateTimeResponse = new OllamaResponse(timePrompt);
-            String timeResponse = quizDAO.retrieveTimer(generateTimeResponse.ollamaReturnResponse());
+            int timeResponse = quizDAO.retrieveTimer(generateTimeResponse.ollamaReturnResponse());
 
             //Get current user to make them the quiz creator
             User user = AuthManager.getInstance().getCurrentUser();

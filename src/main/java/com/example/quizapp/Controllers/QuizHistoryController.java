@@ -71,7 +71,7 @@ public class QuizHistoryController {
 
                         viewBtn.setOnAction(event -> {
                             QuizWithScore item = getTableView().getItems().get(getIndex());
-                            handleViewQuiz(item.getAttempt(), item.getQuiz());
+                            handleViewQuiz(item.getAttempt(), item.getQuiz());//Add parameter that gets time in seconds
                         });
                     }
 
@@ -101,6 +101,7 @@ public class QuizHistoryController {
         );
     }
 
+    //Add parameter for the time it took to complete quiz in the attempt (int timerSeconds)
     private void handleViewQuiz(QuizAttempt attempts, Quiz quiz) {
 
         try {
@@ -109,7 +110,19 @@ public class QuizHistoryController {
 
             QuizController controller = loader.getController();
             controller.setViewMode(true, attempts);
-            controller.setQuiz(quiz);
+
+            //Replace this with the below if statement
+            controller.setQuiz(quiz, "Practice");
+
+            //When attempt time is displayed on quiz history page, implement this if statement
+            //So that the quiz completion time can be displayed
+//            if(time.equals("--:--:--")){
+//                controller.setQuiz(quiz, "Practice");
+//            }
+//            else{
+//                controller.setTimer(timerSeconds);
+//                controller.setQuiz(quiz, "Exam");
+//            }
 
             Stage stage = (Stage) quizTable.getScene().getWindow();
             stage.setTitle("View Quiz Attempt");
@@ -127,7 +140,16 @@ public class QuizHistoryController {
             Parent root = loader.load();
 
             QuizController quizController = loader.getController();
-            quizController.setQuiz(quiz);
+
+            //When attempt time is displayed on this page, implement this if statement
+            //So that the quiz can be retaken in same mode as the attempt
+//            if(time.equals("--:--:--")){
+//                controller.setQuiz(quiz, "Practice");
+//            }
+//            else{
+//                controller.setQuiz(quiz, "Exam");
+//            }
+            quizController.setQuiz(quiz, "Practice");
 
             Stage stage = (Stage) quizTable.getScene().getWindow();
             stage.setScene(new Scene(root, 800, 550));

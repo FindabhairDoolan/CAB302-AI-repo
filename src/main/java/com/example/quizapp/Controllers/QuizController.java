@@ -5,6 +5,8 @@ import com.example.quizapp.utils.AlertManager;
 import com.example.quizapp.utils.AuthManager;
 import com.example.quizapp.utils.QuizManager;
 import com.example.quizapp.utils.SceneManager;
+import javafx.animation.Timeline;
+import javafx.animation.KeyFrame;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -12,6 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
+import javafx.util.Duration;
 import java.io.IOException;
 import java.util.*;
 
@@ -38,7 +41,8 @@ public class QuizController {
     private RadioButton option4;
     @FXML
     private ToggleGroup answerToggleGroup;
-
+    @FXML
+    private Label timerLabel;
 
     //Declaration of further variables
     User user = AuthManager.getInstance().getCurrentUser();
@@ -55,6 +59,10 @@ public class QuizController {
     private String difficulty;
     private String yearLevel;
     private String subject;
+    private String mode;
+    private Timeline timer;
+    private int timerSeconds;
+    private boolean timerPause = false;
 
     private boolean isViewMode = false;
     private List<String> previousAnswers = new ArrayList<>();
@@ -72,6 +80,10 @@ public class QuizController {
     public void setSubject(String subject) {
         this.subject = subject;
     }
+
+    public void setMode(String mode) {this.mode = mode;}
+
+    public void setTimer(int timerSeconds) {this.timerSeconds = timerSeconds;}
 
     public void setViewMode(boolean viewMode, QuizAttempt attempt) {
         this.isViewMode = viewMode;
@@ -105,19 +117,13 @@ public class QuizController {
         // If No is selected, do nothing
     }
 
-    /**
-     * Initialises the Quiz page
-     */
-    @FXML
-    public void initialize() {}
-
-    public void setQuiz(Quiz quiz) {
+    public void setQuiz(Quiz quiz, String mode) {
         this.quiz = quiz;
 
         setDifficulty(quiz.getDifficulty());
         setYearLevel(quiz.getYearLevel());
         setSubject(quiz.getSubject());
-        setMode(quiz.getMode());
+        setMode(mode);
 
         loadQuiz();
     }
@@ -142,6 +148,21 @@ public class QuizController {
         //preload all questions if coming from another controller
         totalQuestions = questionList.size();
         if (isViewMode) this.correctAnswers = (int) (attempt.getScore() * totalQuestions / 100.0);
+
+        if (mode.equals("Exam")){
+            if (isViewMode){
+                timerLabel.setVisible(true);
+                timerPause = true;
+            }
+            else{
+                timerSeconds = quiz.getMode();
+                timerLabel.setVisible(true);
+            }
+            startTimer();
+        }
+        else{
+            timerLabel.setVisible(false);
+        }
 
         loadQuestion(questionList.get(questionIndex - 1));
         updateProgressLabel(); // Update the progress label on initialization
@@ -203,10 +224,11 @@ public class QuizController {
                     } else {
                         feedbackLabel.setText("Incorrect");
                     }
-                    feedbackLabel.setVisible(true);
                 } else if (isCorrect) {
                     rb.setStyle("-fx-font-weight: bold; -fx-text-fill: green;");
                 }
+
+                feedbackLabel.setVisible(true);
             }
         }
         updateProgressLabel();
@@ -265,7 +287,7 @@ public class QuizController {
     }
 
     private void saveQuizAttemptToDatabase() {
-        QuizAttempt attempt = new QuizAttempt(quiz.getQuizID(), user.getUserID(), (correctAnswers * 100.0) / totalQuestions, selectedAnswers);
+        QuizAttempt attempt = new QuizAttempt(quiz.getQuizID(), user.getUserID(), (correctAnswers * 100.0) / totalQuestions, timerSeconds, selectedAnswers);
         quizAttemptDAO.addQuizAttempt(attempt);
     }
 
@@ -275,12 +297,14 @@ public class QuizController {
     private void showQuizCompletedScreen() {
 
         try {
+            timerPause = true;
+
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/quiz-completed.fxml"));
             Parent root = fxmlLoader.load();
 
             QuizCompletedController QCcontroller = fxmlLoader.getController();
             QCcontroller.setQuiz(quiz);
-            QCcontroller.setResults(correctAnswers, totalQuestions, difficulty, yearLevel);
+            QCcontroller.setResults(correctAnswers, totalQuestions, difficulty, yearLevel, mode, timerSeconds);
             Stage stage = (Stage) nextButton.getScene().getWindow();
             Scene scene = new Scene(root, 800, 550);
             stage.setScene(scene);
@@ -292,7 +316,51 @@ public class QuizController {
         }
     }
 
-    public void setMode(String mode) {
+    /**
+     * Initialises the timer if in exam mode
+     */
+    private void startTimer() {
+        updateLabel(); // Set initial time
+
+        timer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            if (!timerPause){ //Only reduce time if not paused
+                timerSeconds--;
+                updateLabel();
+
+                if (timerSeconds <= 0) {
+                    timer.stop();
+                    onTimeUp();
+                }
+            }
+        }));
+        timer.setCycleCount(Timeline.INDEFINITE);
+        timer.play();
     }
+
+    /**
+     * Update the timer label every second
+     */
+    private void updateLabel() {
+        int hours = timerSeconds / 3600;
+        int minutes = (timerSeconds % 3600) / 60;
+        int seconds = timerSeconds % 60;
+
+        timerLabel.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
+    }
+
+    /**
+     * When the timer reaches 0 time remaining, force ends the quiz
+     */
+    private void onTimeUp() {
+
+        //If the quiz had remaining unanswered questions, answers are stored as null
+        while (selectedAnswers.size() < totalQuestions) {
+            selectedAnswers.add(null);
+        }
+
+        saveQuizAttemptToDatabase();
+        showQuizCompletedScreen();
+    }
+
 }
 

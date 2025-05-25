@@ -26,7 +26,7 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
                     + "quizID INTEGER NOT NULL,"
                     + "userID INTEGER NOT NULL,"
                     + "score DOUBLE,"
-                    + "attemptTime DATETIME DEFAULT CURRENT_TIMESTAMP,"
+                    + "attemptTime INTEGER NOT NULL,"
                     + "answers TEXT,"
                     + "FOREIGN KEY (quizID) REFERENCES quizzes(id) ON DELETE CASCADE,"
                     + "FOREIGN KEY (userID) REFERENCES users(id) ON DELETE CASCADE"
@@ -43,12 +43,13 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
 
         try {
             String answersJson = new ObjectMapper().writeValueAsString(quizAttempt.getAnswers());
-            String query = "INSERT INTO quizAttempts (quizID, userID, score, answers) VALUES (?, ?, ?, ?)";
+            String query = "INSERT INTO quizAttempts (quizID, userID, score, attemptTime, answers) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, quizAttempt.getQuizID());
             statement.setInt(2, quizAttempt.getUserID());
             statement.setDouble(3, quizAttempt.getScore());
-            statement.setString(4, answersJson);
+            statement.setInt(4, quizAttempt.getAttemptTime());
+            statement.setString(5, answersJson);
             statement.executeUpdate();
         }
         catch (Exception e) {
@@ -59,12 +60,13 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
     @Override
     public void updateQuizAttempt(QuizAttempt quizAttempt) {
         try {
-            String query = "UPDATE quizAttempts SET quizID = ?, userID = ?, score = ? WHERE id = ?";
+            String query = "UPDATE quizAttempts SET quizID = ?, userID = ?, score = ?, attemptTime = ? WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, quizAttempt.getQuizID());
             statement.setInt(2, quizAttempt.getUserID());
             statement.setDouble(3, quizAttempt.getScore());
-            statement.setInt(4, quizAttempt.getId());
+            statement.setInt(4, quizAttempt.getAttemptTime());
+            statement.setInt(5, quizAttempt.getId());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -99,13 +101,10 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
                         quizID,
                         userID,
                         rs.getInt("score"),
+                        rs.getInt("attemptTime"),
                         answers
                 );
                 quizAttempt.setId(rs.getInt("id"));
-                String timeStr = rs.getString("attemptTime");
-                if (timeStr != null) {
-                    quizAttempt.setAttemptTime(LocalDateTime.parse(timeStr));
-                }
                 quizAttempts.add(quizAttempt);
             }
 
@@ -133,7 +132,7 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
                         rs.getString("name"),
                         rs.getString("subject"),
                         rs.getString("topic"),
-                        rs.getString("mode"),
+                        rs.getInt("mode"),
                         rs.getString("difficulty"),
                         rs.getString("yearLevel"),
                         rs.getString("country"),
@@ -146,6 +145,7 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
                         rs.getInt("quizID"),
                         rs.getInt("userID"),
                         rs.getDouble("score"),
+                        rs.getInt("attemptTime"),
                         answers
                 );
 
