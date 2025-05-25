@@ -38,6 +38,9 @@ public class QuizHistoryController {
     private TableColumn<QuizWithScore, String> scoreCol;
 
     @FXML
+    private TableColumn<QuizWithScore, String> timeCol;
+
+    @FXML
     private TableColumn<QuizWithScore, Void> actionCol;
 
     @FXML
@@ -58,6 +61,9 @@ public class QuizHistoryController {
 
         scoreCol.setCellValueFactory(data -> javafx.beans.binding.Bindings.createStringBinding(() ->
                 String.valueOf(data.getValue().getScore())));
+
+        timeCol.setCellValueFactory(data -> javafx.beans.binding.Bindings.createStringBinding(() ->
+                String.valueOf(data.getValue().getAttempt().getAttemptTime())));
 
         actionCol.setCellFactory(new Callback<>() {
             @Override
