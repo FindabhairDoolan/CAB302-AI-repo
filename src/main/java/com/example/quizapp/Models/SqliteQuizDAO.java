@@ -1,6 +1,8 @@
 package com.example.quizapp.Models;
 
 import javafx.scene.control.ComboBox;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -30,7 +32,18 @@ public class SqliteQuizDAO implements IQuizDAO {
         return questionDropdown; // Return the ComboBox
     }
 
+    /**
+     * Retrieves the quiz timer in seconds from the AI JSON response
+     * @param JSONResponse
+     * @return
+     */
+    public String retrieveTimer(String JSONResponse){
+        JSONObject json = new JSONObject(JSONResponse);
+        JSONArray quizArray = json.getJSONArray("Quiz");
+        JSONObject timerObj = quizArray.getJSONObject(0);
 
+        return Integer.toString(timerObj.getInt("timerSeconds"));
+    }
 
     private void createTable() {
         // Create table if not exists

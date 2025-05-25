@@ -24,8 +24,13 @@
 
             <center>
                 <!--The title-->
-                <Label fx:id="progressLabel" text="Question X of Y" style="-fx-font-size: 20px; -fx-padding: 0 40 0 0;"/>
+                <Label fx:id="progressLabel" text="Question X of Y" style="-fx-font-size: 20px; -fx-padding: 0 0 0 20;"/>
             </center>
+
+            <right>
+                <!--The timer-->
+                <Label fx:id="timerLabel" text="--:--:--" style="-fx-font-size: 20px; -fx-padding: 0 20 0 0;" visible="true"/>
+            </right>
 
         </BorderPane>
     </top>
