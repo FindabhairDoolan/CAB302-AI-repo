@@ -156,6 +156,7 @@ public class CreateQuizController {
 
             //Get the current quiz now that ID has been auto incremented in database
             quiz = quizDAO.getQuizByName(titleResponse);
+            QuizManager.getInstance().setCurrentQuiz(quiz);
             int quizID = quizDAO.getQuizByName(titleResponse).getQuizID();
 
             //Add the generated questions to the database
@@ -183,6 +184,10 @@ public class CreateQuizController {
 
     }
 
+    /**
+     * Sends user back to Home page if they confirm
+     * @throws IOException
+     */
     @FXML
     public void onBack() throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
