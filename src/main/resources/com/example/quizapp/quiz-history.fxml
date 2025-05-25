@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
 
 
 <BorderPane xmlns="http://javafx.com/javafx/8"
@@ -33,13 +28,13 @@
                     <TableColumn fx:id="nameCol"
                                  text="Quiz Name" prefWidth="200"/>
                     <TableColumn fx:id="subjectCol"
-                                 text="Subject"    prefWidth="150"/>
+                                 text="Subject"    prefWidth="100"/>
                     <TableColumn fx:id="topicCol"
-                                 text="Topic"      prefWidth="150"/>
+                                 text="Topic"      prefWidth="100"/>
                     <TableColumn fx:id="scoreCol"
                                  text="Score (%)"      prefWidth="100"/>
                     <TableColumn fx:id="actionCol"
-                                 text="Actions"    prefWidth="150"/>
+                                 text="Actions"    prefWidth="250"/>
                 </columns>
             </TableView>
         </VBox>

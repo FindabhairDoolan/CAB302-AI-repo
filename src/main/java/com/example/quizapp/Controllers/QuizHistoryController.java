@@ -10,10 +10,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 public class QuizHistoryController {
@@ -61,7 +65,8 @@ public class QuizHistoryController {
                 return new TableCell<>() {
                     private final Button retakeBtn = new Button("Retake");
                     private final Button viewBtn = new Button("View");
-                    private final HBox box = new HBox(8, retakeBtn, viewBtn);
+                    private final Button downLoadBtn = new Button("Download");
+                    private final HBox box = new HBox(8, retakeBtn, viewBtn, downLoadBtn);
 
                     {
                         retakeBtn.setOnAction(event -> {
@@ -73,6 +78,12 @@ public class QuizHistoryController {
                             QuizWithScore item = getTableView().getItems().get(getIndex());
                             handleViewQuiz(item.getAttempt(), item.getQuiz());//Add parameter that gets time in seconds
                         });
+
+                        downLoadBtn.setOnAction(event -> {
+                            QuizWithScore item = getTableView().getItems().get(getIndex());
+                            handleDownLoadQuiz(item.getQuiz());
+                        });
+
                     }
 
                     @Override
@@ -133,6 +144,50 @@ public class QuizHistoryController {
         }
     }
 
+    private void handleDownLoadQuiz(Quiz quiz) {
+
+        //Intialize file chooser and the name and format the file is saved
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialFileName(quiz.getName().replaceAll("\\s+", "_") + ".txt");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+
+        //Show the save window
+        File file = fileChooser.showSaveDialog(quizTable.getScene().getWindow());
+
+        //Write the quiz into a .txt file
+        if (file != null) {
+            try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
+                writer.println("Name: " + quiz.getName());
+                writer.println("Subject: " + quiz.getSubject());
+                writer.println("Topic: " + quiz.getTopic());
+                writer.println("Difficulty: " + quiz.getDifficulty());
+                writer.println("Year level: " + quiz.getYearLevel());
+                writer.println("Country: " + quiz.getCountry());
+                writer.println();
+
+                List<Question> questions = new SqliteQuestionDAO().getQuestionsForQuiz(quiz.getQuizID());
+
+                int index = 1;
+                for (Question q : questions) {
+                    writer.println(index++ + ". " + q.getQuestionText());
+                    for (String answer : q.getShuffledAnswers()) {
+                        writer.println("   ○ " + answer);
+                    }
+                    writer.println();
+                }
+
+                //Show alert message with success info
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Quiz downloaded successfully!", ButtonType.OK);
+                alert.setHeaderText(null);
+                alert.showAndWait();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Failed to save quiz.", ButtonType.OK);
+                alert.setHeaderText(null);
+                alert.showAndWait();
+            }
+        }
+    }
 
     private void handleRetakeQuiz(Quiz quiz) {
         try {
