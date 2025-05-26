@@ -27,7 +27,8 @@
   -fx-background-color: #2D2A43;
   -fx-text-fill: #FFFFFF;         /* dark blue-purple */
   -fx-font-size: 14px;
-    -fx-cursor: hand;
+  -fx-cursor: hand;
+  -fx-background-radius: 6
 }
 .link-button:hover {
   -fx-opacity: 0.9;
@@ -87,6 +88,7 @@
   -fx-font-size: 16px;
   -fx-background-radius: 6;
   -fx-padding: 10 0;
+  -fx-background-radius: 12
 }
 .primary-button:hover {
   -fx-opacity: 0.9;
@@ -101,6 +103,7 @@
   -fx-padding: 12 20;
   -fx-min-width: 70px;
   -fx-min-height: 32px;
+  -fx-background-radius: 10
 }
 
 .secondary-button:hover {
@@ -146,6 +149,7 @@
   -fx-text-fill: #2D2A43;
   -fx-font-size: 12px;
   -fx-padding: 4 10;
+  -fx-background-radius: 6
 }
 .button.action-button:hover {
   -fx-background-color: #2D2A43;
@@ -194,6 +198,7 @@
   -fx-padding: 0;
   -fx-alignment: center;
   -fx-cursor: hand;
+
 }
 .icon-button:hover {
   -fx-background-color: #2D2A43;
