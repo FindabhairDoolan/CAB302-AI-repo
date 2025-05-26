@@ -180,7 +180,7 @@ public class CreateQuizController {
             quizDAO.deleteQuiz(failedQuiz);
 
             //Display error window
-            AlertManager.alertError("Quiz generation error", "An error occurred while generating your quiz, please try again.");
+            AlertManager.alertErrorWait("Quiz generation error", "An error occurred while generating your quiz, please try again.");
         }
 
     }
@@ -280,25 +280,25 @@ public class CreateQuizController {
     public boolean validateQuizSettings () {
         // Check if a subject has been selected
         if (subjectComboBox.getValue() == null) {
-            AlertManager.alertError("No selected subject","You must select a subject.");
+            AlertManager.alertErrorWait("No selected subject","You must select a subject.");
             return false;
         }
 
         // Check if a year level has been selected
         if (yearLevelComboBox.getValue() == null) {
-            AlertManager.alertError("No selected year level", "You must select a year level.");
+            AlertManager.alertErrorWait("No selected year level", "You must select a year level.");
             return false;
         }
 
         // Check if a difficulty level has been selected
         if (difficultyGroup.getSelectedToggle() == null) {
-            AlertManager.alertError("No selected difficulty", "You must select a difficulty level.");
+            AlertManager.alertErrorWait("No selected difficulty", "You must select a difficulty level.");
             return false;
         }
 
         // Check if a topic has been input
         if (topicTextArea.getText().isBlank()) {
-            AlertManager.alertError("No topic input", "You must input a topic for the quiz.");
+            AlertManager.alertErrorWait("No topic input", "You must input a topic for the quiz.");
             return false;
         }
 

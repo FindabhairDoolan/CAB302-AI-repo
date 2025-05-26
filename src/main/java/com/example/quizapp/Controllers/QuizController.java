@@ -7,7 +7,6 @@ import com.example.quizapp.utils.QuizManager;
 import com.example.quizapp.utils.SceneManager;
 import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -145,7 +144,7 @@ public class QuizController {
         if (questionList.isEmpty()) {
             //System.err.println("No questions found for quiz ID " + idToLoad);
             //Show an alert dialog to the user
-            AlertManager.alertError("Quiz has no questions", "No questions found for this quiz, " +
+            AlertManager.alertErrorWait("Quiz has no questions", "No questions found for this quiz, " +
                     "please return to the home page and add questions to this quiz in the quiz editor.");
         }
 
@@ -169,8 +168,9 @@ public class QuizController {
                 examAnswers.add(null);
             }
         }
-        else{
+        else{ //If practice mode, no timer and timer is -1 to symbolise no time in attempt
             timerLabel.setVisible(false);
+            timerSeconds = -1;
         }
 
         loadQuestion(questionList.get(questionIndex - 1));
@@ -428,9 +428,18 @@ public class QuizController {
      */
     private void onTimeUp() {
 
-        AlertManager.alertError("Time's up!", "Timer has reached 00:00:00, final results will be calculated.");
+        AlertManager.alertErrorShow("Time's up!", "Timer has reached 00:00:00, final results are calculated.");
+
+        //Get selected answer on current page if there is one and update the list of answers
+        RadioButton selected = (RadioButton) answerToggleGroup.getSelectedToggle();
+        if (selected != null){
+            String selectedText = selected.getText();
+            examAnswers.set(questionIndex - 1, selectedText);
+        }
+
         selectedAnswers = examAnswers;
 
+        //Check how many answers were correct
         for (int i = 0; i < selectedAnswers.size(); i++) {
             Question currentQuestion = questionList.get(i);
             String correctText = currentQuestion.getCorrectAnswer();

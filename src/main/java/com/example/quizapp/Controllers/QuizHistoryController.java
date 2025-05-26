@@ -62,8 +62,19 @@ public class QuizHistoryController {
         scoreCol.setCellValueFactory(data -> javafx.beans.binding.Bindings.createStringBinding(() ->
                 String.valueOf(data.getValue().getScore())));
 
-        timeCol.setCellValueFactory(data -> javafx.beans.binding.Bindings.createStringBinding(() ->
-                String.valueOf(data.getValue().getAttempt().getAttemptTime())));
+        timeCol.setCellValueFactory(data -> javafx.beans.binding.Bindings.createStringBinding(() -> {
+            int timerSeconds = data.getValue().getAttempt().getAttemptTime();
+
+            //If no timer since practice mode.
+            if(timerSeconds == -1){
+                return "--:--:--";
+            }
+
+            int hours = timerSeconds / 3600;
+            int minutes = (timerSeconds % 3600) / 60;
+            int seconds = timerSeconds % 60;
+            return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        }));
 
         actionCol.setCellFactory(new Callback<>() {
             @Override
@@ -77,12 +88,12 @@ public class QuizHistoryController {
                     {
                         retakeBtn.setOnAction(event -> {
                             QuizWithScore item = getTableView().getItems().get(getIndex());
-                            handleRetakeQuiz(item.getQuiz());
+                            handleRetakeQuiz(item.getQuiz(), item.getAttempt().getAttemptTime());
                         });
 
                         viewBtn.setOnAction(event -> {
                             QuizWithScore item = getTableView().getItems().get(getIndex());
-                            handleViewQuiz(item.getAttempt(), item.getQuiz());//Add parameter that gets time in seconds
+                            handleViewQuiz(item.getAttempt(), item.getQuiz(), item.getAttempt().getAttemptTime());
                         });
 
                         downLoadBtn.setOnAction(event -> {
@@ -119,7 +130,7 @@ public class QuizHistoryController {
     }
 
     //Add parameter for the time it took to complete quiz in the attempt (int timerSeconds)
-    private void handleViewQuiz(QuizAttempt attempts, Quiz quiz) {
+    private void handleViewQuiz(QuizAttempt attempts, Quiz quiz, int timerSeconds) {
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/quizapp/quiz.fxml"));
@@ -128,18 +139,14 @@ public class QuizHistoryController {
             QuizController controller = loader.getController();
             controller.setViewMode(true, attempts);
 
-            //Replace this with the below if statement
-            controller.setQuiz(quiz, "Practice");
-
-            //When attempt time is displayed on quiz history page, implement this if statement
-            //So that the quiz completion time can be displayed
-//            if(time.equals("--:--:--")){
-//                controller.setQuiz(quiz, "Practice");
-//            }
-//            else{
-//                controller.setTimer(timerSeconds);
-//                controller.setQuiz(quiz, "Exam");
-//            }
+            //If the attempt was practice mode, view in practice mode
+            if(timerSeconds == -1){
+                controller.setQuiz(quiz, "Practice");
+            }
+            else{//Else view in exam mode
+                controller.setTimer(timerSeconds);
+                controller.setQuiz(quiz, "Exam");
+            }
 
             Stage stage = (Stage) quizTable.getScene().getWindow();
             stage.setTitle("View Quiz Attempt");
@@ -195,22 +202,20 @@ public class QuizHistoryController {
         }
     }
 
-    private void handleRetakeQuiz(Quiz quiz) {
+    private void handleRetakeQuiz(Quiz quiz, int timerSeconds) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/quizapp/quiz.fxml"));
             Parent root = loader.load();
 
             QuizController quizController = loader.getController();
 
-            //When attempt time is displayed on this page, implement this if statement
-            //So that the quiz can be retaken in same mode as the attempt
-//            if(time.equals("--:--:--")){
-//                controller.setQuiz(quiz, "Practice");
-//            }
-//            else{
-//                controller.setQuiz(quiz, "Exam");
-//            }
-            quizController.setQuiz(quiz, "Practice");
+            //If the attempt was practice mode, take in practice mode
+            if(timerSeconds == -1){
+                quizController.setQuiz(quiz, "Practice");
+            }
+            else{//Else take in exam mode
+                quizController.setQuiz(quiz, "Exam");
+            }
 
             Stage stage = (Stage) quizTable.getScene().getWindow();
             stage.setScene(new Scene(root, 800, 550));
