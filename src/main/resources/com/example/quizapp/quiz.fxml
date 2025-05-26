@@ -24,8 +24,13 @@
 
             <center>
                 <!--The title-->
-                <Label fx:id="progressLabel" text="Question X of Y" style="-fx-font-size: 20px; -fx-padding: 0 40 0 0;"/>
+                <Label fx:id="progressLabel" text="Question X of Y" style="-fx-font-size: 20px; -fx-padding: 0 0 0 20;"/>
             </center>
+
+            <right>
+                <!--The timer-->
+                <Label fx:id="timerLabel" text="--:--:--" style="-fx-font-size: 20px; -fx-padding: 0 20 0 0;" visible="true"/>
+            </right>
 
         </BorderPane>
     </top>
@@ -73,10 +78,13 @@
     <bottom>
         <BorderPane>
             <center>
+                <HBox alignment="CENTER" spacing="20">
+                    <!--The previous button, not visible unless exam mode-->
+                    <Button fx:id="previousButton" text="Previous" style="-fx-font-size: 15px;"  managed="false" visible="false" onAction="#onPrevious"/>
 
-                <!--The exit button, not visible until question selected-->
-                <Button fx:id="nextButton" text="Next" style="-fx-font-size: 15px;"  visible="false" onAction="#onNext"/>
-
+                    <!--The next button, not visible until question selected-->
+                    <Button fx:id="nextButton" text="Next" style="-fx-font-size: 15px;"  visible="false" onAction="#onNext"/>
+                </HBox>
             </center>
         </BorderPane>
     </bottom>

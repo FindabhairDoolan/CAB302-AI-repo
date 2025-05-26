@@ -4,6 +4,9 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
 
     private Connection connection;
@@ -22,8 +25,9 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
                     + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + "quizID INTEGER NOT NULL,"
                     + "userID INTEGER NOT NULL,"
-                    + "score,"
-                    + "attemptTime DATETIME DEFAULT CURRENT_TIMESTAMP,"
+                    + "score DOUBLE,"
+                    + "attemptTime INTEGER NOT NULL,"
+                    + "answers TEXT,"
                     + "FOREIGN KEY (quizID) REFERENCES quizzes(id) ON DELETE CASCADE,"
                     + "FOREIGN KEY (userID) REFERENCES users(id) ON DELETE CASCADE"
                     + ")";
@@ -36,12 +40,16 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
 
     @Override
     public void addQuizAttempt(QuizAttempt quizAttempt) {
+
         try {
-            String query = "INSERT INTO quizAttempts (quizID, userID, score) VALUES (?, ?, ?)";
+            String answersJson = new ObjectMapper().writeValueAsString(quizAttempt.getAnswers());
+            String query = "INSERT INTO quizAttempts (quizID, userID, score, attemptTime, answers) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, quizAttempt.getQuizID());
             statement.setInt(2, quizAttempt.getUserID());
-            statement.setInt(3, quizAttempt.getScore());
+            statement.setDouble(3, quizAttempt.getScore());
+            statement.setInt(4, quizAttempt.getAttemptTime());
+            statement.setString(5, answersJson);
             statement.executeUpdate();
         }
         catch (Exception e) {
@@ -52,12 +60,13 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
     @Override
     public void updateQuizAttempt(QuizAttempt quizAttempt) {
         try {
-            String query = "UPDATE quizAttempts SET quizID = ?, userID = ?, score = ? WHERE id = ?";
+            String query = "UPDATE quizAttempts SET quizID = ?, userID = ?, score = ?, attemptTime = ? WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, quizAttempt.getQuizID());
             statement.setInt(2, quizAttempt.getUserID());
-            statement.setInt(3, quizAttempt.getScore());
-            statement.setInt(4, quizAttempt.getId());
+            statement.setDouble(3, quizAttempt.getScore());
+            statement.setInt(4, quizAttempt.getAttemptTime());
+            statement.setInt(5, quizAttempt.getId());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -87,17 +96,15 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
             statement.setInt(2, quizID);
             ResultSet rs = statement.executeQuery(query);
             while (rs.next()) {
-                //might be some problems with the question id and quizID?
+                List<String> answers = new ObjectMapper().readValue(rs.getString("answers"), new TypeReference<List<String>>() {});
                 QuizAttempt quizAttempt = new QuizAttempt(
                         quizID,
                         userID,
-                        rs.getInt("score")
+                        rs.getInt("score"),
+                        rs.getInt("attemptTime"),
+                        answers
                 );
                 quizAttempt.setId(rs.getInt("id"));
-                String timeStr = rs.getString("attemptTime");
-                if (timeStr != null) {
-                    quizAttempt.setAttemptTime(LocalDateTime.parse(timeStr));
-                }
                 quizAttempts.add(quizAttempt);
             }
 
@@ -110,52 +117,46 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
     //work in progress
     @Override
     public List<QuizWithScore> getQuizzesAttemptedByUser(int userID) {
-        List<QuizWithScore> groupedQuizzes = new ArrayList<>();
-        Map<Integer, Quiz> quizMap = new HashMap<>();
-        Map<Integer, List<Integer>> scoreMap = new HashMap<>();
+        List<QuizWithScore> attempts = new ArrayList<>();
 
         try {
-            String query = " SELECT q.*, qa.score FROM quizAttempts qa JOIN quizzes q ON qa.quizID = q.id WHERE qa.userID = ? ORDER BY qa.attemptTime DESC ";
+            String query = " SELECT q.*, qa.* FROM quizAttempts qa JOIN quizzes q ON qa.quizID = q.id WHERE qa.userID = ? ORDER BY qa.attemptTime DESC ";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, userID);
             ResultSet rs = statement.executeQuery();
+            Quiz quiz = null;
+            QuizAttempt attempt = null;
             while (rs.next()) {
-                int quizID = rs.getInt("id");
 
-                // Store quiz object once
-                if (!quizMap.containsKey(quizID)) {
-                    Quiz quiz = new Quiz(
-                            rs.getString("quizName"),
-                            rs.getString("subject"),
-                            rs.getString("quizTopic"),
-                            rs.getString("quizMode"),
-                            rs.getString("difficulty"),
-                            rs.getString("yearLevel"),
-                            rs.getString("country"),
-                            rs.getInt("creatorID")
-                    );
-                    quiz.setQuizID(quizID);
-                    quizMap.put(quizID, quiz);
-                }
+                quiz = new Quiz(
+                        rs.getString("name"),
+                        rs.getString("subject"),
+                        rs.getString("topic"),
+                        rs.getInt("mode"),
+                        rs.getString("difficulty"),
+                        rs.getString("yearLevel"),
+                        rs.getString("country"),
+                        rs.getString("visibility"),
+                        rs.getInt("creatorID")
+                );
 
-                //Timestamp time = rs.getTimestamp("attemptTime"); <- not working, maybe try later again
-                int score = rs.getInt("score");
-                scoreMap.computeIfAbsent(quizID, k -> new ArrayList<>()).add(score);
-                }
+                List<String> answers = new ObjectMapper().readValue(rs.getString("answers"), new TypeReference<List<String>>() {});
+                attempt = new QuizAttempt(
+                        rs.getInt("quizID"),
+                        rs.getInt("userID"),
+                        rs.getDouble("score"),
+                        rs.getInt("attemptTime"),
+                        answers
+                );
 
-                for (Map.Entry<Integer, Quiz> entry : quizMap.entrySet()) {
-                    int quizIDforMapping = entry.getKey();
-                    Quiz quiz = entry.getValue();
-                    List<Integer> scores = scoreMap.getOrDefault(quizIDforMapping, List.of());
-                    groupedQuizzes.add(new QuizWithScore(quiz, scores));
-
+                quiz.setQuizID(rs.getInt("id"));
+                attempts.add(new QuizWithScore(quiz, attempt));
             }
-
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return groupedQuizzes;
+        return attempts;
     }
 
 

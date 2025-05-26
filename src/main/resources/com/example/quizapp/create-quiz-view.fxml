@@ -10,7 +10,6 @@
             fx:controller="com.example.quizapp.Controllers.CreateQuizController">
 
     <fx:define>
-        <ToggleGroup fx:id="modeToggleGroup"/>
         <ToggleGroup fx:id="difficultyGroup"/>
     </fx:define>
 
@@ -124,20 +123,20 @@
                     <!-- Spacing -->
                     <Region prefHeight="20"/>
 
-                    <!-- Quiz Mode -->
-                    <HBox spacing="10" alignment="CENTER_LEFT">
-                        <Label text="Quiz Mode"/>
-                        <!-- Practice Mode: Selected and enabled -->
-                        <ToggleButton fx:id="practiceToggleButton"
-                                      text="Practice"
-                                      selected="true"
-                                      toggleGroup="$modeToggleGroup"/>
-                        <!-- Exam Mode: Disabled and unselectable -->
-                        <ToggleButton fx:id="examToggleButton"
-                                      text="Exam"
-                                      disable="true"
-                                      toggleGroup="$modeToggleGroup"/>
-                    </HBox>
+<!--                    &lt;!&ndash; Quiz Mode &ndash;&gt;-->
+<!--                    <HBox spacing="10" alignment="CENTER_LEFT">-->
+<!--                        <Label text="Quiz Mode"/>-->
+<!--                        &lt;!&ndash; Practice Mode: Selected and enabled &ndash;&gt;-->
+<!--                        <ToggleButton fx:id="practiceToggleButton"-->
+<!--                                      text="Practice"-->
+<!--                                      selected="true"-->
+<!--                                      toggleGroup="$modeToggleGroup"/>-->
+<!--                        &lt;!&ndash; Exam Mode: Disabled and unselectable &ndash;&gt;-->
+<!--                        <ToggleButton fx:id="examToggleButton"-->
+<!--                                      text="Exam"-->
+<!--                                      disable="true"-->
+<!--                                      toggleGroup="$modeToggleGroup"/>-->
+<!--                    </HBox>-->
 
                 </VBox>
             </HBox>

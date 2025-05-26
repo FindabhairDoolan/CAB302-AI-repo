@@ -1,123 +1,223 @@
 package com.example.quizapp.Controllers;
 
 import com.example.quizapp.Models.*;
+import com.example.quizapp.utils.AuthManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Parent;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import javafx.util.Callback;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 public class QuizHistoryController {
 
     @FXML
-    public ListView<QuizWithScore> quizListView;
+    private TableView<QuizWithScore> quizTable;
 
     @FXML
-    private Button backButton;
+    private TableColumn<QuizWithScore, String> nameCol;
 
-    //populate the listview when the scene is loaded
+    @FXML
+    private TableColumn<QuizWithScore, String> subjectCol;
+
+    @FXML
+    private TableColumn<QuizWithScore, String> topicCol;
+
+    @FXML
+    private TableColumn<QuizWithScore, String> scoreCol;
+
+    @FXML
+    private TableColumn<QuizWithScore, String> timeCol;
+
+    @FXML
+    private TableColumn<QuizWithScore, Void> actionCol;
+
     @FXML
     public void initialize() {
-        displayQuizzes();
+        setupColumns();
+        loadQuizData();
     }
 
-    //return to home
-    @FXML
-    public void onBack() {
-        Stage stage = (Stage) backButton.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/home.fxml"));
+    private void setupColumns() {
+        nameCol.setCellValueFactory(data -> javafx.beans.binding.Bindings.createStringBinding(() ->
+                data.getValue().getQuiz().getName()));
+
+        subjectCol.setCellValueFactory(data -> javafx.beans.binding.Bindings.createStringBinding(() ->
+                data.getValue().getQuiz().getSubject()));
+
+        topicCol.setCellValueFactory(data -> javafx.beans.binding.Bindings.createStringBinding(() ->
+                data.getValue().getQuiz().getTopic()));
+
+        scoreCol.setCellValueFactory(data -> javafx.beans.binding.Bindings.createStringBinding(() ->
+                String.valueOf(data.getValue().getScore())));
+
+        timeCol.setCellValueFactory(data -> javafx.beans.binding.Bindings.createStringBinding(() ->
+                String.valueOf(data.getValue().getAttempt().getAttemptTime())));
+
+        actionCol.setCellFactory(new Callback<>() {
+            @Override
+            public TableCell<QuizWithScore, Void> call(final TableColumn<QuizWithScore, Void> param) {
+                return new TableCell<>() {
+                    private final Button retakeBtn = new Button("Retake");
+                    private final Button viewBtn = new Button("View");
+                    private final Button downLoadBtn = new Button("Download");
+                    private final HBox box = new HBox(8, retakeBtn, viewBtn, downLoadBtn);
+
+                    {
+                        retakeBtn.setOnAction(event -> {
+                            QuizWithScore item = getTableView().getItems().get(getIndex());
+                            handleRetakeQuiz(item.getQuiz());
+                        });
+
+                        viewBtn.setOnAction(event -> {
+                            QuizWithScore item = getTableView().getItems().get(getIndex());
+                            handleViewQuiz(item.getAttempt(), item.getQuiz());//Add parameter that gets time in seconds
+                        });
+
+                        downLoadBtn.setOnAction(event -> {
+                            QuizWithScore item = getTableView().getItems().get(getIndex());
+                            handleDownLoadQuiz(item.getQuiz());
+                        });
+
+                    }
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(box);
+                        }
+                    }
+                };
+            }
+        });
+    }
+
+    private void loadQuizData() {
+        ObservableList<QuizWithScore> quizData = getQuizzes();
+        quizTable.setItems(quizData);
+    }
+
+    private ObservableList<QuizWithScore> getQuizzes() {
+        User user = AuthManager.getInstance().getCurrentUser();
+        return FXCollections.observableArrayList(
+                new SqliteQuizAttemptDAO().getQuizzesAttemptedByUser(user.getUserID())
+        );
+    }
+
+    //Add parameter for the time it took to complete quiz in the attempt (int timerSeconds)
+    private void handleViewQuiz(QuizAttempt attempts, Quiz quiz) {
+
         try {
-            Scene scene = new Scene(fxmlLoader.load(), 800, 550);
-            stage.setScene(scene);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/quizapp/quiz.fxml"));
+            Parent root = loader.load();
+
+            QuizController controller = loader.getController();
+            controller.setViewMode(true, attempts);
+
+            //Replace this with the below if statement
+            controller.setQuiz(quiz, "Practice");
+
+            //When attempt time is displayed on quiz history page, implement this if statement
+            //So that the quiz completion time can be displayed
+//            if(time.equals("--:--:--")){
+//                controller.setQuiz(quiz, "Practice");
+//            }
+//            else{
+//                controller.setTimer(timerSeconds);
+//                controller.setQuiz(quiz, "Exam");
+//            }
+
+            Stage stage = (Stage) quizTable.getScene().getWindow();
+            stage.setTitle("View Quiz Attempt");
+            stage.setScene(new Scene(root, 800, 550));
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    //create a list of mock quizzes for testing
-    public ObservableList<Quiz> createMockQuizzes() {
-        ObservableList<Quiz> quizzes = FXCollections.observableArrayList();
+    private void handleDownLoadQuiz(Quiz quiz) {
 
-        // Add some mock quizzes to the list
-        quizzes.add(new Quiz("Math Quiz", "Mathematics", "Fractions", "Online", "Medium", "High School", "USA", 101));
-        quizzes.add(new Quiz("Science Quiz", "Science","Chemistry", "In-Person", "Hard", "College", "UK", 102));
-        quizzes.add(new Quiz("History Quiz", "History", "The Industrial Revolution","Online", "Easy", "High School", "Australia", 103));
+        //Intialize file chooser and the name and format the file is saved
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialFileName(quiz.getName().replaceAll("\\s+", "_") + ".txt");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
 
-        return quizzes;
-    }
+        //Show the save window
+        File file = fileChooser.showSaveDialog(quizTable.getScene().getWindow());
 
-    //A function to retrieve quizzes from the database
-    public ObservableList<QuizWithScore> getQuizzes() {
-        User user = AuthManager.getInstance().getCurrentUser();
-        ObservableList<QuizWithScore> quizzes = FXCollections.observableArrayList(new SqliteQuizAttemptDAO().getQuizzesAttemptedByUser(user.getUserID()));
-        return quizzes;
-    }
+        //Write the quiz into a .txt file
+        if (file != null) {
+            try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
+                writer.println("Name: " + quiz.getName());
+                writer.println("Subject: " + quiz.getSubject());
+                writer.println("Topic: " + quiz.getTopic());
+                writer.println("Difficulty: " + quiz.getDifficulty());
+                writer.println("Year level: " + quiz.getYearLevel());
+                writer.println("Country: " + quiz.getCountry());
+                writer.println();
 
-    //Display the quizzes
-    public void displayQuizzes() {
-        ObservableList<QuizWithScore> quizzes = getQuizzes();
-        quizListView.setItems(quizzes);
+                List<Question> questions = new SqliteQuestionDAO().getQuestionsForQuiz(quiz.getQuizID());
 
-        quizListView.setCellFactory(list -> new ListCell<>() {
-            @Override
-            protected void updateItem(QuizWithScore item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setGraphic(null);
-
-
-                    setText(null);
-                } else {
-                    VBox box = new VBox(5);
-
-                    String quizName = item.getQuiz().getName();
-                    String topic = item.getQuiz().getTopic();
-                    List<Integer> scores = item.getScores();
-
-                    Label title = new Label(quizName + " - " + topic);
-                    Label score = new Label("Scores: " + scores.toString());
-
-                    Button retakeButton = new Button("Retake Quiz");
-                    retakeButton.setOnAction(e -> handleRetakeQuiz(item.getQuiz()));
-
-                    box.getChildren().addAll(title, score, retakeButton);
-                    setGraphic(box);
+                int index = 1;
+                for (Question q : questions) {
+                    writer.println(index++ + ". " + q.getQuestionText());
+                    for (String answer : q.getShuffledAnswers()) {
+                        writer.println("   ○ " + answer);
+                    }
+                    writer.println();
                 }
-            }
-        });
-    }
 
+                //Show alert message with success info
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Quiz downloaded successfully!", ButtonType.OK);
+                alert.setHeaderText(null);
+                alert.showAndWait();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Failed to save quiz.", ButtonType.OK);
+                alert.setHeaderText(null);
+                alert.showAndWait();
+            }
+        }
+    }
 
     private void handleRetakeQuiz(Quiz quiz) {
-    try {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/quizapp/quiz.fxml"));
-        Parent root = loader.load();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/quizapp/quiz.fxml"));
+            Parent root = loader.load();
 
-        QuizController quizController = loader.getController();
-        quizController.setQuiz(quiz);
+            QuizController quizController = loader.getController();
 
-        int numOfQs = new SqliteQuizDAO().getNumberOfQuestions(quiz);
-        quizController.setTotalQuestions(numOfQs);
+            //When attempt time is displayed on this page, implement this if statement
+            //So that the quiz can be retaken in same mode as the attempt
+//            if(time.equals("--:--:--")){
+//                controller.setQuiz(quiz, "Practice");
+//            }
+//            else{
+//                controller.setQuiz(quiz, "Exam");
+//            }
+            quizController.setQuiz(quiz, "Practice");
 
-        Stage stage = (Stage) backButton.getScene().getWindow();
-        Scene scene = new Scene(root, 800, 550);
-        stage.setScene(scene);
-        stage.setTitle("Take quiz");
-        stage.show();
-
-    } catch (IOException e) {
-        e.printStackTrace();
+            Stage stage = (Stage) quizTable.getScene().getWindow();
+            stage.setScene(new Scene(root, 800, 550));
+            stage.setTitle("Take Quiz");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-    }
-
 }

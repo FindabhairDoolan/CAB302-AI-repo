@@ -13,10 +13,11 @@ public class GenerateUniqueQuizTitleTest {
     private static final String quizName = "Math Quiz";
     private static final String subject = "Mathematics";
     private static final String quizTopic = "Math basics";
-    private static final String quizMode = "Practice";
+    private static final int quizMode = 180;
     private static final String difficulty = "Hard";
     private static final String yearLevel = "year 10";
     private static final String country = "Australia";
+    private static final String visibility = "Public";
     private static final int creatorID = 1;
 
     @BeforeEach
@@ -32,10 +33,10 @@ public class GenerateUniqueQuizTitleTest {
 
         if (existingQuiz != null && existingQuiz.getCreatorID() == user.getUserID()) {
             int duplicateNum = 1;
-            String titleDuplicate = title + duplicateNum;
+            String titleDuplicate = title + "(" + duplicateNum + ")";
             while (mockQuizDAO.getQuizByName(titleDuplicate) != null) {
                 duplicateNum++;
-                titleDuplicate = title + duplicateNum;
+                titleDuplicate = title + "(" + duplicateNum + ")";
             }
             title = titleDuplicate;
         }
@@ -51,25 +52,25 @@ public class GenerateUniqueQuizTitleTest {
 
     @Test
     void testUniqueQuizTitle_WithOneDuplicate() {
-        mockQuizDAO.saveQuiz(new Quiz(quizName, subject, quizTopic, quizMode, difficulty, yearLevel, country, creatorID)); // Existing Quiz by User ID 1
+        mockQuizDAO.saveQuiz(new Quiz(quizName, subject, quizTopic, quizMode, difficulty, yearLevel, country, visibility, creatorID)); // Existing Quiz by User ID 1
 
         String title = generateUniqueQuizTitle("Math Quiz");
-        assertEquals("Math Quiz1", title);
+        assertEquals("Math Quiz(1)", title);
     }
 
     @Test
     void testUniqueQuizTitle_WithMultipleDuplicates() {
-        mockQuizDAO.saveQuiz(new Quiz(quizName, subject, quizTopic, quizMode, difficulty, yearLevel, country, creatorID));
+        mockQuizDAO.saveQuiz(new Quiz(quizName, subject, quizTopic, quizMode, difficulty, yearLevel, country, visibility, creatorID));
         //Assume first duplicate already went through the unique title method
-        mockQuizDAO.saveQuiz(new Quiz("Math Quiz1", subject, quizTopic, quizMode, difficulty, yearLevel, country, creatorID)); // Two existing duplicates
+        mockQuizDAO.saveQuiz(new Quiz("Math Quiz(1)", subject, quizTopic, quizMode, difficulty, yearLevel, country, visibility, creatorID)); // Two existing duplicates
 
         String title = generateUniqueQuizTitle("Math Quiz");
-        assertEquals("Math Quiz2", title);
+        assertEquals("Math Quiz(2)", title);
     }
 
     @Test
     void testUniqueQuizTitle_DifferentUser() {
-        mockQuizDAO.saveQuiz(new Quiz(quizName, subject, quizTopic, quizMode, difficulty, yearLevel, country, 2)); // Different User (ID 2)
+        mockQuizDAO.saveQuiz(new Quiz(quizName, subject, quizTopic, quizMode, difficulty, yearLevel, country, visibility, 2)); // Different User (ID 2)
 
         String title = generateUniqueQuizTitle("Math Quiz");
         assertEquals("Math Quiz", title);

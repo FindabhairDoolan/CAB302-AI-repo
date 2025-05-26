@@ -1,7 +1,6 @@
 package com.example.quizapp.Controllers;
 
-import com.example.quizapp.Models.AuthManager;
-import com.example.quizapp.utils.SceneManager;
+import com.example.quizapp.utils.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -42,16 +41,14 @@ public class MenuBarController {
     @FXML
     protected void handleHome() {
         // Swap to home/dashboard
-        Stage stage = (Stage) menuBar.getScene().getWindow();
-        SceneManager.switchScene("/com/example/quizapp/home.fxml", "Home", stage);
+        SceneManager.switchScene("/com/example/quizapp/home.fxml", "Home");
         System.out.println("Going to home page...");
     }
 
     @FXML
     protected void handleLogout() {
         //Swap to Welcome
-        Stage stage = (Stage) menuBar.getScene().getWindow();
-        SceneManager.switchScene("/com/example/quizapp/WelcomePage.fxml", "Welcome", stage);
+        SceneManager.switchScene("/com/example/quizapp/WelcomePage.fxml", "Welcome");
         //End user session
         AuthManager.getInstance().logOut();
         //Terminal/System Notification
@@ -67,8 +64,7 @@ public class MenuBarController {
 
     @FXML
     protected void handleMyQuizzes() {
-        Stage stage = (Stage) menuBar.getScene().getWindow();
-        SceneManager.switchScene("/com/example/quizapp/my-quizzes.fxml", "My Quizzes", stage);
+        SceneManager.switchScene("/com/example/quizapp/my-quizzes.fxml", "My Quizzes");
         System.out.println("Going to my quizzes...");
     }
 
@@ -76,16 +72,14 @@ public class MenuBarController {
     @FXML
     protected void handleCreateQuiz() {
         //Swap to Create Quiz
-        Stage stage = (Stage) menuBar.getScene().getWindow();
-        SceneManager.switchScene("/com/example/quizapp/create-quiz-view.fxml", "Create Quiz", stage);
+        SceneManager.switchScene("/com/example/quizapp/create-quiz-view.fxml", "Create Quiz");
         System.out.println("Going to Quiz Creator...");
 
     }
 
     @FXML
     protected void handleQuizHistory() {
-        Stage stage = (Stage) menuBar.getScene().getWindow();
-        SceneManager.switchScene("/com/example/quizapp/quiz-history.fxml", "Quiz History", stage);
+        SceneManager.switchScene("/com/example/quizapp/quiz-history.fxml", "Quiz History");
         System.out.println("Going to Quiz History...");
 
     }

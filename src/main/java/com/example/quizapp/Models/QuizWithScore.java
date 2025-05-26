@@ -1,24 +1,28 @@
 package com.example.quizapp.Models;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 public class QuizWithScore {
     private Quiz quiz;
-    private List<Integer> scores;
+    private QuizAttempt attempt;
     private Timestamp time;
 
-    public QuizWithScore(Quiz quiz, List<Integer> scores) {
+    public QuizWithScore(Quiz quiz, QuizAttempt quizAttempt) {
         this.quiz = quiz;
-        this.scores = scores;
+        this.attempt = quizAttempt;
     }
 
     public Quiz getQuiz() {
         return quiz;
     }
 
-    public List<Integer> getScores() {
-        return scores;
+    public double getScore() {
+        return attempt.getScore();
     }
+
+    public QuizAttempt getAttempt() {
+        return attempt;
+    }
+
 
 }

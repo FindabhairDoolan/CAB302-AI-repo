@@ -1,7 +1,8 @@
-package com.example.quizapp.Models;
+package com.example.quizapp.utils;
 import com.example.quizapp.Models.SqliteUserDAO;
 import com.example.quizapp.Models.IUserDAO;
 
+import com.example.quizapp.Models.User;
 import javafx.scene.control.Alert;
 
 import java.security.MessageDigest;

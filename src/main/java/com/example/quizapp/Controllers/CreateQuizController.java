@@ -3,6 +3,8 @@ package com.example.quizapp.Controllers;
 import com.example.quizapp.Main;
 import com.example.quizapp.Models.*;
 import com.example.quizapp.utils.AlertManager;
+import com.example.quizapp.utils.AuthManager;
+import com.example.quizapp.utils.QuizManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -31,8 +33,6 @@ public class CreateQuizController {
     private VBox numQuestionsContainer;
     @FXML
     private ToggleGroup difficultyGroup;
-    @FXML
-    private ToggleGroup modeToggleGroup;
     @FXML
     private TextArea topicTextArea;
 
@@ -83,9 +83,7 @@ public class CreateQuizController {
         String selectedYearLevel = yearLevelComboBox.getValue();
         String selectedSubject = subjectComboBox.getValue();
         String userTopic = topicTextArea.getText();
-        ToggleButton selectedModeButton = (ToggleButton) modeToggleGroup.getSelectedToggle();
-        String selectedMode = selectedModeButton.getText();
-        String selectedCountry = "Australia"; //Placeholder until country selection is implemented
+        String selectedCountry = "Australia"; //Placeholder for if country selection is implemented
 
         //The prompt sent to the AI to generate the quiz
         String questionPrompt = String.format("You are a helpful assistant. Please output the following data as JSON:\n" +
@@ -128,42 +126,46 @@ public class CreateQuizController {
             //Ensure the quiz title is unique if duplicates
             titleResponse = generateUniqueQuizTitle(titleResponse);
 
-            //If it is exam mode, request the AI to generate a default timer
-            if (selectedMode.equals("Exam")) {
-                String timePrompt = String.format("Generate a reasonable total time limit for a person" +
-                        " in %s to complete all the following questions in this quiz:\n" +
-                        "%s\nThe response is only the total time in seconds to complete the entire quiz." +
-                        " Only display the seconds.", selectedYearLevel, JSONResponse);
-                OllamaResponse generateTimeResponse = new OllamaResponse(timePrompt);
-                String timeResponse = generateTimeResponse.ollamaReturnResponse();
-            }
+            //Request the AI to generate a default timer
+            String timePrompt = String.format("You are a helpful assistant. Please output the following data as JSON:\n" +
+                    "            {\n" +
+                    "              \"Quiz\": [\n" +
+                    "                {\n" +
+                    "                  \"timerSeconds\": \"...\",\n" +
+                    "                }\n" +
+                    "              ]\n" +
+                    "            }\n" +
+                    "\n" +
+                    "            Populate the 'quiz' array with a timer in seconds, the time should be a number with no unit provided." +
+                    " The time is based upon the provided quiz questions for a %s Australian student:\n" +
+                    "*Generated quiz here*\n" +
+                    "\n" +
+                    "            Use realistic data for:\n" +
+                    "            - timerSeconds\n" +
+                    "\n" +
+                    "            Only return valid JSON without additional commentary.\n", selectedYearLevel, JSONResponse);
+            OllamaResponse generateTimeResponse = new OllamaResponse(timePrompt);
+            int timeResponse = quizDAO.retrieveTimer(generateTimeResponse.ollamaReturnResponse());
 
             //Get current user to make them the quiz creator
             User user = AuthManager.getInstance().getCurrentUser();
+
             //Add generated quiz to database
-            Quiz quiz = new Quiz(titleResponse, selectedSubject, userTopic, selectedMode, selectedDifficulty, selectedYearLevel, selectedCountry, user.getUserID());
+            Quiz quiz = new Quiz(titleResponse, selectedSubject, userTopic, timeResponse, selectedDifficulty, selectedYearLevel, selectedCountry, "Public", user.getUserID());
             quizDAO.addQuiz(quiz);
 
-            //Set the current quiz now that ID has been auto incremented in database
+            //Get the current quiz now that ID has been auto incremented in database
             quiz = quizDAO.getQuizByName(titleResponse);
             QuizManager.getInstance().setCurrentQuiz(quiz);
             int quizID = quizDAO.getQuizByName(titleResponse).getQuizID();
+
             //Add the generated questions to the database
             questionDAO.addAIQuestions(JSONResponse, quizID);
 
-            // Send user to Quiz page
-            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/com/example/quizapp/Quiz.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), Main.WIDTH, Main.HEIGHT);
+            //Navigate to the quiz page
+            QuizManager quizManager = QuizManager.getInstance();
+            quizManager.openQuiz(quiz);
 
-            // Get the controller and set the total questions
-            QuizController quizController = fxmlLoader.getController();
-            quizController.setTotalQuestions(selectedQuestions);
-            quizController.setDifficulty(selectedDifficulty);
-            quizController.setYearLevel(selectedYearLevel);
-            quizController.setSubject(selectedSubject);
-
-            Stage stage = (Stage) createButton.getScene().getWindow();
-            stage.setScene(scene);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -182,6 +184,10 @@ public class CreateQuizController {
 
     }
 
+    /**
+     * Sends user back to Home page if they confirm
+     * @throws IOException
+     */
     @FXML
     public void onBack() throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -251,12 +257,15 @@ public class CreateQuizController {
     private String generateUniqueQuizTitle (String title){
         User user = AuthManager.getInstance().getCurrentUser();
         Quiz existingQuiz = quizDAO.getQuizByName(title);
+
+        //If there is a duplicate quiz, and its by the same user
         if (existingQuiz != null && existingQuiz.getCreatorID() == user.getUserID()) {
             int duplicateNum = 1;
-            String titleDuplicate = title + duplicateNum;
+            String titleDuplicate = title + "(" + duplicateNum + ")";
+            //While there is still a duplicate
             while (quizDAO.getQuizByName(titleDuplicate) != null) {
                 duplicateNum++;
-                titleDuplicate = title + duplicateNum;
+                titleDuplicate = title + "(" + duplicateNum + ")";
             }
             title = titleDuplicate;
         }
@@ -271,12 +280,6 @@ public class CreateQuizController {
         // Check if a subject has been selected
         if (subjectComboBox.getValue() == null) {
             AlertManager.alertError("No selected subject","You must select a subject.");
-            return false;
-        }
-
-        //If the user hasn't selected a quiz mode they may not create the quiz
-        if (modeToggleGroup.getSelectedToggle() == null) {
-            AlertManager.alertError("No selected mode", "You must select a quiz mode.");
             return false;
         }
 

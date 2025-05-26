@@ -1,8 +1,12 @@
 package com.example.quizapp.data;
 
 import com.example.quizapp.Models.*;
+import com.example.quizapp.utils.AuthManager;
+
 import java.sql.Connection;
 import java.sql.Statement;
+import java.util.Arrays;
+import java.util.List;
 
 /*
 This class is for initializing the database. It adds two initial users, alice and bob, but does not
@@ -53,7 +57,7 @@ public class DatabaseSeeder {
             //If quiz does not exist in database yet, adds it
             Quiz quiz1 = quizDAO.getQuizByName("Algebra Basics");
             if (quiz1 == null) {
-                quizDAO.addQuiz(new Quiz("Algebra Basics", "Mathematics","Algebra", "Practice", "Easy", "Year 10", "Australia", aliceID));
+                quizDAO.addQuiz(new Quiz("Algebra Basics", "Mathematics","Algebra", 180, "Easy", "Year 10", "Australia", "Public", aliceID));
                 quiz1 = quizDAO.getQuizByName("Algebra Basics");
                 //Add same question 5 times
                 for (int i = 1; i <= 5; i++) {
@@ -64,7 +68,7 @@ public class DatabaseSeeder {
 
             Quiz quiz2 = quizDAO.getQuizByName("Photosynthesis");
             if (quiz2 == null) {
-                quizDAO.addQuiz(new Quiz("Photosynthesis", "Science","Biology", "Practice", "Medium", "Year 11", "Australia", bobID));
+                quizDAO.addQuiz(new Quiz("Photosynthesis", "Science","Biology", 180, "Medium", "Year 11", "Australia", "Public", bobID));
                 quiz2 = quizDAO.getQuizByName("Photosynthesis");
                 for (int i = 1; i <= 5; i++) {
                     int quiz2ID = quiz2.getQuizID();
@@ -74,7 +78,7 @@ public class DatabaseSeeder {
 
             Quiz quiz3 = quizDAO.getQuizByName("World War II");
             if (quiz3 == null) {
-                quizDAO.addQuiz(new Quiz("World War II", "History","Wars", "Practice", "Easy", "Year 10", "Australia", aliceID));
+                quizDAO.addQuiz(new Quiz("World War II", "History","Wars", 180, "Easy", "Year 10", "Australia", "Public", aliceID));
                 quiz3 = quizDAO.getQuizByName("World War II");
                 for (int i = 1; i <= 5; i++) {
                     int quiz3ID = quiz3.getQuizID();
@@ -87,15 +91,21 @@ public class DatabaseSeeder {
             int quiz2ID = quizDAO.getQuizByName("Photosynthesis").getQuizID();
             int quiz3ID = quizDAO.getQuizByName("World War II").getQuizID();
 
-            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz1ID, aliceID, 4));
-            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz2ID, aliceID, 3));
-            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz3ID, aliceID, 5));
-            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz1ID, aliceID, 4));
+            List<String> AlgebraAnswers = Arrays.asList("3", "4", "5", "6", "7");
 
-            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz1ID, bobID, 3));
-            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz2ID, bobID, 5));
-            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz3ID, bobID, 2));
-            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz3ID, bobID, 4));
+            List<String> HistoryAnswers =  Arrays.asList("Hitler", "Hitler", "Hitler", "Hitler", "Hitler");
+
+            List<String> BiologyAnswers = Arrays.asList("Water", "Water", "Water", "Water", "Water");
+
+            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz1ID, aliceID, 100, 180, AlgebraAnswers));
+            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz2ID, aliceID, 20, 180, BiologyAnswers));
+            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz3ID, aliceID, 20, 180, HistoryAnswers));
+            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz1ID, aliceID, 100, 180, AlgebraAnswers));
+
+            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz1ID, bobID, 100, 180, AlgebraAnswers));
+            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz2ID, bobID, 20, 180, BiologyAnswers));
+            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz3ID, bobID, 20, 180, HistoryAnswers));
+            quizAttemptDAO.addQuizAttempt(new QuizAttempt(quiz3ID, bobID, 20, 180, HistoryAnswers));
 
             stmt.close();
         } catch (Exception e) {

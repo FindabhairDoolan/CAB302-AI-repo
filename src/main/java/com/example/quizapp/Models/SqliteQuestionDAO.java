@@ -64,6 +64,7 @@ public class SqliteQuestionDAO implements IQuestionDAO {
 
         List<Question> questions = new ArrayList<>();
 
+
         try {
             String query = "SELECT quizID, questionText, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3 FROM questions WHERE quizID = ?";
             PreparedStatement statement = connection.prepareStatement(query);
@@ -84,6 +85,7 @@ public class SqliteQuestionDAO implements IQuestionDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return questions;
     }
 

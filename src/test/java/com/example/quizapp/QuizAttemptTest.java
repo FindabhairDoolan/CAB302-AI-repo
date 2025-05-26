@@ -5,6 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -12,17 +15,20 @@ public class QuizAttemptTest {
 
     private static final int quizID = 101;
     private static final int userID = 202;
-    private static final int score = 85;
+    private static final double score = 85;
+    private static final int time = 180;
 
     private static final int quizID_2 = 103;
     private static final int userID_2 = 204;
-    private static final int score_2 = 92;
+    private static final double score_2 = 92;
+    private static final int time_2 = 120;
+    private static final List<String> answers = Arrays.asList("1", "2", "3", "4", "5");
 
     private QuizAttempt attempt;
 
     @BeforeEach
     public void setUp() {
-        attempt = new QuizAttempt(quizID, userID, score);
+        attempt = new QuizAttempt(quizID, userID, score, time, answers);
     }
 
     @Test
@@ -65,9 +71,13 @@ public class QuizAttemptTest {
     }
 
     @Test
-    public void testSetAndGetAttemptTime() {
-        LocalDateTime now = LocalDateTime.now();
-        attempt.setAttemptTime(now);
-        assertEquals(now, attempt.getAttemptTime());
+    public void testGetAttemptTime() {
+        assertEquals(time, attempt.getAttemptTime());
+    }
+
+    @Test
+    public void testSetAttemptTime() {
+        attempt.setAttemptTime(time_2);
+        assertEquals(time_2, attempt.getAttemptTime());
     }
 }

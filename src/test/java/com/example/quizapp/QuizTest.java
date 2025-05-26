@@ -10,26 +10,28 @@ public class QuizTest {
     private static final String quizName = "Science Quiz";
     private static final String subject = "Science";
     private static final String quizTopic = "Physics";
-    private static final String quizMode = "Practice";
+    private static final int quizMode = 180;
     private static final String difficulty = "Hard";
     private static final String yearLevel = "year 10";
     private static final String country = "Australia";
+    private static final String visibility = "Public";
     private static final int creatorID = 101;
 
     private static final String quizName_2 = "Math Quiz";
     private static final String subject_2 = "Math";
     private static final String quizTopic_2 = "Algebra";
-    private static final String quizMode_2 = "Practice";
+    private static final int quizMode_2 = 120;
     private static final String difficulty_2 = "Easy";
     private static final String yearLevel_2 = "year 8";
     private static final String country_2 = "New Zealand";
+    private static final String visibility_2 = "Public";
     private static final int creatorID_2 = 202;
 
     private Quiz quiz;
 
     @BeforeEach
     public void setUp() {
-        quiz = new Quiz(quizName, subject, quizTopic, quizMode, difficulty, yearLevel, country, creatorID);
+        quiz = new Quiz(quizName, subject, quizTopic, quizMode, difficulty, yearLevel, country, visibility, creatorID);
     }
 
     @Test
@@ -113,6 +115,17 @@ public class QuizTest {
     public void testSetCountry() {
         quiz.setCountry(country_2);
         assertEquals(country_2, quiz.getCountry());
+    }
+
+    @Test
+    public void testGetVisibility() {
+        assertEquals(visibility, quiz.getVisibility());
+    }
+
+    @Test
+    public void testSetVisibility() {
+        quiz.setVisibility(visibility_2);
+        assertEquals(visibility_2, quiz.getVisibility());
     }
 
     @Test

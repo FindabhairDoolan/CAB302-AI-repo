@@ -1,15 +1,32 @@
 package com.example.quizapp.Models;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 public class QuizAttempt {
-    private int id, quizID, userID, score;
-    private LocalDateTime attemptTime;
+    private int id, quizID, userID;
+    private double score;
+    private int attemptTime;
+    private List<String> selectedAnswers;
 
-    public QuizAttempt(int quizID, int userID, int score) {
+
+
+    public QuizAttempt(int quizID, int userID, double score, int attemptTime, List<String> selectedAnswers) {
         this.quizID = quizID;
         this.userID = userID;
         this.score = score;
+        this.attemptTime = attemptTime;
+        this.selectedAnswers = selectedAnswers;
+    }
+
+
+    public List<String> getAnswers() {
+        return this.selectedAnswers;
+    }
+
+    public void setAnswers(List<String> answers) {
+        this.selectedAnswers = answers;
     }
 
     public int getId() { return id; }
@@ -21,15 +38,15 @@ public class QuizAttempt {
     public int getUserID() { return userID; }
     public void setUserID(int userID) { this.userID = userID; }
 
-    public int getScore() { return score; }
-    public void setScore(int score) { this.score = score; }
+    public double getScore() { return score; }
+    public void setScore(double score) { this.score = score; }
 
-    public LocalDateTime getAttemptTime() { return attemptTime; }
-    public void setAttemptTime(LocalDateTime attemptTime) { this.attemptTime = attemptTime; }
+    public int getAttemptTime() { return attemptTime; }
+    public void setAttemptTime(int attemptTime) { this.attemptTime = attemptTime; }
 
     @Override
     public String toString() {
-        return String.format("QuizAttempt{id=%d, quizID=%d, userID=%d, score=%d, attemptTime=%s}",
+        return String.format("QuizAttempt{id=%d, quizID=%d, userID=%d, score=%d, attemptTime=%d}",
                 id, quizID, userID, score, attemptTime);
     }
 }
