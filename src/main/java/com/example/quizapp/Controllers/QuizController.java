@@ -300,6 +300,12 @@ public class QuizController {
                 questionIndex++;
                 loadQuestion(questionList.get(questionIndex - 1));
             } else {
+                RadioButton selected = (RadioButton) answerToggleGroup.getSelectedToggle();
+
+                if (selected != null){
+                    String selectedText = selected.getText();
+                    examAnswers.set(questionIndex - 1, selectedText);
+                }
                 handleExamFinish();
             }
         }
