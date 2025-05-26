@@ -109,13 +109,17 @@ public class QuizCompletedController {
 
         finalScoreLabel.setText(String.format("%.2f%%", percentage));
         questionCountLabel.setText(String.format("✔ Final Score: %d/%d", correctAnswers, totalQuestions));
-        difficultyYearLabel.setText(String.format("🎓 %s%n🛠  ️Difficulty: %s", yearLevel, difficulty));
+        difficultyYearLabel.setText(
+                "🎓 " + yearLevel +
+                        "\n🛠 Difficulty: " + difficulty
+        );
 
-        if (mode.equals("Exam")){
-            timeLabel.setText("⏱️ " + String.format("%02d:%02d:%02d", hours, minutes, seconds));
-        }
-        else{
-            timeLabel.setText("⏱️ --:--:--");
+        if (mode.equals("Exam")) {
+            timeLabel.setText(
+                    "⏱ " + String.format("%02d:%02d:%02d", hours, minutes, seconds)
+            );
+        } else {
+            timeLabel.setText("⏱ --:--:--");
         }
     }
 

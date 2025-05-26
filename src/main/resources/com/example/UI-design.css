@@ -225,10 +225,7 @@
     -fx-text-fill: black;
     -fx-content-display: left;
 
-
-
 }
-
 
 /* Style the Create Quiz button in the placeholder */
 .table-view .placeholder > .vbox > Button {
@@ -260,4 +257,28 @@
 .icon-button .text {
   -fx-fill: #FFFFFF;
   -fx-font-size: 16px;
+}
+
+
+.toggle-button.difficulty-toggle {
+  -fx-background-color: #F7F7F7;
+  -fx-text-fill: #2D2A43;
+  -fx-border-color: #2D2A43;
+  -fx-border-width: 1;
+  -fx-border-radius: 6;
+  -fx-background-radius: 6;
+
+  -fx-font-family: "Avenir Heavy", sans-serif;
+  -fx-font-size: 14px;
+  -fx-padding: 8 16;
+  -fx-cursor: hand;
+}
+
+.toggle-button.difficulty-toggle:hover {
+  -fx-opacity: 0.9;
+}
+
+.toggle-button.difficulty-toggle:selected {
+  -fx-background-color: #2D2A43;
+  -fx-text-fill: #FFFFFF;
 }

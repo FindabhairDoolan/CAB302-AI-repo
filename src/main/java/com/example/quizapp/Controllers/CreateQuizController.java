@@ -36,9 +36,11 @@ public class CreateQuizController {
     @FXML
     private TextArea topicTextArea;
 
+    private ComboBox<Integer> questionDropdown;
     private SqliteUserDAO userDAO;
     private SqliteQuizDAO quizDAO;
     private SqliteQuestionDAO questionDAO;
+
 
     public CreateQuizController() {
         userDAO = new SqliteUserDAO();
@@ -48,8 +50,7 @@ public class CreateQuizController {
 
     @FXML
     public void initialize() {
-        // Add the question dropdown from SqliteUser DAO to the numQuestionsContainer
-        ComboBox<Integer> questionDropdown = quizDAO.getQuestionDropdown();
+        questionDropdown = quizDAO.getQuestionDropdown();
         numQuestionsContainer.getChildren().add(questionDropdown);
     }
 
