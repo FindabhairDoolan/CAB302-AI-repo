@@ -29,10 +29,15 @@ public class QuizCompletedController {
     @FXML
     private Label difficultyYearLabel;
 
+    @FXML
+    private Label timeLabel;
+
     private int correctAnswers;
     private int totalQuestions;
     private String difficulty;
     private String yearLevel;
+    private String mode;
+    private int timerSeconds;
 
     @FXML
     private Button retakeButton;
@@ -61,7 +66,7 @@ public class QuizCompletedController {
             Parent root = loader.load();
 
             QuizController quizController = loader.getController();
-            quizController.setQuiz(quizTaken);
+            quizController.setQuiz(quizTaken, mode);
 
             int numOfQs = new SqliteQuizDAO().getNumberOfQuestions(quizTaken);
             quizController.setTotalQuestions(numOfQs);
@@ -77,19 +82,41 @@ public class QuizCompletedController {
         }
     }
 
-    public void setResults(int correctAnswers, int totalQuestions, String difficulty, String yearLevel) {
+    /**
+     * Sets the current quiz attempt's results and displays them on page
+     * @param correctAnswers the number of correct answers
+     * @param totalQuestions the total questions in the quiz
+     * @param difficulty the difficulty of the quiz
+     * @param yearLevel the year level the quiz was designed for
+     * @param mode the quiz mode
+     * @param timerSeconds the remaining time on the timer in seconds
+     */
+    public void setResults(int correctAnswers, int totalQuestions, String difficulty, String yearLevel, String mode, int timerSeconds) {
         this.correctAnswers = correctAnswers;
         this.totalQuestions = totalQuestions;
         this.difficulty = difficulty;
         this.yearLevel = yearLevel;
+        this.mode = mode;
+        this.timerSeconds = timerSeconds;
 
         // Calculate the percentage
         double percentage = ((double) correctAnswers / totalQuestions) * 100;
 
+        //Convert time into hours, minutes and seconds
+        int hours = timerSeconds / 3600;
+        int minutes = (timerSeconds % 3600) / 60;
+        int seconds = timerSeconds % 60;
+
         finalScoreLabel.setText(String.format("%.2f%%", percentage));
         questionCountLabel.setText(String.format("✔ Final Score: %d/%d", correctAnswers, totalQuestions));
         difficultyYearLabel.setText(String.format("🎓 %s%n🛠  ️Difficulty: %s", yearLevel, difficulty));
-        //timeLabel.setText("⏱️  " + String.format("%02d:%02d", mins, secs));
+
+        if (mode.equals("Exam")){
+            timeLabel.setText("⏱️ " + String.format("%02d:%02d:%02d", hours, minutes, seconds));
+        }
+        else{
+            timeLabel.setText("⏱️ --:--:--");
+        }
     }
 
 }

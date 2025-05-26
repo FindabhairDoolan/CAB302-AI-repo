@@ -1,6 +1,8 @@
 package com.example.quizapp.Models;
 
 import javafx.scene.control.ComboBox;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -30,7 +32,18 @@ public class SqliteQuizDAO implements IQuizDAO {
         return questionDropdown; // Return the ComboBox
     }
 
+    /**
+     * Retrieves the quiz timer in seconds from the AI JSON response
+     * @param JSONResponse
+     * @return
+     */
+    public int retrieveTimer(String JSONResponse){
+        JSONObject json = new JSONObject(JSONResponse);
+        JSONArray quizArray = json.getJSONArray("Quiz");
+        JSONObject timerObj = quizArray.getJSONObject(0);
 
+        return timerObj.getInt("timerSeconds");
+    }
 
     private void createTable() {
         // Create table if not exists
@@ -41,7 +54,7 @@ public class SqliteQuizDAO implements IQuizDAO {
                     + "name VARCHAR NOT NULL,"
                     + "subject    VARCHAR NOT NULL,"
                     + "topic VARCHAR NOT NULL,"
-                    + "mode VARCHAR NOT NULL,"
+                    + "mode INTEGER NOT NULL,"
                     + "difficulty VARCHAR NOT NULL," //is "not null" necessary?
                     + "yearLevel VARCHAR NOT NULL," //is "not null" necessary?
                     + "country VARCHAR NOT NULL," //is "not null" necessary?
@@ -55,25 +68,6 @@ public class SqliteQuizDAO implements IQuizDAO {
         }
     }
 
-/**
-    private void insertSampleData() {
-        try {
-            Statement clearStatement = connection.createStatement();
-            String clearQuery = "DELETE FROM quizzes";
-            clearStatement.execute(clearQuery);
-            Statement insertStatement = connection.createStatement();
-            Need to be modified if wanted to use for testing purposes:
-            String insertQuery = "INSERT INTO quizzes (userName, email, password) VALUES "
-                    + "('John Doe', 'johndoe@example.com', 'secret1'),"
-                    + "('Jane Doe', 'janedoe@example.com', 'secret1'),"
-                   + "('Jay Doe', 'jaydoe@example.com', 'secret1')";
-            insertStatement.execute(insertQuery);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
- */
-
     @Override
     public void addQuiz(Quiz quiz) {
         try {
@@ -82,7 +76,7 @@ public class SqliteQuizDAO implements IQuizDAO {
             statement.setString(1, quiz.getName());
             statement.setString(2, quiz.getSubject());
             statement.setString(3, quiz.getTopic());
-            statement.setString(4, quiz.getMode());
+            statement.setInt(4, quiz.getMode());
             statement.setString(5, quiz.getDifficulty());
             statement.setString(6, quiz.getYearLevel());
             statement.setString(7, quiz.getCountry());
@@ -103,7 +97,7 @@ public class SqliteQuizDAO implements IQuizDAO {
             statement.setString(1, quiz.getName());
             statement.setString(2, quiz.getSubject());
             statement.setString(3, quiz.getTopic());
-            statement.setString(4, quiz.getMode());
+            statement.setInt(4, quiz.getMode());
             statement.setString(5, quiz.getDifficulty());
             statement.setString(6, quiz.getYearLevel());
             statement.setString(7, quiz.getCountry());
@@ -153,7 +147,7 @@ public class SqliteQuizDAO implements IQuizDAO {
                         rs.getString("Name"),
                         rs.getString("subject"),
                         rs.getString("Topic"),
-                        rs.getString("Mode"),
+                        rs.getInt("Mode"),
                         rs.getString("difficulty"),
                         rs.getString("yearLevel"),
                         rs.getString("country"),
@@ -181,7 +175,7 @@ public class SqliteQuizDAO implements IQuizDAO {
                         rs.getString("name"),
                         rs.getString("subject"),
                         rs.getString("topic"),
-                        rs.getString("mode"),
+                        rs.getInt("mode"),
                         rs.getString("difficulty"),
                         rs.getString("yearLevel"),
                         rs.getString("country"),
@@ -211,7 +205,7 @@ public class SqliteQuizDAO implements IQuizDAO {
                         rs.getString("name"),
                         rs.getString("subject"),
                         rs.getString("topic"),
-                        rs.getString("mode"),
+                        rs.getInt("mode"),
                         rs.getString("difficulty"),
                         rs.getString("yearLevel"),
                         rs.getString("country"),
@@ -241,7 +235,7 @@ public class SqliteQuizDAO implements IQuizDAO {
                             rs.getString("name"),
                             rs.getString("subject"),
                             rs.getString("topic"),
-                            rs.getString("mode"),
+                            rs.getInt("mode"),
                             rs.getString("difficulty"),
                             rs.getString("yearLevel"),
                             rs.getString("country"),

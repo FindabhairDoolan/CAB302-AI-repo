@@ -52,8 +52,10 @@
                 <VBox alignment="CENTER_LEFT" spacing="10">
                     <Label fx:id="questionCountLabel"
                            styleClass="stats"/>
-                    <!-- <Label fx:id="timeLabel"
-                    styleClass="subheading"/>  -->
+
+                    <Label fx:id="timeLabel"
+                    styleClass="subheading"/>
+
                     <Label fx:id="difficultyYearLabel"
                            styleClass="stats"/>
                 </VBox>

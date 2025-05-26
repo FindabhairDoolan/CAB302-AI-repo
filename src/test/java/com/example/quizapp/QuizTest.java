@@ -10,7 +10,7 @@ public class QuizTest {
     private static final String quizName = "Science Quiz";
     private static final String subject = "Science";
     private static final String quizTopic = "Physics";
-    private static final String quizMode = "Practice";
+    private static final int quizMode = 180;
     private static final String difficulty = "Hard";
     private static final String yearLevel = "year 10";
     private static final String country = "Australia";
@@ -20,7 +20,7 @@ public class QuizTest {
     private static final String quizName_2 = "Math Quiz";
     private static final String subject_2 = "Math";
     private static final String quizTopic_2 = "Algebra";
-    private static final String quizMode_2 = "Practice";
+    private static final int quizMode_2 = 120;
     private static final String difficulty_2 = "Easy";
     private static final String yearLevel_2 = "year 8";
     private static final String country_2 = "New Zealand";

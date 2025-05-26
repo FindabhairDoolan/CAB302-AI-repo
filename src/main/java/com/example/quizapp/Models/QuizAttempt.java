@@ -7,15 +7,16 @@ import java.util.Map;
 public class QuizAttempt {
     private int id, quizID, userID;
     private double score;
-    private LocalDateTime attemptTime;
+    private int attemptTime;
     private List<String> selectedAnswers;
 
 
 
-    public QuizAttempt(int quizID, int userID, double score, List<String> selectedAnswers) {
+    public QuizAttempt(int quizID, int userID, double score, int attemptTime, List<String> selectedAnswers) {
         this.quizID = quizID;
         this.userID = userID;
         this.score = score;
+        this.attemptTime = attemptTime;
         this.selectedAnswers = selectedAnswers;
     }
 
@@ -40,12 +41,12 @@ public class QuizAttempt {
     public double getScore() { return score; }
     public void setScore(double score) { this.score = score; }
 
-    public LocalDateTime getAttemptTime() { return attemptTime; }
-    public void setAttemptTime(LocalDateTime attemptTime) { this.attemptTime = attemptTime; }
+    public int getAttemptTime() { return attemptTime; }
+    public void setAttemptTime(int attemptTime) { this.attemptTime = attemptTime; }
 
     @Override
     public String toString() {
-        return String.format("QuizAttempt{id=%d, quizID=%d, userID=%d, score=%d, attemptTime=%s}",
+        return String.format("QuizAttempt{id=%d, quizID=%d, userID=%d, score=%d, attemptTime=%d}",
                 id, quizID, userID, score, attemptTime);
     }
 }

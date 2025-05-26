@@ -2,10 +2,10 @@ package com.example.quizapp.Models;
 
 public class Quiz {
 
-    private int id, creatorID;
-    private String quizName, subject, quizTopic, quizMode, difficulty, yearLevel, country, visibility;
+    private int id, creatorID, quizMode;
+    private String quizName, subject, quizTopic, difficulty, yearLevel, country, visibility;
 
-    public Quiz(String quizName, String subject, String quizTopic, String quizMode, String difficulty, String yearLevel, String country, String visibility, int creatorID) {
+    public Quiz(String quizName, String subject, String quizTopic, int quizMode, String difficulty, String yearLevel, String country, String visibility, int creatorID) {
         this.quizName = quizName;
         this.subject = subject;
         this.quizTopic = quizTopic;
@@ -29,8 +29,8 @@ public class Quiz {
     public String getTopic() { return quizTopic; }
     public void setTopic(String quizTopic) { this.quizTopic = quizTopic; }
 
-    public String getMode() { return quizMode; }
-    public void setMode(String quizMode) { this.quizMode = quizMode; }
+    public int getMode() { return quizMode; }
+    public void setMode(int quizMode) { this.quizMode = quizMode; }
 
     public String getDifficulty() { return difficulty; }
     public void setDifficulty(String difficulty) { this.difficulty = difficulty; }
@@ -49,7 +49,7 @@ public class Quiz {
 
     @Override
     public String toString() {
-        return String.format("Quiz{id=%d, name='%s', subject='%s', topic='%s',  mode='%s', difficulty='%s', year='%s', country='%s','visibility=%s' creatorID=%d}",
+        return String.format("Quiz{id=%d, name='%s', subject='%s', topic='%s',  mode='%d', difficulty='%s', year='%s', country='%s','visibility=%s' creatorID=%d}",
                 id, quizName, subject, quizTopic, quizMode, difficulty, yearLevel, country, visibility, creatorID);
     }
 

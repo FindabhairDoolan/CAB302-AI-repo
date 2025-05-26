@@ -13,7 +13,7 @@ public class GenerateUniqueQuizTitleTest {
     private static final String quizName = "Math Quiz";
     private static final String subject = "Mathematics";
     private static final String quizTopic = "Math basics";
-    private static final String quizMode = "Practice";
+    private static final int quizMode = 180;
     private static final String difficulty = "Hard";
     private static final String yearLevel = "year 10";
     private static final String country = "Australia";
