@@ -299,6 +299,34 @@ public class SqliteQuizDAO implements IQuizDAO {
         return ((int) numOfQuestions);
 
     }
+    // Added this method to load quiz by quiz for testing purpose for edit quiz page
+    public Quiz getQuizById(int quizId) {
+        Quiz quiz = null;
+        try {
+            String query = "SELECT * FROM quizzes WHERE id = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, quizId);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                quiz = new Quiz(
+                        rs.getString("name"),
+                        rs.getString("subject"),
+                        rs.getString("topic"),
+                        rs.getInt("mode"),
+                        rs.getString("difficulty"),
+                        rs.getString("yearLevel"),
+                        rs.getString("country"),
+                        rs.getString("visibility"),
+                        rs.getInt("creatorID")
+                );
+                quiz.setQuizID(rs.getInt("id"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return quiz;
+    }
+
 
 }
 

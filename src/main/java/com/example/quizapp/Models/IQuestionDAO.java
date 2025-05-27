@@ -7,5 +7,6 @@ public interface IQuestionDAO {
     public void updateQuestion(Question question);
     public void deleteQuestion(Question question);
     public List<Question> getQuestionsForQuiz(int quizId);
+    public void deleteQuestionfromQuiz(Question question);
 }
 

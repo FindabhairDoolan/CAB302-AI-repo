@@ -156,6 +156,31 @@ public class SqliteQuestionDAO implements IQuestionDAO {
             e.printStackTrace();
         }
     }
+    @Override
+    public void deleteQuestionfromQuiz(Question question) {
+        try {
+            // SQL query to delete from questions table based on questionID
+            String query = "DELETE FROM questions WHERE questionID = ?";
 
+            // Prepare the statement
+            PreparedStatement statement = connection.prepareStatement(query);
+
+            // Set the parameter to match the question's questionID
+            statement.setInt(1, question.getQuestionID());
+
+            // Execute the deletion
+            int rowsAffected = statement.executeUpdate();
+
+            // Verbose log to confirm deletion
+            if (rowsAffected > 0) {
+                System.out.println("Question with ID " + question.getQuestionID() + " was successfully deleted.");
+            } else {
+                System.out.println("No question found with ID " + question.getQuestionID() + ". Deletion failed.");
+            }
+        } catch (Exception e) {
+            // Handle any exception and print the error message
+            e.printStackTrace();
+        }
+    }
 }
 

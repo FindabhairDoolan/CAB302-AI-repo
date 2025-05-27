@@ -18,7 +18,7 @@
     <center>
         <ScrollPane fx:id="scrollPane" fitToWidth="true">
             <content>
-                <VBox fx:id="questionsContainer" spacing="10" alignment="BOTTOM_CENTER" >
+                <VBox fx:id="questionsContainer" spacing="10" alignment="CENTER" >
                     <!-- Button for generating new question -->
                     <Button fx:id="generateQuestionButton"
                             text="+ Add New Question"
