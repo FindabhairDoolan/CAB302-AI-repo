@@ -34,10 +34,6 @@ public class DatabaseSeeder {
     public void seed() {
         try {
             Statement stmt = connection.createStatement();
-            stmt.executeUpdate("DELETE FROM quizAttempts");
-            //stmt.executeUpdate("DELETE FROM questions");
-            //stmt.executeUpdate("DELETE FROM quizzes");
-            //stmt.executeUpdate("DELETE FROM users");
 
             User alice = userDAO.getUserByEmail("alice@example.com");
             if (alice == null) {
