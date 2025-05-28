@@ -104,7 +104,8 @@ public class QuizEditorController implements Initializable {
     private Node createQuestionNode(Question question) {
         VBox card = new VBox(10);
         card.setPadding(new Insets(10));
-        card.setStyle("-fx-border-color: #ccc; -fx-border-radius: 5; -fx-background-color: #f9f9f9;");
+        card.setStyle("-fx-border-color: #ccc; -fx-border-radius: 5");
+        card.getStyleClass().add("thumbnail-background");
 
         // Display Question (Read-Only)
         Label questionLabel = new Label("Question:");
@@ -126,12 +127,12 @@ public class QuizEditorController implements Initializable {
         Label lastOptionLabel = new Label("4. " + question.getIncorrectAnswer3());
 
         // Regenerate and Delete Buttons
-        Button regenerateButton = new Button("Regenerate");
+        Button regenerateButton = new Button("🔄 Regenerate");
         regenerateButton.setOnAction(e -> {
             regenerateQuestion(question, card);
         });
 
-        Button deleteButton = new Button("Delete");
+        Button deleteButton = new Button("🗑 Delete");
         deleteButton.setOnAction(e -> {
             questionList.remove(question); // Remove from in-memory list
             questionsContainer.getChildren().remove(card); // Remove from UI

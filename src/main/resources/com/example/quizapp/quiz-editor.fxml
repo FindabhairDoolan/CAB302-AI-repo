@@ -4,10 +4,17 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
+<?import java.net.URL?>
+
 <BorderPane fx:id="rootPane"
             xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.quizapp.Controllers.QuizEditorController">
+
+    <stylesheets>
+        <URL value="@../UI-design.css"/>
+    </stylesheets>
+
 
     <!-- Top Bar -->
     <top>
@@ -31,14 +38,17 @@
 
             <Button fx:id="discardButton"
                     text="Discard Changes"
+                    styleClass="primary-button"
                     style="-fx-font-size: 14px; -fx-padding: 8 20 8 20;"/>
 
             <Button fx:id="generateQuestionButton"
                     text="+ Add New Question"
+                    styleClass="primary-button"
                     style="-fx-font-size: 14px; -fx-padding: 8 20 8 20;"/>
 
             <Button fx:id="saveButton"
                     text="Save Changes"
+                    styleClass="primary-button"
                     style="-fx-font-size: 14px; -fx-padding: 8 20 8 20;"/>
 
             <Region HBox.hgrow="ALWAYS" />
