@@ -18,6 +18,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.*;
+import com.example.quizapp.utils.AlertManager;
+import com.example.quizapp.utils.AuthManager;
+import com.example.quizapp.utils.QuizManager;
 
 public class QuizEditorController implements Initializable {
     @FXML
@@ -36,6 +39,8 @@ public class QuizEditorController implements Initializable {
     private Quiz currentQuiz;
     private SqliteQuestionDAO questionDAO = new SqliteQuestionDAO();
     private SqliteQuizDAO quizDAO = new SqliteQuizDAO();
+
+    private List<Question> questionList = new ArrayList<>(); // Temporary list to track changes
 
     private static class QuestionCardData {
         Question originalQuestion;
@@ -78,51 +83,61 @@ public class QuizEditorController implements Initializable {
         loadQuestions();
     }
     private void loadQuestions() {
+        // Fetch questions from the database
+        List<Question> originalQuestions = questionDAO.getQuestionsForQuiz(currentQuiz.getQuizID());
+        questionList.clear();
+        questionList.addAll(originalQuestions);
+
+        // Clear the container before adding updated questions
         questionsContainer.getChildren().clear();
-        if (currentQuiz == null) {
-            System.out.println("No quiz loaded");
-            return;
+
+        for (Question question : questionList) {
+            Node questionNode = createQuestionNode(question); // Create each question's UI node
+            questionsContainer.getChildren().add(questionNode);
         }
 
-        List<Question> questions = questionDAO.getQuestionsForQuiz(currentQuiz.getQuizID());
-        for (Question q : questions) {
-            Node qNode = createQuestionNode(q);
-            questionsContainer.getChildren().add(qNode);
-        }
+
     }
     private Node createQuestionNode(Question question) {
-        VBox box = new VBox(5);
-        box.setPadding(new Insets(10));
+        VBox card = new VBox(10);
+        card.setPadding(new Insets(10));
+        card.setStyle("-fx-border-color: #ccc; -fx-border-radius: 5; -fx-background-color: #f9f9f9;");
 
-        Label qLabel = new Label("Q " + question.getQuestionText());
-        Label options = new Label("Correct " + question.getCorrectAnswer());
+        // Display Question (Read-Only)
+        Label questionLabel = new Label("Question:");
+        Label questionText = new Label(question.getQuestionText());
+        questionText.setWrapText(true); // Ensure long questions wrap in the UI
 
-        Button deleteBtn = new Button("Delete");
-        deleteBtn.setOnAction(e -> {
-            questionDAO.deleteQuestionfromQuiz(question);
-            loadQuestions();
+        // Display Options (Answers) (Read-Only)
+        Label optionsLabel = new Label("Options:");
+        VBox optionsBox = new VBox(5);
+        optionsBox.getChildren().addAll(
+                new Label("1. " + question.getCorrectAnswer()),
+                new Label("2. " + question.getIncorrectAnswer1()),
+                new Label("3. " + question.getIncorrectAnswer2()),
+                new Label("4. " + question.getIncorrectAnswer3())
+        );
+
+        // Regenerate Button
+        Button regenerateButton = new Button("Regenerate");
+        regenerateButton.setOnAction(e -> {
+            regenerateQuestion(question, card);
         });
 
-        Button regenerateBtn = new Button("Regenerate");
-        regenerateBtn.setOnAction(e -> regenerateQuestion(question));
+        // Delete Button
+        Button deleteButton = new Button("Delete");
+        deleteButton.setOnAction(e -> {
+            questionList.remove(question); // Remove from the in-memory list
+            questionsContainer.getChildren().remove(card); // Remove from the UI
+        });
 
-        HBox buttonBox = new HBox(10, deleteBtn, regenerateBtn);
-        box.getChildren().addAll(qLabel, options, buttonBox);
-        box.setStyle("-fx-border-color: black; -fx-border-width: 1; -fx-background-color: #f5f5f5;");
+        // Add elements to the card
+        HBox buttonBox = new HBox(10, regenerateButton, deleteButton);
+        card.getChildren().addAll(questionLabel, questionText, optionsLabel, optionsBox, buttonBox);
 
-        return box;
-    }
-    private void regenerateQuestion(Question oldQuestion) {
-        try {
-            questionDAO.deleteQuestion(oldQuestion);
-            String prompt = "Generate 1 quiz question in JSON format with keys: question, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3.";
-            OllamaResponse response = new OllamaResponse(prompt);
-            String aiResponse = response.ollamaReturnResponse();
-            questionDAO.addAIQuestions(aiResponse, currentQuiz.getQuizID());
-            loadQuestions();
-        } catch (OllamaBaseException | IOException | InterruptedException | SQLException e) {
-            e.printStackTrace();
-        }
+        return card;
+
+
     }
 
     private void generateQuestion() {
@@ -135,88 +150,108 @@ public class QuizEditorController implements Initializable {
         } catch (OllamaBaseException | IOException | InterruptedException | SQLException e) {
             e.printStackTrace();
         }
+
+    }
+    /**
+     * Regenerates the provided question using AI and updates it both in-memory and in the UI.
+     *
+     * @param oldQuestion The question to be regenerated.
+     * @param card        The UI card representing the question to regenerate.
+     */
+    private void regenerateQuestion(Question oldQuestion, VBox card) {
+        try {
+            // Build AI prompt for regenerating a similar question
+            String aiPrompt = String.format(
+                    "Regenerate a multiple-choice question similar to: '%s'. Keep the topic '%s', subject '%s', " +
+                            "and difficulty '%s'. Provide 4 answers: 1 correct and 3 incorrect answers.",
+                    oldQuestion.getQuestionText(),
+                    currentQuiz.getTopic(),
+                    currentQuiz.getSubject(),
+                    currentQuiz.getDifficulty()
+            );
+
+            // Call QuizManager to interact with AI
+            Optional<Question> regeneratedQuestion = QuizManager.generateSingleQuestionWithAI(aiPrompt, currentQuiz.getQuizID());
+
+            // Check if regeneration was successful
+            if (regeneratedQuestion.isPresent()) {
+                Question newQuestion = regeneratedQuestion.get();
+
+                // Replace the old question in the in-memory list
+                int index = questionList.indexOf(oldQuestion);
+                if (index != -1) {
+                    questionList.set(index, newQuestion);
+                }
+
+                // Replace UI node for regenerated question
+                Node newQuestionNode = createQuestionNode(newQuestion); // Create card for new question
+                int cardIndex = questionsContainer.getChildren().indexOf(card);
+                questionsContainer.getChildren().set(cardIndex, newQuestionNode);
+                AlertManager.alertError("Success", "Question regenerated!");
+            } else {
+                AlertManager.alertError("Error", "Failed to regenerate the question. Please try again.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertManager.alertError("Error", "Something went wrong while regenerating the question.");
+        }
+    }
+    /**
+     * Generates a new AI-based question for the current quiz and adds it to both
+     * the UI and the temporary list of questions.
+     */
+    private void generateAIQuestionForEdit() {
+        try {
+            // Build AI prompt (same logic as onCreate() but for ONE question)
+            String quizTopic = currentQuiz.getTopic();
+            String quizSubject = currentQuiz.getSubject();
+            String quizDifficulty = currentQuiz.getDifficulty();
+
+            String aiPrompt = String.format(
+                    "Generate ONE multiple-choice question for the topic '%s', subject '%s' with difficulty level '%s'. " +
+                            "Provide 4 answers: 1 correct and 3 incorrect answers.",
+                    quizTopic, quizSubject, quizDifficulty
+            );
+
+            // Call QuizManager (or equivalent logic from onCreate()) to interact with AI
+            Optional<Question> aiGeneratedQuestion = QuizManager.generateSingleQuestionWithAI(aiPrompt, currentQuiz.getQuizID());
+
+            // Handle if the question is successfully generated
+            if (aiGeneratedQuestion.isPresent()) {
+                Question newQuestion = aiGeneratedQuestion.get();
+
+                // Save it temporarily
+                questionList.add(newQuestion);
+
+                // Dynamically add it to the UI
+                Node questionNode = createQuestionNode(newQuestion); // Create UI card for the question
+                questionsContainer.getChildren().add(questionNode);
+                AlertManager.alertError("Success", "New question generated!");
+            } else {
+                AlertManager.alertError("Error", "Failed to generate a new question. Please try again.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertManager.alertError("Error", "Something went wrong while generating a question.");
+        }
     }
 
     private void saveChanges() {
-        for (Node node : questionsContainer.getChildren()) {
-            if (node instanceof VBox card && card.getUserData() instanceof QuestionCardData data) {
-                Question q = data.originalQuestion;
-                if (q.getQuestionID() == 0) {
-                    questionDAO.addQuestion(q);
-                }
-            }
+        try {
+            // Bulk update questions in the database using the DAO
+            questionDAO.setQuestions(currentQuiz.getQuizID(), questionList);
+            AlertManager.alertError("Success", "Changes saved successfully!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            AlertManager.alertError("Error", "Failed to save changes.");
         }
-        loadQuestions();
-        System.out.println("Changes saved.");
+
     }
 
     private void discardChanges() {
-        loadQuestions(); // Reset view to original state
-        System.out.println("Changes discarded.");
-    }
-/*
-    private VBox createQuestionCard(Question question, boolean isNew) {
-        VBox card = new VBox(10);
-        card.setStyle("-fx-border-color: #ccc; -fx-border-radius: 5; -fx-padding: 10; -fx-background-color: #f9f9f9;");
-
-        HBox header = new HBox(10);
-        Label titleLabel = new Label("Question");
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-        Button regenerateBtn = new Button("\uD83D\uDD04");
-        Button deleteBtn = new Button("\uD83D\uDDD1");
-
-        VBox finalCard = card;
-        deleteBtn.setOnAction(e -> {
-            if (isNew || question.getQuestionID() == 0) {
-                questionsContainer.getChildren().remove(finalCard);
-            } else {
-                questionDAO.deleteQuestion(question);
-                questionsContainer.getChildren().remove(finalCard);
-            }
-        });
-
-        regenerateBtn.setOnAction(e -> {
-            Question regenerated = generateAIQuestion(question.getQuizID());
-            VBox newCard = createQuestionCard(regenerated, true);
-            int index = questionsContainer.getChildren().indexOf(finalCard);
-            questionsContainer.getChildren().remove(finalCard);
-            questionsContainer.getChildren().add(index, newCard);
-        });
-
-        header.getChildren().addAll(titleLabel, spacer, regenerateBtn, deleteBtn);
-
-        Label questionTextLabel = new Label(question.getQuestionText());
-
-        VBox optionsBox = new VBox(5);
-        List<String> options = Arrays.asList(
-                question.getCorrectAnswer(),
-                question.getIncorrectAnswer1(),
-                question.getIncorrectAnswer2(),
-                question.getIncorrectAnswer3()
-        );
-        Collections.shuffle(options);
-
-        for (String option : options) {
-            Label optionLabel = new Label(option);
-            optionsBox.getChildren().add(optionLabel);
-        }
-
-        card.getChildren().addAll(header, questionTextLabel, optionsBox);
-        card.setUserData(new QuestionCardData(question));
-
-        return card;
+        loadQuestions(); // Reload from the database and reset the in-memory list
+        AlertManager.alertError("Discarded", "All changes have been discarded.");
     }
 
-    private Question generateAIQuestion(int quizId) {
-        // Simulated AI-generated question. Replace with actual AI generation logic.
-        return new Question(
-                quizId,
-                "What is the capital of France?",
-                "Paris",
-                "London",
-                "Berlin",
-                "Madrid"
-        );
-    }*/
+
 }

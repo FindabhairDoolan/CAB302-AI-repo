@@ -1,9 +1,12 @@
 package com.example.quizapp.Models;
 
+import java.util.ArrayList;
+
 public class Quiz {
 
     private int id, creatorID, quizMode;
     private String quizName, subject, quizTopic, difficulty, yearLevel, country, visibility;
+
 
     public Quiz(String quizName, String subject, String quizTopic, int quizMode, String difficulty, String yearLevel, String country, String visibility, int creatorID) {
         this.quizName = quizName;
@@ -15,6 +18,8 @@ public class Quiz {
         this.country = country;
         this.visibility = visibility;
         this.creatorID = creatorID;
+
+
     }
 
     public int getQuizID() { return id; }
@@ -52,6 +57,8 @@ public class Quiz {
         return String.format("Quiz{id=%d, name='%s', subject='%s', topic='%s',  mode='%d', difficulty='%s', year='%s', country='%s','visibility=%s' creatorID=%d}",
                 id, quizName, subject, quizTopic, quizMode, difficulty, yearLevel, country, visibility, creatorID);
     }
+
+
 
 
 }

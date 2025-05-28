@@ -1,6 +1,8 @@
 package com.example.quizapp.utils;
 
 import com.example.quizapp.Controllers.QuizController;
+import com.example.quizapp.Models.OllamaResponse;
+import com.example.quizapp.Models.Question;
 import com.example.quizapp.Models.Quiz;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -129,4 +131,40 @@ public class QuizManager {
         startAlert.setContentText("Starting \"" + quiz.getName() + "\" in " + mode + " mode.");
         startAlert.showAndWait();
     }
+    /**
+     * Calls the AI to generate a single question.
+     *
+     * @param prompt The AI prompt to generate a single question.
+     * @param quizId The ID of the quiz for context.
+     * @return Optional<Question> if the AI successfully generates the question.
+     */
+    public static Optional<Question> generateSingleQuestionWithAI(String prompt, int quizId) {
+        try {
+            // Call the AI API here
+            OllamaResponse response = new OllamaResponse(prompt);
+            String aiResponse = response.ollamaReturnResponse();
+
+
+            // Process the AI response
+            if (aiResponse != null) {
+                // Parse the AI response into a Question object
+                String[] parts = aiResponse.split("\\|"); // Assuming "|" is a delimiter
+                if (parts.length == 5) {
+                    Question question = new Question(
+                            quizId,
+                            parts[0], // Question text
+                            parts[1], // Correct answer
+                            parts[2], // Incorrect answer 1
+                            parts[3], // Incorrect answer 2
+                            parts[4]  // Incorrect answer 3
+                    );
+                    return Optional.of(question);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
 }
