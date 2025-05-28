@@ -25,10 +25,6 @@ public class Main extends Application {
 
         // Optional: Use SceneManager to switch to WelcomePage scene
         SceneManager.switchScene("/com/example/quizapp/WelcomePage.fxml", TITLE);
-        // remove after debugging
-        //SceneManager.setPrimaryStage(primaryStage);
-        //SceneManager.switchScene("/com/example/quizapp/quiz-editor.fxml", TITLE);
-
         // Seed the database
         new DatabaseSeeder().seed();
     }
