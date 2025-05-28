@@ -25,7 +25,7 @@
 /* Top “Back” link */
 .link-button {
   -fx-background-color: #2D2A43;
-  -fx-text-fill: #FFFFFF;         /* dark blue-purple */
+  -fx-text-fill: #FFFFFF;         
   -fx-font-size: 14px;
   -fx-cursor: hand;
   -fx-background-radius: 6
