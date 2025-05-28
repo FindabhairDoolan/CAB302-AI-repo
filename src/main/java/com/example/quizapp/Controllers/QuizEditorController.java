@@ -7,6 +7,7 @@ import com.example.quizapp.Models.SqliteQuestionDAO;
 import com.example.quizapp.Models.SqliteQuizDAO;
 import com.example.quizapp.Models.OllamaResponse;
 import io.github.ollama4j.exceptions.OllamaBaseException;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -74,7 +75,8 @@ public class QuizEditorController implements Initializable {
         }
 
 
-        generateQuestionButton.setOnAction(e -> generateQuestion());
+        generateQuestionButton.setOnAction(e -> generateAIQuestionForEdit());
+        //generateQuestionButtonCheck.setOnAction(e -> generateQuestion());
         discardButton.setOnAction(e -> discardChanges());
         saveButton.setOnAction(e -> saveChanges());
     }
@@ -140,18 +142,7 @@ public class QuizEditorController implements Initializable {
 
     }
 
-    private void generateQuestion() {
-        try {
-            String prompt = "Generate 1 quiz question in JSON format with keys: question, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3.";
-            OllamaResponse response = new OllamaResponse(prompt);
-            String aiResponse = response.ollamaReturnResponse();
-            questionDAO.addAIQuestions(aiResponse, currentQuiz.getQuizID());
-            loadQuestions();
-        } catch (OllamaBaseException | IOException | InterruptedException | SQLException e) {
-            e.printStackTrace();
-        }
 
-    }
     /**
      * Regenerates the provided question using AI and updates it both in-memory and in the UI.
      *
@@ -162,8 +153,19 @@ public class QuizEditorController implements Initializable {
         try {
             // Build AI prompt for regenerating a similar question
             String aiPrompt = String.format(
-                    "Regenerate a multiple-choice question similar to: '%s'. Keep the topic '%s', subject '%s', " +
-                            "and difficulty '%s'. Provide 4 answers: 1 correct and 3 incorrect answers.",
+                    "You are a helpful assistant. Based on the example provided, generate a new valid JSON object for a multiple-choice question with the same structure. Do not return any extra text, quotes, or markdown. Only return the raw JSON object.:\n" +
+                            "{\n" +
+                            "  \"question\": \"...\",\n" +
+                            "  \"correctAnswer\": \"...\",\n" +
+                            "  \"incorrectAnswer1\": \"...\",\n" +
+                            "  \"incorrectAnswer2\": \"...\",\n" +
+                            "  \"incorrectAnswer3\": \"...\"\n" +
+                            "}\n\n" +
+                            "Regenerate a new question based on this:\n" +
+                            "'%s'\n\n" +
+                            "Keep the topic: '%s', subject: '%s', and difficulty: '%s'.\n" +
+                            "Use realistic and appropriate data for all fields.\n" +
+                            "Do not include any explanation, markdown, or additional text — only return the JSON.",
                     oldQuestion.getQuestionText(),
                     currentQuiz.getTopic(),
                     currentQuiz.getSubject(),
@@ -179,16 +181,33 @@ public class QuizEditorController implements Initializable {
 
                 // Replace the old question in the in-memory list
                 int index = questionList.indexOf(oldQuestion);
-                if (index != -1) {
-                    questionList.set(index, newQuestion);
+                if (index == -1) {
+                    System.err.println("Old question not found in in-memory list.");
+                    AlertManager.alertError("Error", "Failed to update the question in memory.");
+                    return;
                 }
+                questionList.set(index, newQuestion);
 
-                // Replace UI node for regenerated question
-                Node newQuestionNode = createQuestionNode(newQuestion); // Create card for new question
-                int cardIndex = questionsContainer.getChildren().indexOf(card);
-                questionsContainer.getChildren().set(cardIndex, newQuestionNode);
-                AlertManager.alertError("Success", "Question regenerated!");
+                // Update the UI
+                Platform.runLater(() -> {
+                    int cardIndex = questionsContainer.getChildren().indexOf(card);
+                    if (cardIndex == -1) {
+                        System.err.println("Card not found in questionsContainer.");
+                        AlertManager.alertError("Error", "Failed to update the question in the UI.");
+                        return;
+                    }
+
+                    try {
+                        Node newQuestionNode = createQuestionNode(newQuestion); // Create card for new question
+                        questionsContainer.getChildren().set(cardIndex, newQuestionNode);
+                        AlertManager.alertError("Success", "Question regenerated and UI updated!");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        AlertManager.alertError("Error", "Failed to update the UI for the regenerated question.");
+                    }
+                });
             } else {
+                System.err.println("AI failed to generate a question.");
                 AlertManager.alertError("Error", "Failed to regenerate the question. Please try again.");
             }
         } catch (Exception e) {
@@ -208,8 +227,15 @@ public class QuizEditorController implements Initializable {
             String quizDifficulty = currentQuiz.getDifficulty();
 
             String aiPrompt = String.format(
-                    "Generate ONE multiple-choice question for the topic '%s', subject '%s' with difficulty level '%s'. " +
-                            "Provide 4 answers: 1 correct and 3 incorrect answers.",
+                    "You are a helpful assistant. Based on the example provided, generate a valid JSON object for a multiple-choice question. Format the response strictly as raw JSON without any missing keys or braces. Here's the template:\n" +
+                            "  {\n" +
+                            "    \"question\": \"...\",\n" +
+                            "    \"correctAnswer\": \"...\",\n" +
+                            "    \"incorrectAnswer1\": \"...\",\n" +
+                            "    \"incorrectAnswer2\": \"...\",\n" +
+                            "    \"incorrectAnswer3\": \"...\"\n" +
+                            "  }\n" +
+                            "  Always ensure the response is a complete JSON object and avoid truncating the output.\n",
                     quizTopic, quizSubject, quizDifficulty
             );
 

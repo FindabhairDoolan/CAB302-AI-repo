@@ -22,7 +22,8 @@
                     <!-- Button for generating new question -->
                     <Button fx:id="generateQuestionButton"
                             text="+ Add New Question"
-                            style="-fx-font-size: 16px;" />
+                            style="-fx-font-size: 16px;"
+                            visible = "true"/>
                 </VBox>
             </content>
         </ScrollPane>
