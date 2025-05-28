@@ -19,23 +19,28 @@
         <ScrollPane fx:id="scrollPane" fitToWidth="true">
             <content>
                 <VBox fx:id="questionsContainer" spacing="10" alignment="CENTER" >
-                    <!-- Button for generating new question -->
-                    <Button fx:id="generateQuestionButton"
-                            text="+ Add New Question"
-                            style="-fx-font-size: 16px;"
-                            visible = "true"/>
+
                 </VBox>
             </content>
         </ScrollPane>
     </center>
         <!-- Bottom Bar -->
     <bottom>
-        <HBox spacing="10" alignment="CENTER">
+        <HBox spacing="20" alignment="CENTER" style="-fx-padding: 10;">
             <Region HBox.hgrow="ALWAYS" />
-            <Button fx:id="discardButton" text="Discard Changes"/>
 
-            <Region HBox.hgrow="ALWAYS" />
-            <Button fx:id="saveButton" text="Save Changes" />
+            <Button fx:id="discardButton"
+                    text="Discard Changes"
+                    style="-fx-font-size: 14px; -fx-padding: 8 20 8 20;"/>
+
+            <Button fx:id="generateQuestionButton"
+                    text="+ Add New Question"
+                    style="-fx-font-size: 14px; -fx-padding: 8 20 8 20;"/>
+
+            <Button fx:id="saveButton"
+                    text="Save Changes"
+                    style="-fx-font-size: 14px; -fx-padding: 8 20 8 20;"/>
+
             <Region HBox.hgrow="ALWAYS" />
         </HBox>
     </bottom>

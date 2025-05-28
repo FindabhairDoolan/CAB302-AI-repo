@@ -97,6 +97,7 @@ public class QuizEditorController implements Initializable {
             Node questionNode = createQuestionNode(question); // Create each question's UI node
             questionsContainer.getChildren().add(questionNode);
         }
+        //questionsContainer.getChildren().add(generateQuestionButton);
 
 
     }
@@ -113,33 +114,46 @@ public class QuizEditorController implements Initializable {
         // Display Options (Answers) (Read-Only)
         Label optionsLabel = new Label("Options:");
         VBox optionsBox = new VBox(5);
+
+        // First three options stacked vertically
         optionsBox.getChildren().addAll(
                 new Label("1. " + question.getCorrectAnswer()),
                 new Label("2. " + question.getIncorrectAnswer1()),
-                new Label("3. " + question.getIncorrectAnswer2()),
-                new Label("4. " + question.getIncorrectAnswer3())
+                new Label("3. " + question.getIncorrectAnswer2())
         );
 
-        // Regenerate Button
+        // Create last option label
+        Label lastOptionLabel = new Label("4. " + question.getIncorrectAnswer3());
+
+        // Regenerate and Delete Buttons
         Button regenerateButton = new Button("Regenerate");
         regenerateButton.setOnAction(e -> {
             regenerateQuestion(question, card);
         });
 
-        // Delete Button
         Button deleteButton = new Button("Delete");
         deleteButton.setOnAction(e -> {
-            questionList.remove(question); // Remove from the in-memory list
-            questionsContainer.getChildren().remove(card); // Remove from the UI
+            questionList.remove(question); // Remove from in-memory list
+            questionsContainer.getChildren().remove(card); // Remove from UI
         });
 
-        // Add elements to the card
-        HBox buttonBox = new HBox(10, regenerateButton, deleteButton);
-        card.getChildren().addAll(questionLabel, questionText, optionsLabel, optionsBox, buttonBox);
+        // HBox containing last option and buttons, buttons aligned right
+        HBox lastLineBox = new HBox(10);
+        lastLineBox.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
+
+        // Use HBox grow priority to push buttons right
+        HBox.setHgrow(lastOptionLabel, Priority.ALWAYS);
+        lastOptionLabel.setMaxWidth(Double.MAX_VALUE);
+
+        lastLineBox.getChildren().addAll(lastOptionLabel, regenerateButton, deleteButton);
+
+        // Add the options and last line box
+        optionsBox.getChildren().add(lastLineBox);
+
+        // Add all elements to the card
+        card.getChildren().addAll(questionLabel, questionText, optionsLabel, optionsBox);
 
         return card;
-
-
     }
 
 
