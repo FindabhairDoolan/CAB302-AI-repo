@@ -37,6 +37,7 @@ public class QuizEditorController implements Initializable {
     @FXML
     private BorderPane rootPane;
 
+    private final QuizManager qm = QuizManager.getInstance();
     private Quiz currentQuiz;
     private SqliteQuestionDAO questionDAO = new SqliteQuestionDAO();
     private SqliteQuizDAO quizDAO = new SqliteQuizDAO();
@@ -52,18 +53,12 @@ public class QuizEditorController implements Initializable {
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        /*if (QuizManager.getInstance().getCurrentQuiz() == null) {
-            Quiz sampleQuiz = new Quiz(
-                    "Sample Quiz", "Math", "Algebra", 1,
-                    "Easy", "Year 10", "Australia", "Public", 123
-            );
-            QuizManager.getInstance().setCurrentQuiz(sampleQuiz);
-        }*/
-        // Load quiz with ID 1 from the database
-        SqliteQuizDAO quizDAO = new SqliteQuizDAO();
-        // Load a quiz by name
+        currentQuiz = qm.getCurrentQuiz();
+        qm.setCurrentQuiz(currentQuiz);
+        loadQuestions();
+
+        /*SqliteQuizDAO quizDAO = new SqliteQuizDAO();
         Quiz loadedQuiz = quizDAO.getQuizByName("World War II");
-        // Set it as the current quiz
         this.currentQuiz = loadedQuiz;
         QuizManager.getInstance().setCurrentQuiz(loadedQuiz);
         if (loadedQuiz == null) {
@@ -72,11 +67,10 @@ public class QuizEditorController implements Initializable {
             this.currentQuiz = loadedQuiz;
             QuizManager.getInstance().setCurrentQuiz(loadedQuiz);
             loadQuestions();
-        }
+        }*/
 
 
         generateQuestionButton.setOnAction(e -> generateAIQuestionForEdit());
-        //generateQuestionButtonCheck.setOnAction(e -> generateQuestion());
         discardButton.setOnAction(e -> discardChanges());
         saveButton.setOnAction(e -> saveChanges());
     }
