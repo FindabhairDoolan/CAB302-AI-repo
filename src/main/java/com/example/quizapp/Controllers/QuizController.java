@@ -120,6 +120,11 @@ public class QuizController {
         // If No is selected, do nothing
     }
 
+    /**
+     * Sets the initial values of the quiz
+     * @param quiz the quiz to be displayed
+     * @param mode the mode of the quiz practice/exam
+     */
     public void setQuiz(Quiz quiz, String mode) {
         this.quiz = quiz;
 
@@ -158,7 +163,7 @@ public class QuizController {
                 timerPause = true;
             }
             else{
-                timerSeconds = quiz.getMode();
+                timerSeconds = quiz.getTimer();
                 timerLabel.setVisible(true);
             }
             startTimer();

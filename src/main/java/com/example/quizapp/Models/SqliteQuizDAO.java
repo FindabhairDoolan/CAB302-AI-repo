@@ -17,7 +17,7 @@ public class SqliteQuizDAO implements IQuizDAO {
         connection = SqliteConnection.getInstance();
         createTable();
         initializeQuestionDropdown();
-        //insertSampleData(); //for testing, to be removed later
+        //insertSampleData(); //for testing
     }
 
     private void initializeQuestionDropdown() {
@@ -54,7 +54,7 @@ public class SqliteQuizDAO implements IQuizDAO {
                     + "name VARCHAR NOT NULL,"
                     + "subject    VARCHAR NOT NULL,"
                     + "topic VARCHAR NOT NULL,"
-                    + "mode INTEGER NOT NULL,"
+                    + "timer INTEGER NOT NULL,"
                     + "difficulty VARCHAR NOT NULL," //is "not null" necessary?
                     + "yearLevel VARCHAR NOT NULL," //is "not null" necessary?
                     + "country VARCHAR NOT NULL," //is "not null" necessary?
@@ -71,12 +71,12 @@ public class SqliteQuizDAO implements IQuizDAO {
     @Override
     public void addQuiz(Quiz quiz) {
         try {
-            String query = "INSERT INTO quizzes (name, subject, topic, mode, difficulty, yearLevel, country, visibility, creatorID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO quizzes (name, subject, topic, timer, difficulty, yearLevel, country, visibility, creatorID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, quiz.getName());
             statement.setString(2, quiz.getSubject());
             statement.setString(3, quiz.getTopic());
-            statement.setInt(4, quiz.getMode());
+            statement.setInt(4, quiz.getTimer());
             statement.setString(5, quiz.getDifficulty());
             statement.setString(6, quiz.getYearLevel());
             statement.setString(7, quiz.getCountry());
@@ -92,12 +92,12 @@ public class SqliteQuizDAO implements IQuizDAO {
     @Override
     public void updateQuiz(Quiz quiz) {
         try {
-            String query = "UPDATE quizzes SET name = ?, subject = ?, topic = ?, mode = ?, difficulty = ?, yearLevel = ?, country = ?, visibility = ?, creatorID = ? WHERE id = ?";
+            String query = "UPDATE quizzes SET name = ?, subject = ?, topic = ?, timer = ?, difficulty = ?, yearLevel = ?, country = ?, visibility = ?, creatorID = ? WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, quiz.getName());
             statement.setString(2, quiz.getSubject());
             statement.setString(3, quiz.getTopic());
-            statement.setInt(4, quiz.getMode());
+            statement.setInt(4, quiz.getTimer());
             statement.setString(5, quiz.getDifficulty());
             statement.setString(6, quiz.getYearLevel());
             statement.setString(7, quiz.getCountry());
@@ -147,7 +147,7 @@ public class SqliteQuizDAO implements IQuizDAO {
                         rs.getString("Name"),
                         rs.getString("subject"),
                         rs.getString("Topic"),
-                        rs.getInt("Mode"),
+                        rs.getInt("timer"),
                         rs.getString("difficulty"),
                         rs.getString("yearLevel"),
                         rs.getString("country"),
@@ -175,7 +175,7 @@ public class SqliteQuizDAO implements IQuizDAO {
                         rs.getString("name"),
                         rs.getString("subject"),
                         rs.getString("topic"),
-                        rs.getInt("mode"),
+                        rs.getInt("timer"),
                         rs.getString("difficulty"),
                         rs.getString("yearLevel"),
                         rs.getString("country"),
@@ -205,7 +205,7 @@ public class SqliteQuizDAO implements IQuizDAO {
                         rs.getString("name"),
                         rs.getString("subject"),
                         rs.getString("topic"),
-                        rs.getInt("mode"),
+                        rs.getInt("timer"),
                         rs.getString("difficulty"),
                         rs.getString("yearLevel"),
                         rs.getString("country"),
@@ -235,7 +235,7 @@ public class SqliteQuizDAO implements IQuizDAO {
                             rs.getString("name"),
                             rs.getString("subject"),
                             rs.getString("topic"),
-                            rs.getInt("mode"),
+                            rs.getInt("timer"),
                             rs.getString("difficulty"),
                             rs.getString("yearLevel"),
                             rs.getString("country"),

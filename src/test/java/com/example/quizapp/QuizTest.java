@@ -75,13 +75,13 @@ public class QuizTest {
 
     @Test
     public void testGetMode() {
-        assertEquals(quizMode, quiz.getMode());
+        assertEquals(quizMode, quiz.getTimer());
     }
 
     @Test
     public void testSetMode() {
-        quiz.setMode(quizMode_2);
-        assertEquals(quizMode_2, quiz.getMode());
+        quiz.setTimer(quizMode_2);
+        assertEquals(quizMode_2, quiz.getTimer());
     }
 
     @Test
