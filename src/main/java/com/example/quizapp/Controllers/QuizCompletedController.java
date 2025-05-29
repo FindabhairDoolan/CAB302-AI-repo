@@ -1,6 +1,7 @@
 package com.example.quizapp.Controllers;
 
 import com.example.quizapp.Models.Quiz;
+import com.example.quizapp.Models.SqliteQuestionDAO;
 import com.example.quizapp.Models.SqliteQuizDAO;
 import com.example.quizapp.utils.SceneManager;
 import javafx.fxml.FXML;
@@ -68,7 +69,7 @@ public class QuizCompletedController {
             QuizController quizController = loader.getController();
             quizController.setQuiz(quizTaken, mode);
 
-            int numOfQs = new SqliteQuizDAO().getNumberOfQuestions(quizTaken);
+            int numOfQs = new SqliteQuestionDAO().getNumberOfQuestions(quizTaken);
             quizController.setTotalQuestions(numOfQs);
 
             Stage stage = (Stage) retakeButton.getScene().getWindow();

@@ -8,18 +8,26 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.*;
 
-
+/**
+ * The Sqlite Question DAO, communicates with the question table in the database and modifies data
+ */
 public class SqliteQuestionDAO implements IQuestionDAO {
 
     private Connection connection;
 
+    /**
+     * The constructor for the Sqlite Question DAO
+     */
     public SqliteQuestionDAO() {
         connection = SqliteConnection.getInstance();
         createTable();
-        //insertSampleData(); //for testing, to be removed later
+        //insertSampleData(); //for testing
     }
 
 
+    /**
+     * Creates the questions table in the sqlite database if it does not exist
+     */
     private void createTable() {
         // Create table if not exists
         try {
@@ -41,6 +49,9 @@ public class SqliteQuestionDAO implements IQuestionDAO {
     }
 
 
+    /**
+     * Inserts sample data in the questions table in the sqlite database (for testing)
+     */
     private void insertSampleData() {
         try {
             Statement clearStatement = connection.createStatement();
@@ -59,11 +70,14 @@ public class SqliteQuestionDAO implements IQuestionDAO {
         }
     }
 
+    /**
+     * Gets the questions that are from a specified quiz
+     * @param quizId the quiz ID of the quiz the questions are from
+     * @return A list of questions
+     */
     @Override
     public List<Question> getQuestionsForQuiz(int quizId) {
-
         List<Question> questions = new ArrayList<>();
-
 
         try {
             String query = "SELECT quizID, questionText, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3 FROM questions WHERE quizID = ?";
@@ -89,7 +103,24 @@ public class SqliteQuestionDAO implements IQuestionDAO {
         return questions;
     }
 
-    public void addAIQuestions(String JSONResponse, int quizID) throws SQLException, OllamaBaseException, IOException, InterruptedException {
+    /**
+     * Gets the number of questions in a quiz
+     * @param quiz the quiz the questions are from
+     * @return the number of questions
+     */
+    public int getNumberOfQuestions(Quiz quiz) {
+        List<Question> questions = getQuestionsForQuiz(quiz.getQuizID());
+        long numOfQuestions = questions.size();
+        return ((int) numOfQuestions);
+
+    }
+
+    /**
+     * Adds all AI generated questions for a quiz to the database
+     * @param JSONResponse The Ollama AI JSON response with the questions for the quiz
+     * @param quizID the ID of the quiz the questions are for
+     */
+    public void addAIQuestions(String JSONResponse, int quizID) {
 
         JSONObject json = new JSONObject(JSONResponse);
         JSONArray quizArray = json.getJSONArray("Quiz");
@@ -107,6 +138,10 @@ public class SqliteQuestionDAO implements IQuestionDAO {
 
     }
 
+    /**
+     * Adds a question to the sqlite database questions table
+     * @param question the question to be added to the database
+     */
     @Override
     public void addQuestion(Question question) {
         try {
@@ -125,6 +160,10 @@ public class SqliteQuestionDAO implements IQuestionDAO {
         }
     }
 
+    /**
+     * Updates a question in the database to new values
+     * @param question the question with updated values
+     */
     @Override
     public void updateQuestion(Question question) {
         try {
@@ -144,6 +183,10 @@ public class SqliteQuestionDAO implements IQuestionDAO {
         }
     }
 
+    /**
+     * Deletes a question from the sqlite database questions table
+     * @param question the question to be deleted from the database
+     */
     @Override
     public void deleteQuestion(Question question) {
         try {

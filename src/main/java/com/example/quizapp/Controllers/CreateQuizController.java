@@ -42,12 +42,18 @@ public class CreateQuizController {
     private SqliteQuestionDAO questionDAO;
 
 
+    /**
+     * Constructor for the Create Quiz controller
+     */
     public CreateQuizController() {
         userDAO = new SqliteUserDAO();
         quizDAO = new SqliteQuizDAO();
         questionDAO = new SqliteQuestionDAO();
     }
 
+    /**
+     * Initialises variables in the create quiz controller
+     */
     @FXML
     public void initialize() {
         questionDropdown = quizDAO.getQuestionDropdown();
@@ -55,8 +61,9 @@ public class CreateQuizController {
     }
 
     /**
-     * Compiles user customisations choices to generate a personalised quiz, sends
-     * the user to the quiz page.
+     * Compiles user customisation choices to generate a personalised quiz using AI
+     * Stores generated quiz in the database
+     * Prompts user if they want to take the quiz once generated.
      */
     @FXML
     public void onCreate() throws IOException {
@@ -182,7 +189,6 @@ public class CreateQuizController {
             //Display error window
             AlertManager.alertErrorWait("Quiz generation error", "An error occurred while generating your quiz, please try again.");
         }
-
     }
 
     /**

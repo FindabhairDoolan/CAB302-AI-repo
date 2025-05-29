@@ -2,6 +2,9 @@ package com.example.quizapp.utils;
 
 import javafx.scene.control.Alert;
 
+/**
+ * Utility class for calling Alerts
+ */
 public class AlertManager {
 
     /**

@@ -8,11 +8,17 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The Sqlite Quiz DAO, communicates with the quizzes table in the database and modifies data
+ */
 public class SqliteQuizDAO implements IQuizDAO {
 
     private Connection connection;
     private ComboBox<Integer> questionDropdown;
 
+    /**
+     * The constructor for the Sqlite Quiz DAO
+     */
     public SqliteQuizDAO() {
         connection = SqliteConnection.getInstance();
         createTable();
@@ -20,6 +26,9 @@ public class SqliteQuizDAO implements IQuizDAO {
         //insertSampleData(); //for testing
     }
 
+    /**
+     * Initialises the question dropdown with defined values
+     */
     private void initializeQuestionDropdown() {
         questionDropdown = new ComboBox<>(); // Initialize the ComboBox
         // Add number of questions options
@@ -28,6 +37,10 @@ public class SqliteQuizDAO implements IQuizDAO {
         questionDropdown.setValue(5);
     }
 
+    /**
+     * Gets the Question Dropdown combo box
+     * @return the Question dropdown combo box
+     */
     public ComboBox<Integer> getQuestionDropdown() {
         return questionDropdown; // Return the ComboBox
     }
@@ -35,7 +48,7 @@ public class SqliteQuizDAO implements IQuizDAO {
     /**
      * Retrieves the quiz timer in seconds from the AI JSON response
      * @param JSONResponse
-     * @return
+     * @return the timer for the quiz in seconds
      */
     public int retrieveTimer(String JSONResponse){
         JSONObject json = new JSONObject(JSONResponse);
@@ -45,6 +58,9 @@ public class SqliteQuizDAO implements IQuizDAO {
         return timerObj.getInt("timerSeconds");
     }
 
+    /**
+     * Creates the quizzes table in the sqlite database if it does not exist
+     */
     private void createTable() {
         // Create table if not exists
         try {
@@ -68,6 +84,10 @@ public class SqliteQuizDAO implements IQuizDAO {
         }
     }
 
+    /**
+     * Adds a quiz to the sqlite database quizzes table
+     * @param quiz the quiz to be stored in the database
+     */
     @Override
     public void addQuiz(Quiz quiz) {
         try {
@@ -89,6 +109,10 @@ public class SqliteQuizDAO implements IQuizDAO {
         }
     }
 
+    /**
+     * Updates the quiz in the database with new values
+     * @param quiz the quiz with updated values
+     */
     @Override
     public void updateQuiz(Quiz quiz) {
         try {
@@ -114,6 +138,10 @@ public class SqliteQuizDAO implements IQuizDAO {
         }
     }
 
+    /**
+     * Deletes the quiz from the sqlite database quizzes table
+     * @param quiz the quiz to be deleted
+     */
     @Override
     public void deleteQuiz(Quiz quiz) {
         try {
@@ -127,6 +155,11 @@ public class SqliteQuizDAO implements IQuizDAO {
         }
     }
 
+    /**
+     * Searches for quizzes in the sqlite database quizzes table by topic
+     * @param topic the topic of the quiz
+     * @return A list of quizzes with the same subject
+     */
     @Override
     public List<Quiz> searchQuiz(String topic) {
         List<Quiz> quizzes = new ArrayList<>();
@@ -163,6 +196,10 @@ public class SqliteQuizDAO implements IQuizDAO {
         return quizzes;
     }
 
+    /**
+     * Retrieves all the quizzes from the sqlite database quizzes table
+     * @return A list of all quizzes in the database
+     */
     @Override
     public List<Quiz> getAllQuizzes() {
         List<Quiz> quizzes = new ArrayList<>();
@@ -191,6 +228,11 @@ public class SqliteQuizDAO implements IQuizDAO {
         return quizzes;
     }
 
+    /**
+     * Searches for the quiz in the sqlite database quizzes table by name
+     * @param name the name of the quiz
+     * @return the quiz with the same name, or null if not existent
+     */
     @Override
     public Quiz getQuizByName(String name) {
         Quiz quiz = null;
@@ -220,6 +262,11 @@ public class SqliteQuizDAO implements IQuizDAO {
         return quiz;
     }
 
+    /**
+     * Searches for the quizzes made by the same user in the sqlite database
+     * @param creatorID the ID of the user who created the quiz
+     * @return A list of the quizzes the user created
+     */
     @Override
     public List<Quiz> getQuizzesByCreator(int creatorID) {
         List<Quiz> quizzes = new ArrayList<>();
@@ -250,54 +297,6 @@ public class SqliteQuizDAO implements IQuizDAO {
             e.printStackTrace();
         }
         return quizzes;
-    }
-
-
-    @Override
-    public void addQuestionToQuiz(String username) {
-
-    }
-
-    @Override
-    public void removeQuestionFromQuiz(String emailaddress) {
-
-    }
-
-
-    @Override
-    public List<Question> getQuestionsForQuiz(Quiz quiz) {
-        List<Question> questions = new ArrayList<>();
-        int quizID = quiz.getQuizID();
-        try {
-            String query = "SELECT * FROM questions where quizID = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, quizID);
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                Question question = new Question(
-                        rs.getInt("quizID"),
-                        rs.getString("questionText"),
-                        rs.getString("correctAnswer"),
-                        rs.getString("incorrectAnswer1"),
-                        rs.getString("incorrectAnswer1"),
-                        rs.getString("incorrectAnswer1")
-                );
-                question.setQuestionID(rs.getInt("questionID"));
-                questions.add(question);
-
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return questions;
-    }
-
-    public int getNumberOfQuestions(Quiz quiz) {
-        List<Question> questions = getQuestionsForQuiz(quiz);
-        long numOfQuestions = questions.size();
-        return ((int) numOfQuestions);
-
     }
 
 }

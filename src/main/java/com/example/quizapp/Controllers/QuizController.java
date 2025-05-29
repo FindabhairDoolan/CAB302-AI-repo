@@ -18,6 +18,9 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Controller class for the Quiz page
+ */
 public class QuizController {
 
     //Declaration of FXML variables
@@ -71,28 +74,54 @@ public class QuizController {
     private List<String> previousAnswers = new ArrayList<>();
     private QuizAttempt attempt;
 
-
+    /**
+     * Set the difficulty of the current quiz on the quiz page
+     * @param difficulty the difficulty of the current quiz
+     */
     public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
     }
 
+    /**
+     * Set the year level of the current quiz on the quiz page
+     * @param yearLevel the year level the current quiz was designed for
+     */
     public void setYearLevel(String yearLevel) {
         this.yearLevel = yearLevel;
     }
 
+    /**
+     * Set the subject of the current quiz on the quiz page
+     * @param subject the subject of the current quiz
+     */
     public void setSubject(String subject) {
         this.subject = subject;
     }
 
+    /**
+     * Set the mode of the current quiz on the quiz page
+     * @param mode the mode of the current quiz
+     */
     public void setMode(String mode) {this.mode = mode;}
 
+    /**
+     * Set the timer of the current quiz on the quiz page
+     * @param timerSeconds the timer in seconds of the current quiz
+     */
     public void setTimer(int timerSeconds) {this.timerSeconds = timerSeconds;}
 
+    /**
+     * Set the quiz to be in view mode, the user cannot edit answers, get a new score etc
+     * If in view mode, the user may only view the selected past attempt of a quiz
+     * @param viewMode True: The user is viewing a past quiz attempt, False: The user is taking a quiz
+     * @param attempt the attempt the user is viewing
+     */
     public void setViewMode(boolean viewMode, QuizAttempt attempt) {
         this.isViewMode = viewMode;
         this.previousAnswers = attempt.getAnswers();
         this.attempt = attempt;
     }
+
     /**
      * Exits the quiz and returns to home page
      */
@@ -138,7 +167,7 @@ public class QuizController {
 
     /**
      * Loads the quiz by getting quiz questions from database
-     * Also sets progress label data
+     * Loads the quiz according to the viewing mode and quiz mode chosen
      */
     private void loadQuiz() {
 
@@ -220,8 +249,9 @@ public class QuizController {
         updateProgressLabel(); // Updating the progress heading as each question is done
         nextButton.setVisible(true);
 
-        //If it's exam mode and it's not question 1, display the previous button
+        //If it's exam mode
         if(mode.equals("Exam")){
+            //If it's not question 1, display the previous button
             if(questionIndex > 1){
                 previousButton.setVisible(true);
                 previousButton.setManaged(true);
@@ -231,6 +261,8 @@ public class QuizController {
                 previousButton.setManaged(false);
             }
 
+            //Checks if the user has already selected an answer for this question
+            //Selects the answer if previously selected
             String selectedAnswer = examAnswers.get(questionIndex - 1);
             for (Toggle toggle : answerToggleGroup.getToggles()) {
                 RadioButton rb = (RadioButton) toggle;
@@ -245,8 +277,11 @@ public class QuizController {
 
         }
 
+        //If it is view mode
         if (isViewMode && previousAnswers.size() >= questionIndex) {
             showingFeedback = true;
+
+            //Check what the user answered and what the correct answer is, highlight answers accordingly
             String selectedAnswer = previousAnswers.get(questionIndex - 1);
             String correctAnswer = question.getCorrectAnswer();
             for (Toggle toggle : answerToggleGroup.getToggles()) {
@@ -257,18 +292,23 @@ public class QuizController {
                 boolean isCorrect = text.equals(correctAnswer);
                 boolean isSelected = text.equals(selectedAnswer);
 
+                //If the answer was selected
                 if (isSelected) {
                     answerToggleGroup.selectToggle(rb);
+                    //If the answer was correct, display as green
                     if (isCorrect) {
                         rb.setStyle("-fx-font-weight: bold; -fx-text-fill: green;");
                         feedbackLabel.setText("Correct");
+                    //If the answer was wrong, display as red
                     } else {
                         feedbackLabel.setText("Incorrect");
                     }
+                //If this answer was the correct answer, display as green
                 } else if (isCorrect) {
                     rb.setStyle("-fx-font-weight: bold; -fx-text-fill: green;");
                 }
             }
+            //If the user did not select an answer, the answer is incorrect
             if(selectedAnswer == null){
                 feedbackLabel.setText("Incorrect");
             }
@@ -279,7 +319,7 @@ public class QuizController {
     }
 
     /**
-     * Updates the progress of the quiz
+     * Updates the quiz progress label
      */
     private void updateProgressLabel() {
         progressLabel.setText("Question " + questionIndex + " of " + totalQuestions);
@@ -287,16 +327,19 @@ public class QuizController {
 
 
     /**
-     * In practice mode: evaluates the user's answer and displays feedback on first press
-     * On second press it displays the next question
+     * In practice mode: evaluates the user's answer and displays feedback on first press,
+     * on second press it displays the next question.
      * In exam mode: goes to the next question
      */
     @FXML
     public void onNext() {
+        //If it is exam mode
         if (mode.equals("Exam")){
+            //If it is not the last question
             if (questionIndex < totalQuestions) {
                 RadioButton selected = (RadioButton) answerToggleGroup.getSelectedToggle();
 
+                //If the user has selected an answer, add it to the answer list
                 if (selected != null){
                     String selectedText = selected.getText();
                     examAnswers.set(questionIndex - 1, selectedText);
@@ -304,9 +347,12 @@ public class QuizController {
 
                 questionIndex++;
                 loadQuestion(questionList.get(questionIndex - 1));
+
+            //If it is the last question
             } else {
                 RadioButton selected = (RadioButton) answerToggleGroup.getSelectedToggle();
 
+                //If the user has selected an answer, add it to the answer list
                 if (selected != null){
                     String selectedText = selected.getText();
                     examAnswers.set(questionIndex - 1, selectedText);
@@ -314,8 +360,10 @@ public class QuizController {
                 handleExamFinish();
             }
         }
+        //If it is practice mode and this is the first button press
         else if (!showingFeedback) {
             RadioButton selected = (RadioButton) answerToggleGroup.getSelectedToggle();
+            //If the user has not selected an answer, prompt to select an answer
             if (selected == null) {
                 feedbackLabel.setText("Please select an answer by clicking the circles.");
                 feedbackLabel.setVisible(true);
@@ -342,11 +390,16 @@ public class QuizController {
                 correctAnswers++;
             }
         }
+        //If it is the second button press
         else {
+            //If it is not the last question, display the next question
             if (questionIndex < totalQuestions) {
                 questionIndex++;
                 loadQuestion(questionList.get(questionIndex - 1));
+
+            //If it is the last question, send user to quiz complete screen
             } else {
+                //If not view mode, save the attempt to the database
                 if (!isViewMode) saveQuizAttemptToDatabase();
                 showQuizCompletedScreen();
             }
@@ -360,6 +413,7 @@ public class QuizController {
     public void onPrevious() {
         RadioButton selected = (RadioButton) answerToggleGroup.getSelectedToggle();
 
+        //If the user has selected an answer, add it to the selected answers list
         if (selected != null){
             String selectedText = selected.getText();
             examAnswers.set(questionIndex - 1, selectedText);
@@ -413,6 +467,7 @@ public class QuizController {
                 timerSeconds--;
                 updateLabel();
 
+                //If timer reaches 0, force the quiz to end
                 if (timerSeconds <= 0) {
                     timer.stop();
                     onTimeUp();
@@ -466,7 +521,7 @@ public class QuizController {
     }
 
     /**
-     * Confirms user is satisfied with exam answers
+     * Confirms user is satisfied with exam answers if they finish early
      */
     @FXML
     public void handleExamFinish() {
@@ -488,6 +543,7 @@ public class QuizController {
             // User chose Yes – finish quiz
             selectedAnswers = examAnswers;
 
+            //Check how many answers were correct
             for (int i = 0; i < selectedAnswers.size(); i++) {
                 Question currentQuestion = questionList.get(i);
                 String correctText = currentQuestion.getCorrectAnswer();
@@ -498,8 +554,9 @@ public class QuizController {
                 }
             }
 
+            //If not view mode, save the quiz attempt to the database
             if (!isViewMode) saveQuizAttemptToDatabase();
-            showQuizCompletedScreen();
+            showQuizCompletedScreen(); //Send the user to quiz complete page
         }
         // If No is selected, do nothing
     }

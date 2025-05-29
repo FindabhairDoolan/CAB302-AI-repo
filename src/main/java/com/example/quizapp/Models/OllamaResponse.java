@@ -21,6 +21,10 @@ public class OllamaResponse {
     private String prompt;
     private OllamaAPI ollamaAPI;
 
+    /**
+     * The constructor for the Ollama response
+     * @param prompt the prompt to be sent to the Ollama AI
+     */
     public OllamaResponse(String prompt) {
         this.prompt = prompt;
         ollamaAPI = new OllamaAPI(host);
@@ -40,7 +44,7 @@ public class OllamaResponse {
 
         OllamaResult result =
                 ollamaAPI.generate(LLAMA, prompt, false, new OptionsBuilder().build());
-        if (result.getHttpStatusCode()==HTTP_OK) {
+        if (result.getHttpStatusCode()==HTTP_OK) { //If the HTTP status is ok
             if (result != null) {
                 return result.getResponse();
             }

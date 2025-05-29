@@ -8,12 +8,19 @@ import javafx.scene.layout.VBox;
 
 import java.util.Optional;
 
+/**
+ * The Quiz Manager class, manages the instances of quizzes
+ */
 public class QuizManager {
     private static QuizManager instance;
     private Quiz currentQuiz;
 
     private QuizManager() {}
 
+    /**
+     *Returns the singleton instance of the quiz manager class
+     * @return
+     */
     public static QuizManager getInstance() {
         if (instance == null) {
             instance = new QuizManager();
