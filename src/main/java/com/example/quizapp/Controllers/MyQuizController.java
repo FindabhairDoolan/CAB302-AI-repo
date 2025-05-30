@@ -4,6 +4,7 @@ import com.example.quizapp.Models.*;
 import com.example.quizapp.utils.AuthManager;
 import com.example.quizapp.utils.QuizManager;
 import com.example.quizapp.utils.SceneManager;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -152,12 +153,14 @@ public class MyQuizController extends MenuBarController {
                                 String message = newVisibility.equals("Public")
                                         ? "Everyone can see and take your quiz."
                                         : "Only you can see and take your quiz.";
-                                Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION,
-                                        "'" + quiz.getName() + "' has been set to " + newVisibility + ". " + message,
-                                        ButtonType.OK);
-                                confirmation.setTitle("Visibility Changed");
-                                confirmation.setHeaderText(null);
-                                confirmation.showAndWait();
+                                Platform.runLater(() -> {
+                                    Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION,
+                                            "'" + quiz.getName() + "' has been set to " + newVisibility + ". " + message,
+                                            ButtonType.OK);
+                                    confirmation.setTitle("Visibility Changed");
+                                    confirmation.setHeaderText(null);
+                                    confirmation.showAndWait();
+                                });
                             });
                         }
                     }
