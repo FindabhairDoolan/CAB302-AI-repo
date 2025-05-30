@@ -132,7 +132,7 @@ public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
                         rs.getString("name"),
                         rs.getString("subject"),
                         rs.getString("topic"),
-                        rs.getInt("mode"),
+                        rs.getInt("timer"),
                         rs.getString("difficulty"),
                         rs.getString("yearLevel"),
                         rs.getString("country"),

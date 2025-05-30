@@ -5,6 +5,7 @@ import com.example.quizapp.Models.*;
 import com.example.quizapp.utils.AlertManager;
 import com.example.quizapp.utils.AuthManager;
 import com.example.quizapp.utils.QuizManager;
+import com.example.quizapp.utils.SceneManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -213,17 +214,9 @@ public class CreateQuizController {
 
         if (result.isPresent() && result.get() == yesButton) {
             // User chose Yes – go to dashboard
-            Stage stage = (Stage) backButton.getScene().getWindow();
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/quizapp/home.fxml"));
-            try {
-                Scene scene = new Scene(fxmlLoader.load(), Main.WIDTH, Main.HEIGHT);
-                stage.setScene(scene);
-                //This will lead back to the home page
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            SceneManager.switchScene("/com/example/quizapp/home.fxml", "Quiz Master");
         }
-        // If No is selected, do nothing
+            // If No is selected, do nothing
 
     }
 
@@ -248,6 +241,7 @@ public class CreateQuizController {
 
         if (result.isPresent() && result.get() == noButton) {
             // User chose Yes – go to dashboard
+            SceneManager.switchScene("/com/example/quizapp/home.fxml", "Quiz Master");
             return false;
         }
 
