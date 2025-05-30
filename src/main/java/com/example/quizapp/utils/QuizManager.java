@@ -58,6 +58,12 @@ public class QuizManager {
         }
     }
 
+    /**
+     * Creates a confirmation dialog prompting the user to start the selected quiz.
+     *
+     * @param quiz The quiz to be taken.
+     * @return An Alert configured with quiz details and Yes/No options.
+     */
 
     private Alert createQuizPrompt(Quiz quiz) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -72,6 +78,13 @@ public class QuizManager {
 
         return alert;
     }
+
+    /**
+     * Initiates the quiz by loading the quiz scene and passing the quiz and selected mode.
+     *
+     * @param quiz The quiz to start.
+     * @param mode The selected quiz mode ("Practice" or "Exam").
+     */
 
     private void startQuiz(Quiz quiz, String mode) {
         try {
@@ -88,6 +101,12 @@ public class QuizManager {
         }
     }
 
+    /**
+     * Formats quiz metadata into a readable string for display in dialogs.
+     *
+     * @param quiz The quiz whose details are to be formatted.
+     * @return A formatted string describing the quiz.
+     */
     private String formatQuizInfo(Quiz quiz) {
         return String.format(
                 "Quiz Name: %s%nTopic: %s%nSubject: %s%nLevel: %s%nDifficulty: %s",
@@ -99,6 +118,11 @@ public class QuizManager {
         );
     }
 
+    /**
+     * Shows a dialog prompting the user to choose between Practice and Exam mode.
+     *
+     * @return An Optional containing the selected mode if the user confirms, or empty if canceled.
+     */
     private Optional<String> showModeSelection() {
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Select Quiz Mode");
@@ -129,6 +153,12 @@ public class QuizManager {
         return dialog.showAndWait();
     }
 
+    /**
+     * Displays an informational dialog confirming that a quiz is starting.
+     *
+     * @param quiz The quiz that is being started.
+     * @param mode The mode in which the quiz is being taken.
+     */
     private void showStartQuizConfirmation(Quiz quiz, String mode) {
         Alert startAlert = new Alert(Alert.AlertType.INFORMATION);
         startAlert.setTitle("Quiz Starting");
