@@ -7,12 +7,13 @@ import javafx.scene.layout.*;
 import javafx.stage.*;
 
 
-
+/**
+ * Controller class responsible for handling interactions with the menu bar.
+ * Provides navigation between different views in the Quiz App.
+ */
 public class MenuBarController {
     @FXML
     public Region spacer;
-    @FXML
-    protected Button menuItem1; // Account
     @FXML
     protected Button menuItem2; // Logout
     @FXML
@@ -27,7 +28,10 @@ public class MenuBarController {
     private ToolBar menuBar;
 
 
-
+    /**
+     * Initializes the controller after the FXML components are loaded.
+     * Ensures the spacer expands correctly within the layout.
+     */
     @FXML
     public void initialize() {
         // Ensure the spacer behaves like a flexible expander
@@ -38,6 +42,9 @@ public class MenuBarController {
     }
 
 
+    /**
+     * Handles navigation to the home (dashboard) view.
+     */
     @FXML
     protected void handleHome() {
         // Swap to home/dashboard
@@ -45,6 +52,10 @@ public class MenuBarController {
         System.out.println("Going to home page...");
     }
 
+    /**
+     * Handles logout logic and navigation to the welcome screen.
+     * Logs out the user and ends the current session.
+     */
     @FXML
     protected void handleLogout() {
         //Swap to Welcome
@@ -57,18 +68,20 @@ public class MenuBarController {
 
     }
 
-    @FXML
-    protected void handleAccount() {
-        System.out.println("Pulling up account details...");
-    }
 
+
+    /**
+     * Navigates to the user's list of quizzes the current user has created.
+     */
     @FXML
     protected void handleMyQuizzes() {
         SceneManager.switchScene("/com/example/quizapp/my-quizzes.fxml", "My Quizzes");
         System.out.println("Going to my quizzes...");
     }
 
-
+    /**
+     * Navigates to the quiz creation page.
+     */
     @FXML
     protected void handleCreateQuiz() {
         //Swap to Create Quiz
@@ -77,6 +90,9 @@ public class MenuBarController {
 
     }
 
+    /**
+     * Navigates to the quiz creation page.
+     */
     @FXML
     protected void handleQuizHistory() {
         SceneManager.switchScene("/com/example/quizapp/quiz-history.fxml", "Quiz History");

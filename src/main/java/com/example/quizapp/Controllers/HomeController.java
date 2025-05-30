@@ -10,35 +10,55 @@ import java.util.List;
 import java.util.Optional;
 import javafx.geometry.Insets;
 
-
+/**
+ * Controller for the Home view of the Quiz App.
+ * Handles displaying quizzes, filtering, searching, and initializing user-specific data.
+ * Inherits common menu bar logic from {@link MenuBarController}.
+ */
 public class HomeController extends MenuBarController  {
+    /** Displays the welcome message with the user's name. */
     @FXML
     public Label welcomeLabel;
+
+    /** Overlay pane shown when filter settings are toggled. */
     @FXML
     public AnchorPane filterOverlay;
+
+    /** Field for entering a search query to look up quizzes. */
     @FXML
     private TextField searchField;
+
+    /** ListView to display raw search results (currently unused in GUI). */
     @FXML
     private ListView<Quiz> quizResults;
+
+    /** Pane where quiz thumbnails are dynamically added. */
     @FXML
     private FlowPane quizResultsWindow;
+
+    /** Dropdown to select quiz difficulty for filtering. */
     @FXML
     public ComboBox<String> difficultySetting;
+
+    /** Dropdown to select year level for filtering quizzes. */
     @FXML
     public ComboBox<String> yearSetting;
+
+    /** Dropdown to select country (reserved for future use). */
     @FXML
-    public ComboBox<String> countrySetting; //unused; for later implementation
+    public ComboBox<String> countrySetting;
+
+    /** Dropdown to select subject for filtering. */
     @FXML
     public ComboBox<String> subjectSetting;
 
+    /** DAO object for interacting with the quiz database. */
     private IQuizDAO quizDAO = new SqliteQuizDAO();
 
-
-
-
-
-
-    //Quiz Display: Search results
+    /**
+     * Triggered when the user submits a search query.
+     * Searches for matching quizzes and updates the display.
+     */
     @FXML
     private void handleSearch() {
         //Get input
@@ -59,11 +79,16 @@ public class HomeController extends MenuBarController  {
 
 
 
-    //Quiz Display: Filter Popup
+    /**
+     * Shows or hides the filter overlay.
+     */
     public void toggleFilter() {
         filterOverlay.setVisible(!filterOverlay.isVisible());
     }
 
+    /**
+     * Clears all selected filter and search values in the UI.
+     */
     public void clearFilter(){
         yearSetting.setValue(null);
         subjectSetting.setValue(null);
@@ -72,12 +97,14 @@ public class HomeController extends MenuBarController  {
 
     }
 
+    /**
+     * Applies the selected filters and updates the quiz results accordingly.
+     */
     public void applyFilter() {
         String difficulty = difficultySetting.getValue();
         String year = yearSetting.getValue();
         String subject = subjectSetting.getValue();
         String country = countrySetting.getValue();
-
 
         List<Quiz> filtered = quizDAO.getAllQuizzes().stream()
                 //Ignores filter if selection is null or empty (or other cases) otherwise checks for match
@@ -92,6 +119,10 @@ public class HomeController extends MenuBarController  {
         filterOverlay.setVisible(false); // Hide overlay after applying
     }
 
+
+/**
+ * Updates the UI to display the provided list of quizzes as thumbnail cards.
+ */
     private void displayQuizzes(List<Quiz> quizzes) {
         quizResultsWindow.getChildren().clear();
         User user = AuthManager.getInstance().getCurrentUser();
@@ -107,15 +138,18 @@ public class HomeController extends MenuBarController  {
 
 
 
-    //Create a thumbnail on home page for each quiz in database
+    /**
+     * Creates a styled thumbnail card for a quiz.
+     *
+     * @param quiz The quiz to represent
+     * @return An AnchorPane representing the quiz card
+     */
     private AnchorPane createQuizCard(Quiz quiz) {
         AnchorPane card = new AnchorPane();
         int cardWidth = 200;
         int cardHeight = 90;
 
-
         card.setPrefSize(cardWidth, cardHeight);
-        card.setStyle("-fx-border-color: #ccc; -fx-border-radius: 5; -fx-padding: 10;");
         card.getStyleClass().add("thumbnail-background");
 
         VBox content = new VBox(5); // spacing between elements
@@ -159,11 +193,10 @@ public class HomeController extends MenuBarController  {
 
 
 
-
-
-
-
-    //Initialise in window
+    /**
+     * Initializes the Home view.
+     * Sets up the welcome message, loads quizzes, and populates filter options.
+     */
     @FXML
     public void initialize() {
         User user = AuthManager.getInstance().getCurrentUser();
