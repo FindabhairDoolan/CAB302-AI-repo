@@ -299,5 +299,82 @@ public class SqliteQuizDAO implements IQuizDAO {
         return quizzes;
     }
 
+
+
+    /*@Override
+    public void addQuestionToQuiz(String username) {
+
+    }
+
+    @Override
+    public void removeQuestionFromQuiz(String emailaddress) {
+
+    }
+
+
+    @Override
+    public List<Question> getQuestionsForQuiz(Quiz quiz) {
+        List<Question> questions = new ArrayList<>();
+        int quizID = quiz.getQuizID();
+        try {
+            String query = "SELECT * FROM questions where quizID = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, quizID);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                Question question = new Question(
+                        rs.getInt("quizID"),
+                        rs.getString("questionText"),
+                        rs.getString("correctAnswer"),
+                        rs.getString("incorrectAnswer1"),
+                        rs.getString("incorrectAnswer1"),
+                        rs.getString("incorrectAnswer1")
+                );
+                question.setQuestionID(rs.getInt("questionID"));
+                questions.add(question);
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return questions;
+    }
+
+    public int getNumberOfQuestions(Quiz quiz) {
+        List<Question> questions = getQuestionsForQuiz(quiz);
+        long numOfQuestions = questions.size();
+        return ((int) numOfQuestions);
+
+    }
+    // Added this method to load quiz by quiz for testing purpose for edit quiz page
+    public Quiz getQuizById(int quizId) {
+        Quiz quiz = null;
+        try {
+            String query = "SELECT * FROM quizzes WHERE id = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, quizId);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                quiz = new Quiz(
+                        rs.getString("name"),
+                        rs.getString("subject"),
+                        rs.getString("topic"),
+                        rs.getInt("mode"),
+                        rs.getString("difficulty"),
+                        rs.getString("yearLevel"),
+                        rs.getString("country"),
+                        rs.getString("visibility"),
+                        rs.getInt("creatorID")
+                );
+                quiz.setQuizID(rs.getInt("id"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return quiz;
+    }*/
+
+
 }
 

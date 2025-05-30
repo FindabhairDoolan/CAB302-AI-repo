@@ -106,6 +106,8 @@ public class MyQuizController extends MenuBarController {
 
                         // Action: Edit quiz
                         editBtn.setOnAction(e -> {
+                            Quiz selectedQuiz = getTableView().getItems().get(getIndex());
+                            qm.setCurrentQuiz(selectedQuiz); // Store the selected quiz
                             SceneManager.switchScene("/com/example/quizapp/quiz-editor.fxml", "Edit Quiz");
                         });
 

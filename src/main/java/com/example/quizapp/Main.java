@@ -3,6 +3,8 @@ package com.example.quizapp;
 import com.example.quizapp.data.DatabaseSeeder;
 import com.example.quizapp.utils.SceneManager;
 import javafx.application.Application;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -23,7 +25,6 @@ public class Main extends Application {
 
         // Optional: Use SceneManager to switch to WelcomePage scene
         SceneManager.switchScene("/com/example/quizapp/WelcomePage.fxml", TITLE);
-
         // Seed the database
         new DatabaseSeeder().seed();
     }

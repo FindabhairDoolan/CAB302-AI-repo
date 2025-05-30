@@ -199,6 +199,67 @@ public class SqliteQuestionDAO implements IQuestionDAO {
             e.printStackTrace();
         }
     }
+    @Override
+    public void deleteQuestionfromQuiz(Question question) {
+        try {
+            // SQL query to delete from questions table based on questionID
+            String query = "DELETE FROM questions WHERE questionID = ?";
+
+            // Prepare the statement
+            PreparedStatement statement = connection.prepareStatement(query);
+
+            // Set the parameter to match the question's questionID
+            statement.setInt(1, question.getQuestionID());
+
+            // Execute the deletion
+            int rowsAffected = statement.executeUpdate();
+
+            // Verbose log to confirm deletion
+            if (rowsAffected > 0) {
+                System.out.println("Question with ID " + question.getQuestionID() + " was successfully deleted.");
+            } else {
+                System.out.println("No question found with ID " + question.getQuestionID() + ". Deletion failed.");
+            }
+        } catch (Exception e) {
+            // Handle any exception and print the error message
+            e.printStackTrace();
+        }
+    }
+    public void setQuestions(int quizId, List<Question> questions) throws SQLException {
+        connection.setAutoCommit(false);
+
+        try {
+            // Delete the old questions for the quiz
+            String deleteQuery = "DELETE FROM questions WHERE quizID = ?";
+            try (PreparedStatement deleteStmt = connection.prepareStatement(deleteQuery)) {
+                deleteStmt.setInt(1, quizId);
+                deleteStmt.executeUpdate();
+            }
+
+            // Insert the updated list of questions
+            String insertQuery = "INSERT INTO questions (quizID, questionText, correctAnswer, incorrectAnswer1, incorrectAnswer2, incorrectAnswer3) " +
+                    "VALUES (?, ?, ?, ?, ?, ?)";
+            try (PreparedStatement insertStmt = connection.prepareStatement(insertQuery)) {
+                for (Question question : questions) {
+                    insertStmt.setInt(1, quizId);
+                    insertStmt.setString(2, question.getQuestionText());
+                    insertStmt.setString(3, question.getCorrectAnswer());
+                    insertStmt.setString(4, question.getIncorrectAnswer1());
+                    insertStmt.setString(5, question.getIncorrectAnswer2());
+                    insertStmt.setString(6, question.getIncorrectAnswer3());
+                    insertStmt.addBatch();
+                }
+                insertStmt.executeBatch();
+            }
+
+            connection.commit();
+        } catch (SQLException e) {
+            connection.rollback();
+            throw e;
+        } finally {
+            connection.setAutoCommit(true);
+        }
+    }
 
 }
 

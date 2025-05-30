@@ -1,12 +1,16 @@
 package com.example.quizapp.Models;
 
+
 /**
  * The quiz class, outlines the attributes of a quiz
  */
+import java.util.ArrayList;
+
 public class Quiz {
 
     private int id, creatorID, timer;
     private String quizName, subject, quizTopic, difficulty, yearLevel, country, visibility;
+
 
     /**
      * The constructor for the quiz class
@@ -20,6 +24,7 @@ public class Quiz {
      * @param visibility the visibility of the quiz: Public/Private
      * @param creatorID the creator ID of the quiz owner
      */
+
     public Quiz(String quizName, String subject, String quizTopic, int quizMode, String difficulty, String yearLevel, String country, String visibility, int creatorID) {
         this.quizName = quizName;
         this.subject = subject;
@@ -30,6 +35,8 @@ public class Quiz {
         this.country = country;
         this.visibility = visibility;
         this.creatorID = creatorID;
+
+
     }
 
     /**
@@ -161,6 +168,8 @@ public class Quiz {
         return String.format("Quiz{id=%d, name='%s', subject='%s', topic='%s',  timer='%d', difficulty='%s', year='%s', country='%s','visibility=%s' creatorID=%d}",
                 id, quizName, subject, quizTopic, timer, difficulty, yearLevel, country, visibility, creatorID);
     }
+
+
 
 
 }

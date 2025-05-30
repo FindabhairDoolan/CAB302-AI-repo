@@ -1,12 +1,15 @@
 package com.example.quizapp.utils;
 
 import com.example.quizapp.Controllers.QuizController;
+import com.example.quizapp.Models.OllamaResponse;
+import com.example.quizapp.Models.Question;
 import com.example.quizapp.Models.Quiz;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
 import java.util.Optional;
+import org.json.JSONObject;
 
 /**
  * The Quiz Manager class, manages the instances of quizzes
@@ -166,4 +169,71 @@ public class QuizManager {
         startAlert.setContentText("Starting \"" + quiz.getName() + "\" in " + mode + " mode.");
         startAlert.showAndWait();
     }
+    public static boolean isValidJson(String response) {
+        try {
+            new JSONObject(response); // Try parsing the string as a JSON object
+            return true;              // JSON is valid
+        } catch (Exception e) {
+            return false;             // JSON is invalid
+        }
+    }
+
+    /**
+     * Calls the AI to generate a single question.
+     *
+     * @param prompt The AI prompt to generate a single question.
+     * @param quizId The ID of the quiz for context.
+     * @return Optional<Question> if the AI successfully generates the question.
+     */
+    public static Optional<Question> generateSingleQuestionWithAI(String prompt, int quizId) {
+        try {
+            // Call the AI API
+            OllamaResponse response = new OllamaResponse(prompt);
+            String aiResponse = response.ollamaReturnResponse();
+
+            if (aiResponse == null || aiResponse.isBlank()) {
+                throw new IllegalArgumentException("AI returned an empty response.");
+            }
+
+            // Trim and auto-correct common JSON issues
+            aiResponse = aiResponse.trim();
+
+            // Attempt to auto-fix: add missing closing brace
+            if (!aiResponse.endsWith("}")) {
+                aiResponse += "}";
+            }
+
+            // Basic structure validation
+            if (!isValidJson(aiResponse)) {
+                throw new IllegalArgumentException("AI returned an invalid JSON response: " + aiResponse);
+            }
+
+            // Parse the JSON
+            JSONObject json = new JSONObject(aiResponse);
+
+            String questionText = json.getString("question");
+            String correctAnswer = json.getString("correctAnswer");
+            String incorrect1 = json.getString("incorrectAnswer1");
+            String incorrect2 = json.getString("incorrectAnswer2");
+            String incorrect3 = json.getString("incorrectAnswer3");
+
+            Question question = new Question(
+                    quizId,
+                    questionText,
+                    correctAnswer,
+                    incorrect1,
+                    incorrect2,
+                    incorrect3
+            );
+
+            return Optional.of(question);
+
+        } catch (Exception e) {
+            System.err.println("Error generating question with AI:");
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
+    }
+
 }
