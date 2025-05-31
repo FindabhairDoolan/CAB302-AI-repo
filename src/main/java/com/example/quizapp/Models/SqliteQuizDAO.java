@@ -84,10 +84,7 @@ public class SqliteQuizDAO implements IQuizDAO {
         }
     }
 
-    /**
-     * Adds a quiz to the sqlite database quizzes table
-     * @param quiz the quiz to be stored in the database
-     */
+
     @Override
     public void addQuiz(Quiz quiz) {
         try {
@@ -109,10 +106,7 @@ public class SqliteQuizDAO implements IQuizDAO {
         }
     }
 
-    /**
-     * Updates the quiz in the database with new values
-     * @param quiz the quiz with updated values
-     */
+
     @Override
     public void updateQuiz(Quiz quiz) {
         try {
@@ -138,10 +132,7 @@ public class SqliteQuizDAO implements IQuizDAO {
         }
     }
 
-    /**
-     * Deletes the quiz from the sqlite database quizzes table
-     * @param quiz the quiz to be deleted
-     */
+
     @Override
     public void deleteQuiz(Quiz quiz) {
         try {
@@ -155,11 +146,6 @@ public class SqliteQuizDAO implements IQuizDAO {
         }
     }
 
-    /**
-     * Searches for quizzes in the sqlite database quizzes table by topic
-     * @param topic the topic of the quiz
-     * @return A list of quizzes with the same subject
-     */
     @Override
     public List<Quiz> searchQuiz(String topic) {
         List<Quiz> quizzes = new ArrayList<>();
@@ -196,10 +182,7 @@ public class SqliteQuizDAO implements IQuizDAO {
         return quizzes;
     }
 
-    /**
-     * Retrieves all the quizzes from the sqlite database quizzes table
-     * @return A list of all quizzes in the database
-     */
+
     @Override
     public List<Quiz> getAllQuizzes() {
         List<Quiz> quizzes = new ArrayList<>();
@@ -228,11 +211,7 @@ public class SqliteQuizDAO implements IQuizDAO {
         return quizzes;
     }
 
-    /**
-     * Searches for the quiz in the sqlite database quizzes table by name
-     * @param name the name of the quiz
-     * @return the quiz with the same name, or null if not existent
-     */
+
     @Override
     public Quiz getQuizByName(String name) {
         Quiz quiz = null;
@@ -262,11 +241,6 @@ public class SqliteQuizDAO implements IQuizDAO {
         return quiz;
     }
 
-    /**
-     * Searches for the quizzes made by the same user in the sqlite database
-     * @param creatorID the ID of the user who created the quiz
-     * @return A list of the quizzes the user created
-     */
     @Override
     public List<Quiz> getQuizzesByCreator(int creatorID) {
         List<Quiz> quizzes = new ArrayList<>();

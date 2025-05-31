@@ -8,18 +8,26 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+/**
+ * The Sqlite User DAO communicates with the user table in the database and modifies data
+ */
 public class SqliteUserDAO implements IUserDAO {
 
 
     private Connection connection;
 
-
+    /**
+     * The constructor for the Sqlite User DAO
+     */
     public SqliteUserDAO() {
         connection = SqliteConnection.getInstance();
         createTable();
         //insertSampleData(); //for testing, to be removed later
     }
 
+    /**
+     * Creates the users table in the sqlite database if it does not exist
+     */
     private void createTable() {
         // Create table if not exists
         try {

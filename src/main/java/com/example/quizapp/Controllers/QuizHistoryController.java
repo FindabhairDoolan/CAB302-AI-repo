@@ -20,6 +20,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
+/**
+ * The QuizHistoryController class is responsible for displaying the quiz history table,
+ * including information such as score and time taken. It also provides actions like
+ * retaking, viewing, or downloading a quiz.
+ */
 public class QuizHistoryController {
 
     @FXML
@@ -43,12 +48,19 @@ public class QuizHistoryController {
     @FXML
     private TableColumn<QuizWithScore, Void> actionCol;
 
+
+    /**
+     * Initializes the controller by setting up the table columns and loading quiz data.
+     */
     @FXML
     public void initialize() {
         setupColumns();
         loadQuizData();
     }
 
+    /**
+     * Sets up how data should be displayed in each column of the quiz table.
+     */
     private void setupColumns() {
         nameCol.setCellValueFactory(data -> javafx.beans.binding.Bindings.createStringBinding(() ->
                 data.getValue().getQuiz().getName()));
@@ -117,11 +129,18 @@ public class QuizHistoryController {
         });
     }
 
+    /**
+     * Loads the user's quiz attempt data into the table.
+     */
     private void loadQuizData() {
         ObservableList<QuizWithScore> quizData = getQuizzes();
         quizTable.setItems(quizData);
     }
 
+    /**
+     * Fetches quizzes attempted by the current user.
+     * @return an observable list of QuizWithScore objects
+     */
     private ObservableList<QuizWithScore> getQuizzes() {
         User user = AuthManager.getInstance().getCurrentUser();
         return FXCollections.observableArrayList(
@@ -129,7 +148,12 @@ public class QuizHistoryController {
         );
     }
 
-    //Add parameter for the time it took to complete quiz in the attempt (int timerSeconds)
+    /**
+     * Opens a window to view a past quiz attempt.
+     * @param attempts the quiz attempt to view
+     * @param quiz the quiz being viewed
+     * @param timerSeconds the time spent on the quiz, or -1 for practice mode
+     */
     private void handleViewQuiz(QuizAttempt attempts, Quiz quiz, int timerSeconds) {
 
         try {
@@ -157,6 +181,10 @@ public class QuizHistoryController {
         }
     }
 
+    /**
+     * Downloads the selected quiz as a text file.
+     * @param quiz the quiz to download
+     */
     private void handleDownLoadQuiz(Quiz quiz) {
 
         //Intialize file chooser and the name and format the file is saved
@@ -202,6 +230,12 @@ public class QuizHistoryController {
         }
     }
 
+
+    /**
+     * Opens the quiz in retake mode.
+     * @param quiz the quiz to retake
+     * @param timerSeconds the time limit for the quiz, or -1 for practice mode
+     */
     private void handleRetakeQuiz(Quiz quiz, int timerSeconds) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/quizapp/quiz.fxml"));

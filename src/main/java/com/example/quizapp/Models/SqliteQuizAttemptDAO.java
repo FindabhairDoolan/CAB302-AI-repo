@@ -7,16 +7,24 @@ import java.util.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * The SqliteQuizAttemptDAO communicates with the quizAttempt table in the database and modifies data
+ */
 public class SqliteQuizAttemptDAO implements IQuizAttemptDAO {
 
     private Connection connection;
 
+    /**
+     * The constructor for the Sqlite QuizAttempt DAO
+     */
     public SqliteQuizAttemptDAO() {
         connection = SqliteConnection.getInstance();
         createTable();
     }
 
-
+    /**
+     * Creates the quizAttempts table in the sqlite database if it does not exist
+     */
     private void createTable() {
         // Create table if not exists
         try {
