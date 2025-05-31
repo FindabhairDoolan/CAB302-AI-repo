@@ -8,22 +8,29 @@ import java.io.IOException;
 
 import static com.example.quizapp.Main.HEIGHT;
 import static com.example.quizapp.Main.WIDTH;
-
+/**
+ * SceneManager is a utility class for managing scene transitions in a JavaFX application.
+ */
 public class SceneManager {
 
-    //How to apply SceneManager to Controller for page switching:
-    //  SceneManager.switchScene("/com/example/quizapp/InsertFXML_Name.fxml", "InsertWindowTitle");
-    //  Example of this available in MenuBar & Quiz Controllers
-    // Make sure to import import com.example.quizapp.utils.SceneManager;
-
+    /** The primary stage used throughout the application. */
     private static Stage primaryStage;
 
-    // Set the main stage (used when launching the app)
+    /**
+     * Sets the primary stage. This method should be called once when the application launches.
+     *
+     * @param stage The main application stage.
+     */
     public static void setPrimaryStage(Stage stage) {
         primaryStage = stage;
     }
 
-    // Get the main stage (if needed)
+    /**
+     * Returns the primary stage of the application.
+     *
+     * @return The main
+     * @throws IllegalStateException if the stage has not been initialized via {@link #setPrimaryStage(Stage)}.
+     */
     public static Stage getPrimaryStage() {
         if (primaryStage == null) {
             throw new IllegalStateException("Main Stage is not initialized. Please call setMainStage() first.");
@@ -31,7 +38,13 @@ public class SceneManager {
         return primaryStage;
     }
 
-
+    /**
+     * Switches to a new scene specified by an FXML file.
+     *
+     * @param fxmlPath The relative path to the FXML file (e.g., "/com/example/quizapp/Quiz.fxml").
+     * @param title    The title to set for the stage window.
+     * @throws RuntimeException if the FXML file cannot be loaded.
+     */
     public static void switchScene(String fxmlPath, String title) {
         try {
             FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(fxmlPath));
@@ -48,7 +61,15 @@ public class SceneManager {
             throw new RuntimeException("Could not load FXML file: " + fxmlPath);
         }
     }
-
+    /**
+     * Switches to a new scene and returns the controller instance of the newly loaded FXML.
+     *
+     * @param fxmlPath The relative path to the FXML file (e.g., "/com/example/quizapp/Quiz.fxml").
+     * @param title    The title to set for the stage window.
+     * @param <T>      The type of the controller.
+     * @return The controller instance associated with the loaded FXML.
+     * @throws RuntimeException if the FXML file cannot be loaded.
+     */
     public static <T> T switchSceneWithController(String fxmlPath, String title) {
         try {
             FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(fxmlPath));

@@ -1,11 +1,9 @@
 package com.example.quizapp.Models;
-
+import java.util.ArrayList;
 
 /**
  * The quiz class, outlines the attributes of a quiz
  */
-import java.util.ArrayList;
-
 public class Quiz {
 
     private int id, creatorID, timer;
