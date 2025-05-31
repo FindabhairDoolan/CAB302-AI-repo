@@ -244,7 +244,8 @@ public class QuizEditorController implements Initializable {
                             "    \"incorrectAnswer2\": \"...\",\n" +
                             "    \"incorrectAnswer3\": \"...\"\n" +
                             "  }\n" +
-                            "  Always ensure the response is a complete JSON object and avoid truncating the output.\n",
+                            "  Always ensure the response is a complete JSON object and avoid truncating the output.\n"+
+                            "Keep the topic: '%s', subject: '%s', and difficulty: '%s'.\n",
                     quizTopic, quizSubject, quizDifficulty
             );
 
