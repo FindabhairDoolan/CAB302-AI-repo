@@ -25,8 +25,9 @@ public class Main extends Application {
 
         // Optional: Use SceneManager to switch to WelcomePage scene
         SceneManager.switchScene("/com/example/quizapp/WelcomePage.fxml", TITLE);
-        // Seed the database
-        new DatabaseSeeder().seed();
+
+        //For testing purposes: seed the database
+        //new DatabaseSeeder().seed();
     }
 
     public static void main(String[] args) {

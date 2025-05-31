@@ -10,21 +10,6 @@ public interface IUserDAO {
     public void addUser(User user);
 
     /**
-     * Updates an existing user in the database.
-     * @param user The user to update.
-     */
-    public void updateUser(User user);
-
-    /**
-     * Deletes a user from the database.
-     * @param user The user to delete.
-     */
-    public void deleteUser(User user);
-    /**
-     * Sets a new userID to the database.
-     * @param userID The userID to set.
-     */
-    /**
      * Validates user credentials.
      * @param username The username to validate.
      * @param password The password to validate.

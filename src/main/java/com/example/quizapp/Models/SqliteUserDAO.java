@@ -104,35 +104,6 @@ public class SqliteUserDAO implements IUserDAO {
         return user;
     }
 
-    @Override
-    public void updateUser(User user) {
-    try {
-        String hashedPassword = user.getPassword(); //hash the password in the previous function if needed
-        String query = "UPDATE users SET userName = ?, email = ?, password = ? WHERE userID = ?";
-        PreparedStatement statement = connection.prepareStatement(query);
-        statement.setString(1, user.getUserName());
-        statement.setString(2, user.getEmail());
-        //statement.setString(3, user.getPassword());
-        statement.setString(3, hashedPassword); // Store the hashed password
-        statement.setInt(4, user.getUserID());
-        statement.executeUpdate();
-
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    }
-
-    @Override
-    public void deleteUser(User user) {
-        try {
-            String query = "DELETE FROM users WHERE userID = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, user.getUserID());
-            statement.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public boolean validateCredentials(String email, String password) {

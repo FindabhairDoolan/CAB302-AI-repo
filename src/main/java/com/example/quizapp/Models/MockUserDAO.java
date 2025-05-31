@@ -36,25 +36,7 @@ public class MockUserDAO implements IUserDAO{
         users.add(user);
     }
 
-    @Override
-    public void updateUser(User user) {
-        for (int i = 0; i < users.size(); i++) {
-            if (users.get(i).getUserID() == user.getUserID()) {
-                // [FIXED] Avoid double-hashing already hashed password
-                String newPassword = user.getPassword();
-                if (!newPassword.equals(users.get(i).getPassword())) {
-                    newPassword = hashPassword(newPassword);
-                }
-                user.setPassword(newPassword);
-                users.set(i, user);
-                break;
-            }
-        }
-    }
-    @Override
-    public void deleteUser(User user) {
-        users.remove(user);
-    }
+
 
     @Override
     public boolean validateCredentials(String email, String password) {
