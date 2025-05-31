@@ -16,42 +16,42 @@ Usage
 
   - Login / Register
 
-  New users can create an account.
-
-  Existing users can log in to access all features and personalized content.
-  
+      New users can create an account.
+    
+      Existing users can log in to access all features and personalized content.
+    
   - Create a Quiz
   
-  Choose a topic, number of questions, and difficulty level (Easy, Medium, Hard).
-  
-  The app uses AI to generate unique quiz questions based on your selections.
+      Choose a topic, number of questions, and difficulty level (Easy, Medium, Hard).
+      
+      The app uses AI to generate unique quiz questions based on your selections.
   
   - Select Quiz Mode
   
-  📝 Practice Mode: No time limit; ideal for relaxed learning and self-paced study.
-  
-  ⏱️ Exam Mode: Timed quiz; the app automatically sets a countdown timer based on the number and difficulty of questions. Great for test preparation.
-  
+      📝 Practice Mode: No time limit; ideal for relaxed learning and self-paced study.
+      
+      ⏱️ Exam Mode: Timed quiz; the app automatically sets a countdown timer based on the number and difficulty of questions. Great for test preparation.
+      
   - Take Quizzes
   
-  Attempt quizzes you’ve created or browse quizzes shared by other users.
-  
-  Instant feedback and scoring provided after each attempt (configurable per mode).
+      Attempt quizzes you’ve created or browse quizzes shared by other users.
+      
+      Instant feedback and scoring provided after each attempt (configurable per mode).
   
   - View Score History
   
-  Access your past scores, quiz topics, and timestamps.
-  
-  Use the history to monitor your progress over time.
-  
+      Access your past scores, quiz topics, and timestamps.
+      
+      Use the history to monitor your progress over time.
+      
   - Edit Quiz Questions
   
-  Modify any of your created quizzes to correct, update, or improve the content.
-  
+      Modify any of your created quizzes to correct, update, or improve the content.
+      
   - Download Quizzes
   
-  Export quizzes as PDF or plain text for offline use or study.
+      Export quizzes as PDF or plain text for offline use or study.
   
   - Logout
   
-  Log out securely to end your session.
+      Log out securely to end your session.
