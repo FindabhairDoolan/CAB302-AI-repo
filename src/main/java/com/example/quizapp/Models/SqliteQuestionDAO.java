@@ -178,6 +178,12 @@ public class SqliteQuestionDAO implements IQuestionDAO {
         }
     }
 
+    /**
+     * Updates the list of questions for a specific quiz in the database.
+     * * @param quizId   The unique identifier of the quiz whose questions are to be updated.
+     *  * @param questions A list of {@link Question} objects to be inserted into the quiz.
+     *  * @throws SQLException If a database access error occurs or the transaction fails.
+     *  */
     public void setQuestions(int quizId, List<Question> questions) throws SQLException {
         connection.setAutoCommit(false);
 

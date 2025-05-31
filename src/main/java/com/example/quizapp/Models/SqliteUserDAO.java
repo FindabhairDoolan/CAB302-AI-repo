@@ -9,7 +9,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 /**
- * The Sqlite User DAO communicates with the user table in the database and modifies data
+ * Data Access Object (DAO) for the User entity.
+ * Handles all database operations related to the users table in the SQLite database.
  */
 public class SqliteUserDAO implements IUserDAO {
 
@@ -59,6 +60,11 @@ public class SqliteUserDAO implements IUserDAO {
             e.printStackTrace();
         }
     }
+    /**
+     * Adds a new user to the database.
+     *
+     * @param user the User object containing user details to be inserted
+     */
     @Override
     public void addUser(User user) {
         try {
@@ -75,6 +81,12 @@ public class SqliteUserDAO implements IUserDAO {
         }
     }
 
+    /**
+     * Checks if an email is already registered in the database.
+     *
+     * @param email the email address to check
+     * @return true if the email exists, false otherwise
+     */
     @Override
     public boolean isEmailRegistered(String email) {
         try {
@@ -88,7 +100,12 @@ public class SqliteUserDAO implements IUserDAO {
             return false;
         }
     }
-
+    /**
+     * Retrieves a User object by email.
+     *
+     * @param email the email address to search for
+     * @return the User object if found, null otherwise
+     */
     @Override
     public User getUserByEmail(String email) {
         User user = null;
@@ -112,7 +129,13 @@ public class SqliteUserDAO implements IUserDAO {
         return user;
     }
 
-
+    /**
+     * Validates login credentials against stored user data.
+     *
+     * @param email the email address provided
+     * @param password the password provided (should be hashed as stored)
+     * @return true if credentials are valid, false otherwise
+     */
     @Override
     public boolean validateCredentials(String email, String password) {
         try {
@@ -127,6 +150,14 @@ public class SqliteUserDAO implements IUserDAO {
             return false;
         }
     }
+
+    /**
+     * Validates the signup details for a new user.
+     * Checks for email uniqueness, password length, and password complexity.
+     *
+     * @param user the User object to validate
+     * @return true if the signup information is valid, false otherwise
+     */
     public boolean isSignupValid(User user) {
         try {
             if (isEmailRegistered(user.getEmail())) {
@@ -135,6 +166,7 @@ public class SqliteUserDAO implements IUserDAO {
             }
 
             String password = user.getPassword();
+
             if (password.length() < 8) {
                 System.out.println("Password should be at least 8 characters long");
                 return false;
@@ -143,14 +175,11 @@ public class SqliteUserDAO implements IUserDAO {
                 System.out.println("Password must contain both letters and digits");
                 return false;
             }
-
             return true;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
-
-
 }
 

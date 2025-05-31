@@ -5,8 +5,7 @@ import com.example.quizapp.Models.Quiz;
 import com.example.quizapp.utils.QuizManager;
 import com.example.quizapp.Models.SqliteQuestionDAO;
 import com.example.quizapp.Models.SqliteQuizDAO;
-import com.example.quizapp.Models.OllamaResponse;
-import io.github.ollama4j.exceptions.OllamaBaseException;
+import com.example.quizapp.utils.AlertManager;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,14 +14,20 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
-import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.*;
-import com.example.quizapp.utils.AlertManager;
-import com.example.quizapp.utils.AuthManager;
-import com.example.quizapp.utils.QuizManager;
 
+/**
+ * Controller class for the Quiz Editor screen.
+ * Allows users to edit existing quiz questions, regenerate them using AI,
+ * and save or discard their changes.
+ *
+ * This controller loads the current quiz from {@link QuizManager},
+ * displays the quiz questions using JavaFX UI nodes,
+ * and allows regeneration and management of the question list.
+
+ */
 public class QuizEditorController implements Initializable {
     @FXML
     private VBox questionsContainer;
@@ -42,8 +47,12 @@ public class QuizEditorController implements Initializable {
     private SqliteQuestionDAO questionDAO = new SqliteQuestionDAO();
     private SqliteQuizDAO quizDAO = new SqliteQuizDAO();
 
-    private List<Question> questionList = new ArrayList<>(); // Temporary list to track changes
+    // Stores current working list of questions being edited
+    private List<Question> questionList = new ArrayList<>();
 
+    /**
+     * Helper class to store the original question reference (for potential enhancements).
+     */
     private static class QuestionCardData {
         Question originalQuestion;
 
@@ -51,33 +60,35 @@ public class QuizEditorController implements Initializable {
             this.originalQuestion = originalQuestion;
         }
     }
+
+    /**
+     * Called automatically after the FXML layout has been loaded.
+     * Initializes the quiz editor with current quiz data.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         currentQuiz = qm.getCurrentQuiz();
         qm.setCurrentQuiz(currentQuiz);
         loadQuestions();
 
-        /*SqliteQuizDAO quizDAO = new SqliteQuizDAO();
-        Quiz loadedQuiz = quizDAO.getQuizByName("World War II");
-        this.currentQuiz = loadedQuiz;
-        QuizManager.getInstance().setCurrentQuiz(loadedQuiz);
-        if (loadedQuiz == null) {
-            System.out.println("Quiz not found!");
-        } else {
-            this.currentQuiz = loadedQuiz;
-            QuizManager.getInstance().setCurrentQuiz(loadedQuiz);
-            loadQuestions();
-        }*/
-
-
         generateQuestionButton.setOnAction(e -> generateAIQuestionForEdit());
         discardButton.setOnAction(e -> discardChanges());
         saveButton.setOnAction(e -> saveChanges());
     }
+
+    /**
+     * Sets the quiz to be edited. Can be used to change the current quiz dynamically.
+     *
+     * @param quiz The quiz to load into the editor.
+     */
     public void setQuizToEdit(Quiz quiz) {
         this.currentQuiz = quiz;
         loadQuestions();
     }
+
+    /**
+     * Loads questions from the database for the current quiz and displays them in the UI.
+     */
     private void loadQuestions() {
         // Fetch questions from the database
         List<Question> originalQuestions = questionDAO.getQuestionsForQuiz(currentQuiz.getQuizID());
@@ -91,10 +102,15 @@ public class QuizEditorController implements Initializable {
             Node questionNode = createQuestionNode(question); // Create each question's UI node
             questionsContainer.getChildren().add(questionNode);
         }
-        //questionsContainer.getChildren().add(generateQuestionButton);
-
-
     }
+
+    /**
+     * Creates a JavaFX node representing a single question, including its text and options.
+     * Adds regenerate and delete buttons.
+     *
+     * @param question The question to render.
+     * @return A VBox node representing the question card.
+     */
     private Node createQuestionNode(Question question) {
         VBox card = new VBox(10);
         card.setPadding(new Insets(10));
@@ -150,7 +166,6 @@ public class QuizEditorController implements Initializable {
 
         return card;
     }
-
 
     /**
      * Regenerates the provided question using AI and updates it both in-memory and in the UI.
@@ -224,9 +239,10 @@ public class QuizEditorController implements Initializable {
             AlertManager.alertErrorShow("Error", "Something went wrong while regenerating the question.");
         }
     }
+
     /**
-     * Generates a new AI-based question for the current quiz and adds it to both
-     * the UI and the temporary list of questions.
+     * Generates a new AI-based question using the current quiz context
+     * and appends it to the editor UI and working list.
      */
     private void generateAIQuestionForEdit() {
         try {
@@ -272,6 +288,9 @@ public class QuizEditorController implements Initializable {
         }
     }
 
+    /**
+     * Saves all questions in the temporary list to the database.
+     */
     private void saveChanges() {
         try {
             // Bulk update questions in the database using the DAO
@@ -284,10 +303,11 @@ public class QuizEditorController implements Initializable {
 
     }
 
+    /**
+     * Discards all unsaved changes and reloads the original questions from the database.
+     */
     private void discardChanges() {
         loadQuestions(); // Reload from the database and reset the in-memory list
         AlertManager.alertErrorShow("Discarded", "All changes have been discarded.");
     }
-
-
 }

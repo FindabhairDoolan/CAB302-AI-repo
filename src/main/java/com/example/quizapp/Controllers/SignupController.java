@@ -9,15 +9,15 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import java.io.IOException;
 
-
-
+/**
+ * Controller for the signup screen.
+ * Handles user registration and navigation between signup, welcome, and login screens.
+ */
 public class SignupController {
 
     private AuthManager authManager = AuthManager.getInstance();
 
     public SignupController() {}
-
-
 
     @FXML
     private Button backButton;
@@ -34,6 +34,9 @@ public class SignupController {
     @FXML
     private Button signupButton;
 
+    /**
+     * Handles the back button click by navigating back to the welcome screen.
+     */
     @FXML
     private void handleBackButton() {
         System.out.println("Back clicked");
@@ -49,7 +52,11 @@ public class SignupController {
         stage.setScene(scene);
     }
 
-
+    /**
+     * Processes user signup with the provided username, email, and password.
+     * On successful registration, shows confirmation and navigates to the login screen.
+     * Displays an error alert if signup fails.
+     */
     @FXML
     public void handleSignup(ActionEvent actionEvent) {
         String email = emailField.getText().trim();
@@ -73,7 +80,4 @@ public class SignupController {
             authManager.showAlert( Alert.AlertType.ERROR, "Something went wrong during signup. Please try again.", true);
         }
     }
-
-
-
 }

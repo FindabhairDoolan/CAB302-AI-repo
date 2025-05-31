@@ -10,7 +10,10 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 
-
+/**
+ * Controller for the login screen.
+ * Handles user authentication and navigation between login, welcome, and dashboard screens.
+ */
 public class LoginController {
 
     private AuthManager authManager = AuthManager.getInstance();
@@ -29,6 +32,9 @@ public class LoginController {
     @FXML
     private Button loginButton;
 
+    /**
+     * Handles the back button click by navigating back to the welcome screen.
+     */
     @FXML
     private void handleBackButton() {
         System.out.println("Back clicked");
@@ -44,7 +50,10 @@ public class LoginController {
         stage.setScene(scene);
     }
 
-
+    /**
+     * Attempts to log in the user using the entered email and password.
+     * On success, navigates to the dashboard; otherwise, shows an error alert.
+     */
     public void handleLogin(ActionEvent actionEvent) {
         String email = emailField.getText();
         String password = passwordField.getText();

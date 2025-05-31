@@ -9,7 +9,10 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import java.io.IOException;
 
-
+/**
+ * Controller for the Welcome page.
+ * Handles navigation to the Login and Signup screens.
+ */
 public class WelcomePageController{
     @FXML
     private Button loginButton;
@@ -18,6 +21,12 @@ public class WelcomePageController{
     @FXML
     public Button tempButton;
 
+    /**
+     * Handles the login button click.
+     * Navigates the user to the login screen.
+     *
+     * @throws IOException if the login FXML file cannot be loaded
+     */
     public void handleLogin() throws IOException {
         System.out.println("Login Button clicked");
 
@@ -27,7 +36,14 @@ public class WelcomePageController{
         stage.setScene(scene);
 
     }
-    // move to signup controller
+
+    /**
+     * Handles the signup button click.
+     * Navigates the user to the signup screen.
+     *
+     * @param actionEvent the event triggered by clicking the signup button
+     * @throws IOException if the signup FXML file cannot be loaded
+     */
     public void handleSignup(ActionEvent actionEvent) throws IOException {
         System.out.println("Signup Button clicked");
         // Swap to Signup screen
