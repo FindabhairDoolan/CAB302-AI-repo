@@ -53,6 +53,7 @@ public class LoginController {
     /**
      * Attempts to log in the user using the entered email and password.
      * On success, navigates to the dashboard; otherwise, shows an error alert.
+     * @param actionEvent The action event triggered by clicking the login button.
      */
     public void handleLogin(ActionEvent actionEvent) {
         String email = emailField.getText();
@@ -77,8 +78,4 @@ public class LoginController {
             System.out.println("Incorrect credentials!");
         }
     }
-
-
-
-
 }

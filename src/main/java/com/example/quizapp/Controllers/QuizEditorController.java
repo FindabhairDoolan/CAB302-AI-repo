@@ -22,11 +22,6 @@ import java.util.*;
  * Controller class for the Quiz Editor screen.
  * Allows users to edit existing quiz questions, regenerate them using AI,
  * and save or discard their changes.
- *
- * This controller loads the current quiz from {@link QuizManager},
- * displays the quiz questions using JavaFX UI nodes,
- * and allows regeneration and management of the question list.
-
  */
 public class QuizEditorController implements Initializable {
     @FXML
@@ -63,7 +58,10 @@ public class QuizEditorController implements Initializable {
 
     /**
      * Called automatically after the FXML layout has been loaded.
-     * Initializes the quiz editor with current quiz data.
+     * Initializes the quiz editor with current quiz data and sets up button actions.
+     *
+     * @param location  The location used to resolve relative paths for the root object, or null if unknown.
+     * @param resources The resources used to localize the root object, or null if none.
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
