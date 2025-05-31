@@ -192,7 +192,7 @@ public class QuizEditorController implements Initializable {
                 int index = questionList.indexOf(oldQuestion);
                 if (index == -1) {
                     System.err.println("Old question not found in in-memory list.");
-                    AlertManager.alertError("Error", "Failed to update the question in memory.");
+                    AlertManager.alertErrorShow("Error", "Failed to update the question in memory.");
                     return;
                 }
                 questionList.set(index, newQuestion);
@@ -202,26 +202,26 @@ public class QuizEditorController implements Initializable {
                     int cardIndex = questionsContainer.getChildren().indexOf(card);
                     if (cardIndex == -1) {
                         System.err.println("Card not found in questionsContainer.");
-                        AlertManager.alertError("Error", "Failed to update the question in the UI.");
+                        AlertManager.alertErrorShow("Error", "Failed to update the question in the UI.");
                         return;
                     }
 
                     try {
                         Node newQuestionNode = createQuestionNode(newQuestion); // Create card for new question
                         questionsContainer.getChildren().set(cardIndex, newQuestionNode);
-                        AlertManager.alertError("Success", "Question regenerated and UI updated!");
+                        AlertManager.alertErrorShow("Success", "Question regenerated and UI updated!");
                     } catch (Exception e) {
                         e.printStackTrace();
-                        AlertManager.alertError("Error", "Failed to update the UI for the regenerated question.");
+                        AlertManager.alertErrorShow("Error", "Failed to update the UI for the regenerated question.");
                     }
                 });
             } else {
                 System.err.println("AI failed to generate a question.");
-                AlertManager.alertError("Error", "Failed to regenerate the question. Please try again.");
+                AlertManager.alertErrorShow("Error", "Failed to regenerate the question. Please try again.");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            AlertManager.alertError("Error", "Something went wrong while regenerating the question.");
+            AlertManager.alertErrorShow("Error", "Something went wrong while regenerating the question.");
         }
     }
     /**
@@ -261,13 +261,13 @@ public class QuizEditorController implements Initializable {
                 // Dynamically add it to the UI
                 Node questionNode = createQuestionNode(newQuestion); // Create UI card for the question
                 questionsContainer.getChildren().add(questionNode);
-                AlertManager.alertError("Success", "New question generated!");
+                AlertManager.alertErrorShow("Success", "New question generated!");
             } else {
-                AlertManager.alertError("Error", "Failed to generate a new question. Please try again.");
+                AlertManager.alertErrorShow("Error", "Failed to generate a new question. Please try again.");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            AlertManager.alertError("Error", "Something went wrong while generating a question.");
+            AlertManager.alertErrorShow("Error", "Something went wrong while generating a question.");
         }
     }
 
@@ -275,17 +275,17 @@ public class QuizEditorController implements Initializable {
         try {
             // Bulk update questions in the database using the DAO
             questionDAO.setQuestions(currentQuiz.getQuizID(), questionList);
-            AlertManager.alertError("Success", "Changes saved successfully!");
+            AlertManager.alertErrorShow("Success", "Changes saved successfully!");
         } catch (SQLException e) {
             e.printStackTrace();
-            AlertManager.alertError("Error", "Failed to save changes.");
+            AlertManager.alertErrorShow("Error", "Failed to save changes.");
         }
 
     }
 
     private void discardChanges() {
         loadQuestions(); // Reload from the database and reset the in-memory list
-        AlertManager.alertError("Discarded", "All changes have been discarded.");
+        AlertManager.alertErrorShow("Discarded", "All changes have been discarded.");
     }
 
 
