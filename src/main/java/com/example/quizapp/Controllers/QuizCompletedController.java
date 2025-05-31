@@ -16,6 +16,11 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.time.Duration;
 
+/**
+ * Controller for the quiz completion screen.
+ * Displays the results of the completed quiz including score, difficulty, year level, and time taken.
+ * Allows the user to finish and return to the home screen or retake the quiz.
+ */
 public class QuizCompletedController {
 
     @FXML
@@ -45,11 +50,19 @@ public class QuizCompletedController {
 
 
     private Quiz quizTaken;
-
+    /**
+     * Sets the quiz object for the current quiz session.
+     *
+     * @param quiz the Quiz object taken by the user
+     */
     public void setQuiz(Quiz quiz) {
         this.quizTaken = quiz;
     }
 
+    /**
+     * Handles the action when the finish button is clicked.
+     * Navigates the user back to the home screen.
+     */
     @FXML
     public void handleFinish() {
 
@@ -59,6 +72,10 @@ public class QuizCompletedController {
         SceneManager.switchScene("/com/example/quizapp/home.fxml", "Home");
     }
 
+    /**
+     * Handles the action when the retake quiz button is clicked.
+     * Loads the quiz screen and initializes it with the current quiz and settings.
+     */
     @FXML
     private void handleRetakeQuiz() {
 

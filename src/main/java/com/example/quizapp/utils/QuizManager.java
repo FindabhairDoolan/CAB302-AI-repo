@@ -46,7 +46,12 @@ public class QuizManager {
     public Quiz getCurrentQuiz() {
         return this.currentQuiz;
     }
-
+    /**
+     * If the user chooses to proceed, displays a mode selection dialog,
+     * and upon selecting a mode, confirms and starts the quiz.
+     *
+     * @param quiz
+     */
     public void openQuiz(Quiz quiz) {
         Alert quizPrompt = createQuizPrompt(quiz);
         Optional<ButtonType> result = quizPrompt.showAndWait();

@@ -24,7 +24,6 @@ public class Quiz {
      * @param visibility the visibility of the quiz: Public/Private
      * @param creatorID the creator ID of the quiz owner
      */
-
     public Quiz(String quizName, String subject, String quizTopic, int quizMode, String difficulty, String yearLevel, String country, String visibility, int creatorID) {
         this.quizName = quizName;
         this.subject = subject;

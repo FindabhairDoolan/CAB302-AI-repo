@@ -8,32 +8,56 @@ import javafx.scene.control.Alert;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-//create a singleton object to keep track of the currently logged in user
+/**
+ * Singleton class responsible for user authentication and session management.
+ * Handles login, logout, and signup operations using a user data access object (IUserDAO).
+ * Provides password hashing and validation utilities.
+ */
 public class AuthManager {
 
-    //Create the singleton object
+    /**
+     * The singleton instance of AuthManager.
+     */
     private static AuthManager instance = null;
 
-    //Initialize userDAO object
+    /**
+     * Data access object interface to interact with user data storage.
+     */
     private IUserDAO userDAO;
 
-    //keep track of the current user by storing their email
+    /**
+     * Keeps track of the currently logged-in user.
+     */
     private User currentUser = null;
 
-    //To disable alerts while testing since tests don't work with alerts on
+    /**
+     * Flag to disable JavaFX alerts during testing.
+     */
     public static boolean disableAlertsForTesting = false;
 
-    //private constructor so no other classes can create objects
+    /**
+     * Private constructor to prevent external instantiation.
+     * Initializes the userDAO with the real SqliteUserDAO implementation.
+     */
     private AuthManager() {
         this.userDAO = new SqliteUserDAO();
     }
 
-    //Mock constructor for testing purposes
+    /**
+     * Private constructor used for testing purposes with a mock userDAO.
+     *
+     * @param mockUserDAO the mock implementation of IUserDAO
+     */
     private AuthManager(IUserDAO mockUserDAO) {
         this.userDAO = mockUserDAO;
     }
 
-    //method for other classes to access the object
+    /**
+     * Retrieves the singleton instance of AuthManager.
+     * Creates the instance if it does not exist.
+     *
+     * @return the singleton AuthManager instance
+     */
     public static AuthManager getInstance() {
         if (instance == null) {
             instance = new AuthManager();
@@ -41,17 +65,33 @@ public class AuthManager {
         return instance;
     }
 
-    //Switch to use mock userDAO for testing
+    /**
+     * Sets the singleton instance to a test instance with a mock IUserDAO.
+     * Useful for unit testing without affecting the real database.
+     *
+     * @param mockUserDAO mock implementation of IUserDAO to use in tests
+     */
     public static void setTestInstance(IUserDAO mockUserDAO) {
         instance = new AuthManager(mockUserDAO);
     }
 
-
+    /**
+     * Returns the currently logged-in user.
+     *
+     * @return the current User, or null if no user is logged in
+     */
     public User getCurrentUser() {
         return this.currentUser;
     }
 
-    //login
+    /**
+     * Attempts to log in a user with the specified email and password.
+     * Password is hashed before validation.
+     *
+     * @param email the email of the user trying to log in
+     * @param password the plaintext password entered by the user
+     * @return true if login is successful; false otherwise
+     */
     public boolean login(String email, String password) {
         boolean isValid = userDAO.validateCredentials(email, hashPassword(password));
         if(isValid){
@@ -60,12 +100,23 @@ public class AuthManager {
 
         return isValid;
     }
-
+    /**
+     * Logs out the current user by clearing the currentUser reference.
+     */
     public void logOut() {
         currentUser = null;
     }
 
-    //sign up
+    /**
+     * Registers a new user with the provided username, email, and password.
+     * Validates input fields, email format, email uniqueness, and password strength.
+     * Shows alerts for validation errors unless alerts are disabled for testing.
+     *
+     * @param userName the desired username
+     * @param email the user's email address
+     * @param password the plaintext password
+     * @return true if signup is successful; false otherwise
+     */
     public boolean signup(String userName, String email, String password) {
 
         // Check if any fields are empty
@@ -95,7 +146,14 @@ public class AuthManager {
         return true;
 
     }
-
+    /**
+     * Shows a JavaFX alert with the given type and message.
+     * Alerts can be disabled during testing.
+     *
+     * @param alertType the type of alert (e.g., ERROR, WARNING)
+     * @param message the message to display in the alert
+     * @param signup true if this alert is related to signup validation (sets alert title)
+     */
     public void showAlert(Alert.AlertType alertType, String message, boolean signup) {
         if(disableAlertsForTesting) return;
 
@@ -105,7 +163,13 @@ public class AuthManager {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
+    /**
+     * Checks if a password is valid by ensuring it is at least 8 characters long
+     * and contains at least one letter and one digit.
+     *
+     * @param password the password to validate
+     * @return true if password meets criteria; false otherwise
+     */
     private boolean isValidPassword(String password) {
         if (password.length() < 8) return false;
         boolean hasLetter = false;
@@ -118,11 +182,25 @@ public class AuthManager {
 
         return hasLetter && hasDigit;
     }
+    /**
+     * Validates an email address format using a regular expression.
+     * Only accepts emails ending with ".com".
+     *
+     * @param email the email string to validate
+     * @return true if email matches the pattern; false otherwise
+     */
     private boolean isValidEmail(String email) {
         // Regex pattern
         return email.matches("^[^@\\s]+@[^@\\s]+\\.com$");
     }
-
+    /**
+     * Hashes the given password string using SHA-256 algorithm.
+     * Converts the hash to a hexadecimal string.
+     *
+     * @param password the plaintext password to hash
+     * @return the hashed password as a hex string
+     * @throws RuntimeException if SHA-256 algorithm is unavailable
+     */
     public String hashPassword(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
